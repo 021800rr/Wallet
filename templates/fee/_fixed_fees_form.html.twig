@@ -1,0 +1,7 @@
+<form method="post"
+      action="{{ path('fee_insert_to_wallet') }}"
+      onsubmit="return confirm('Are you sure you want to set fixed fees?');"
+>
+    <input type="hidden" name="_token" value="{{ csrf_token('fixedfees') }}">
+    <button class="save btn btn-danger mb-3">{{ 'Save'|trans }}</button>
+</form>

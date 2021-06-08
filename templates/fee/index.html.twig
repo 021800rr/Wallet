@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="row bg-light">
+
+        <table class="table table-sm table-hover bg-light">
+            <thead>
+            <tr>
+                <th scope="col" class="ps-2">{{ 'Date'|trans }}</th>
+                <th scope="col" class="text-end">{{ 'Amount'|trans }}</th>
+                <th scope="col" class="ps-5">{{ 'Contractor'|trans }}</th>
+
+                <th scope="col" class="text-center" colspan="2">{{ 'Actions'|trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for fee in fees %}
+                <tr>
+                    <td class="ps-2">
+                        {{ fee.date| format_number({min_integer_digit:'2'}) }}
+                    </td>
+                    <td
+                            {% if fee.amount > 0 %}#}
+                            class="text-end  text-danger" style="font-weight: bold"
+                            {% else %}
+                                class="text-end"
+                            {% endif %}
+                            id="fee_amount{{ loop.index }}"
+                    >
+                        {{ fee.amount|number_format(2, ',', ' ') }}
+                    </td>
+                    <td class="ps-5" id="fee_contractor{{ loop.index }}">
+                        {{ fee.contractor.description }}
+                    </td>
+
+                    <td class="text-center">{{ include('fee/_edit_a.html.twig') }}</td>
+                    <td class="text-center">{{ include('fee/_delete_form.html.twig') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {{ include('fee/_fixed_fees_form.html.twig') }}
+
+    </div>
+
+{% endblock %}

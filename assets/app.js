@@ -1,4 +1,5 @@
 import './styles/app.scss';
+import './styles/missing.css'
 import './bootstrap';
 
 const $ = require('jquery');

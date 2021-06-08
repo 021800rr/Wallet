@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="pl" target-language="pl" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="mcQKtAW" resname="Date">
+        <source>Date</source>
+        <target>Data</target>
+      </trans-unit>
+      <trans-unit id="SeltfN9" resname="Amount">
+        <source>Amount</source>
+        <target>Kwota</target>
+      </trans-unit>
+      <trans-unit id="7QKnLXw" resname="Contractor">
+        <source>Contractor</source>
+        <target>Kontrahent</target>
+      </trans-unit>
+      <trans-unit id=".4BZ3Gd" resname="Actions">
+        <source>Actions</source>
+        <target>Akcje</target>
+      </trans-unit>
+      <trans-unit id="fhsNVkH" resname="Account">
+        <source>Account</source>
+        <target>Konto</target>
+      </trans-unit>
+      <trans-unit id="0cmgHVf" resname="Wallet">
+        <source>Wallet</source>
+        <target>Portfel</target>
+      </trans-unit>
+      <trans-unit id="8aPPmZH" resname="New Receipt">
+        <source>New Receipt</source>
+        <target>Nowa Płatność</target>
+      </trans-unit>
+      <trans-unit id="3ei_94y" resname="Transfer">
+        <source>Transfer</source>
+        <target>Przelew</target>
+      </trans-unit>
+      <trans-unit id="g4VXkkp" resname="Backup">
+        <source>Backup</source>
+        <target>Backup</target>
+      </trans-unit>
+      <trans-unit id="Gxxsz0P" resname="New Contractor">
+        <source>New Contractor</source>
+        <target>Nowy Kontrahent</target>
+      </trans-unit>
+      <trans-unit id="_ELD4YW" resname="Fee">
+        <source>Fee</source>
+        <target>Opłaty Stałe</target>
+      </trans-unit>
+      <trans-unit id="D8jt_OV" resname="New Fee">
+        <source>New Fee</source>
+        <target>Nowa Opłata Stała</target>
+      </trans-unit>
+      <trans-unit id="0FJ_Sz1" resname="Logout">
+        <source>Logout</source>
+        <target>Wyjście</target>
+      </trans-unit>
+      <trans-unit id="acVpEs4" resname="You are logged in as">
+        <source>You are logged in as</source>
+        <target>Jesteś zalogowany jako</target>
+      </trans-unit>
+      <trans-unit id="47ienTP" resname="Username">
+        <source>Username</source>
+        <target>Nazwa użytkownika</target>
+      </trans-unit>
+      <trans-unit id="588_9PF" resname="Password">
+        <source>Password</source>
+        <target>Hasło</target>
+      </trans-unit>
+      <trans-unit id="v9QCsvb" resname="Sign in">
+        <source>Sign in</source>
+        <target>Zaloguj się</target>
+      </trans-unit>
+      <trans-unit id="0F4Ht8F" resname="Balance">
+        <source>Balance</source>
+        <target>Saldo</target>
+      </trans-unit>
+      <trans-unit id=".StCgQ9" resname="Retiring">
+        <source>Retiring</source>
+        <target>Backup</target>
+      </trans-unit>
+      <trans-unit id="mSsymQY" resname="Holiday">
+        <source>Holiday</source>
+        <target>Wakacje</target>
+      </trans-unit>
+      <trans-unit id="FQn1YfJ" resname="Save">
+        <source>Save</source>
+        <target>Zapisz</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,20 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello WalletController!{% endblock %}
-
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <div class="row bg-light">
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/elf/Pulpit/rr/prv/rach/Wallet.sf53/src/Controller/WalletController.php'|file_link(0) }}">src/Controller/WalletController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/elf/Pulpit/rr/prv/rach/Wallet.sf53/templates/wallet/index.html.twig'|file_link(0) }}">templates/wallet/index.html.twig</a></code></li>
-    </ul>
-</div>
+        <table class="table table-sm table-hover bg-light">
+            <thead>
+            <tr>
+                <th scope="col" class="ps-2">{{ 'Date'|trans }}</th>
+                <th scope="col" class="text-end">{{ 'Amount'|trans }}</th>
+                <th scope="col" class="text-end">{{ 'Balance'|trans }}</th>
+                <th scope="col" class="ps-5">{{ 'Contractor'|trans }}</th>
+                <th scope="col" class="text-center" colspan="3">{{ 'Actions'|trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for wallet in paginator %}
+                <tr>
+                    <td class="ps-2">
+                        {{ wallet.date|date("Y-m-d") }}
+                    </td>
+                    <td
+                            {% if wallet.amount > 0 %}
+                                class="text-end text-danger" style="font-weight: bold"
+                            {% else %}
+                                class="text-end"
+                            {% endif %}
+                            id="wallet_amount{{ loop.index }}"
+                    >
+                        {{ wallet.amount|number_format(2, ',', ' ') }}
+                    </td>
+                    <td class="text-end" id="wallet_balance{{ loop.index }}">
+                        {{ wallet.balance|number_format(2, ',', ' ') }}
+                    </td>
+                    <td class="ps-5" id="wallet_contractor{{ loop.index }}">
+                        {{ wallet.contractor.description }}
+                    </td>
+
+                    <td class="text-center">{{ include('wallet/_is_consistent_form.html.twig') }}</td>
+                    <td class="text-center">{{ include('wallet/_edit_a.html.twig') }}</td>
+                    <td class="text-center">{{ include('wallet/_delete_form.html.twig') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% set PATH = 'wallet_index' %}
+        {{ include('paginator.html.twig') }}
+
+    </div>
+
 {% endblock %}

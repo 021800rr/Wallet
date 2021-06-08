@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="row bg-light">
+
+        <table class="table table-sm table-hover bg-light">
+            <thead>
+            <tr>
+                <th scope="col" class="ps-2">{{ 'Contractor'|trans }}</th>
+                <th scope="col">{{ 'Account'|trans }}</th>
+
+                <th scope="col" class="text-center" colspan="2">{{ 'Actions'|trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for contractor in paginator %}
+                <tr>
+                    <td class="ps-2">{{ contractor.description }}</td>
+                    <td>{{ contractor.account }}</td>
+
+                    <td class="text-center">{{ include('contractor/_edit_a.html.twig') }}</td>
+                    <td class="text-center">{{ include('contractor/_delete_form.html.twig') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% set PATH = 'contractor_index' %}
+        {{ include('paginator.html.twig') }}
+
+    </div>
+
+{% endblock %}
+

@@ -1,19 +1,72 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {# Run `composer require symfony/webpack-encore-bundle`
-           and uncomment the following Encore helpers to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{{ 'Wallet'|trans }}{% endblock %}</title>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
+<body>
+
+<div class="container">
+    {% if app.user %}
+        <div class="row bg-light text-dark border-bottom">
+            <ul class="nav nav-pills mb-2">
+                <li class="nav-item">
+                    <a class="btn btn-outline-secondary ms-2 mt-2" href="{{ path('wallet_index') }}" id="base_wallet_index">
+                        {{ 'Wallet'|trans }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-secondary ms-2 mt-2" href="{{ path('wallet_new') }}" id="base_wallet_new">
+                        {{ 'New Receipt'|trans }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-secondary ms-2 mt-2" href="{{ path('transfer_index') }}" id="base_transfer_index">
+                        {{ 'Transfer'|trans }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-secondary ms-2 mt-2" href="{{ path('backup_index') }}" id="base_backup_index">
+                        {{ 'Backup'|trans }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-secondary ms-2 mt-2" href="{{ path('contractor_index') }}" id="base_contractor_index">
+                        {{ 'Contractor'|trans }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-secondary ms-2 mt-2" href="{{ path('contractor_new') }}" id="base_contractor_new">
+                        {{ 'New Contractor'|trans }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-secondary ms-2 mt-2" href="{{ path('fee_index') }}" id="base_fee_index">
+                        {{ 'Fee'|trans }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-secondary ms-2 mt-2" href="{{ path('fee_new') }}" id="base_fee_new">
+                        {{ 'New Fee'|trans }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-secondary ms-2 mt-2" href="{{ path('app_logout') }}" id="base_app_logout">
+                        {{ 'Logout'|trans }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    {% endif %}
+    {% block body %}{% endblock %}
+</div>
+
+</body>
 </html>
