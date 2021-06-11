@@ -11,11 +11,9 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Wallet|null findOneBy(array $criteria, array $orderBy = null)
  * @method Wallet[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class WalletRepository extends ServiceEntityRepository
+class WalletRepository extends ServiceEntityRepository implements AppPaginatorInterface
 {
     use WalletBackup;
-
-    public const PAGINATOR_PER_PAGE = 20;
 
     public function __construct(ManagerRegistry $registry)
     {

@@ -4,7 +4,7 @@ namespace App\Service;
 
 use Exception;
 
-class WalletBalanceUpdater extends BalanceUpdater
+class WalletBalanceUpdater extends BalanceUpdater implements UpdaterInterface
 {
     protected function walk($predecessor, &$transaction, ?array $successors): void
     {

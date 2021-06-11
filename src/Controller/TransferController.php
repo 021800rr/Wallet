@@ -6,7 +6,7 @@ use App\Entity\Backup;
 use App\Entity\Wallet;
 use App\Form\TransferToBackupType;
 use App\Form\TransferToWalletType;
-use App\Service\BackupBalanceUpdater;
+use App\Service\TransferInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,13 +43,13 @@ class TransferController extends AbstractController
     /**
      * @Route("/backup", name="transfer_to_backup", methods={"POST"})
      */
-    public function backup(Request $request, BackupBalanceUpdater $transfer): Response
+    public function backup(Request $request, TransferInterface $agent): Response
     {
         $backup = new Backup();
         $backupForm = $this->createForm(TransferToBackupType::class, $backup);
         $backupForm->handleRequest($request);
         if ($backupForm->isSubmitted() && $backupForm->isValid()) {
-            $transfer->moveAssets($backup);
+            $agent->moveToBackup($backup);
 
             return $this->redirectToRoute('backup_index');
         }
@@ -60,13 +60,13 @@ class TransferController extends AbstractController
     /**
      * @Route("/wallet", name="transfer_to_wallet", methods={"POST"})
      */
-    public function wallet(Request $request, BackupBalanceUpdater $transfer): Response
+    public function wallet(Request $request, TransferInterface $agent): Response
     {
         $wallet = new Wallet();
         $walletForm = $this->createForm(TransferToWalletType::class, $wallet);
         $walletForm->handleRequest($request);
         if ($walletForm->isSubmitted() && $walletForm->isValid()) {
-            $transfer->moveAssets($wallet);
+            $agent->moveToWallet($wallet);
 
             return $this->redirectToRoute('wallet_index');
         }

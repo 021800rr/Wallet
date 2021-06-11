@@ -5,29 +5,17 @@ namespace App\Service;
 use App\Entity\Backup;
 use App\Entity\Wallet;
 use App\Repository\BackupRepository;
-use App\Repository\ContractorRepository;
 use App\Repository\WalletRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
-abstract class BalanceUpdater
+abstract class BalanceUpdater implements UpdaterInterface
 {
     protected EntityManagerInterface $entityManager;
-    protected WalletRepository $walletRepository;
-    protected BackupRepository $backupRepository;
-    protected ContractorRepository $contractorRepository;
 
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        WalletRepository $walletRepository,
-        BackupRepository $backupRepository,
-        ContractorRepository $contractorRepository
-    )
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->walletRepository = $walletRepository;
-        $this->backupRepository = $backupRepository;
-        $this->contractorRepository = $contractorRepository;
     }
 
     /**

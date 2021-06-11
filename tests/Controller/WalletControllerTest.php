@@ -47,9 +47,9 @@ class WalletControllerTest extends WebTestCase
         $this->assertSelectorTextContains('td#wallet_amount2', '-10,00');
 
         $this->client->submit(
-            $crawler->filter('form#wallet_delete1')->form()
+            $crawler->filter('form#wallet_delete2')->form()
         );
-        $this->assertSelectorTextContains('td#wallet_balance1', '190,00');
+        $this->assertSelectorTextContains('td#wallet_balance1', '180,00');
     }
 
     public function testChangeIsConsistent(): void

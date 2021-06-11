@@ -11,7 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Backup|null findOneBy(array $criteria, array $orderBy = null)
  * @method Backup[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class BackupRepository extends ServiceEntityRepository
+class BackupRepository extends ServiceEntityRepository implements AppPaginatorInterface
 {
     use WalletBackup;
 

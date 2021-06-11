@@ -35,8 +35,8 @@ class ContractorController extends AbstractController
 
         return $this->render('contractor/index.html.twig', [
             'paginator' => $paginator,
-            'previous' => $offset - WalletRepository::PAGINATOR_PER_PAGE,
-            'next' => min(count($paginator), $offset + WalletRepository::PAGINATOR_PER_PAGE),
+            'previous' => $offset - ContractorRepository::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + ContractorRepository::PAGINATOR_PER_PAGE),
         ]);
     }
 

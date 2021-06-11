@@ -16,3 +16,15 @@ services:
     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
         arguments:
             - '%env(DATABASE_URL)%'
+
+    App\Service\Transfer: ~
+    App\Service\TransferInterface: '@App\Service\Transfer'
+
+    App\Service\BackupBalanceUpdater: ~
+    App\Service\UpdaterInterface $backupUpdater: '@App\Service\BackupBalanceUpdater'
+
+    App\Service\WalletBalanceUpdater: ~
+    App\Service\UpdaterInterface: '@App\Service\WalletBalanceUpdater'
+
+    App\Service\FixedFees: ~
+    App\Service\FeeInterface: '@App\Service\FixedFees'

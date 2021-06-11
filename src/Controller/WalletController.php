@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Wallet;
 use App\Form\WalletType;
 use App\Repository\WalletRepository;
-use App\Service\WalletBalanceUpdater;
+use App\Service\UpdaterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,17 +19,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class WalletController extends AbstractController
 {
-    private WalletBalanceUpdater $walletBalanceUpdater;
+    private UpdaterInterface $updater;
     private WalletRepository $walletRepository;
     private EntityManagerInterface $entityManager;
 
     public function __construct(
-        WalletBalanceUpdater $walletBalanceUpdater,
+        UpdaterInterface $updater,
         WalletRepository $walletRepository,
         EntityManagerInterface $entityManager
     )
     {
-        $this->walletBalanceUpdater = $walletBalanceUpdater;
+        $this->updater = $updater;
         $this->walletRepository = $walletRepository;
         $this->entityManager = $entityManager;
     }
@@ -60,7 +60,7 @@ class WalletController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($wallet);
             $this->entityManager->flush();
-            $this->walletBalanceUpdater->compute($this->walletRepository);
+            $this->updater->compute($this->walletRepository);
 
             return $this->redirectToRoute('wallet_index');
         }
@@ -80,7 +80,7 @@ class WalletController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
-            $this->walletBalanceUpdater->compute($this->walletRepository);
+            $this->updater->compute($this->walletRepository);
 
             return $this->redirectToRoute('wallet_index');
         }
@@ -120,7 +120,7 @@ class WalletController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $wallet->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($wallet);
             $this->entityManager->flush();
-            $this->walletBalanceUpdater->compute($this->walletRepository);
+            $this->updater->compute($this->walletRepository);
         }
 
         return $this->redirectToRoute('wallet_index');

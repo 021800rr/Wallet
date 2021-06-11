@@ -6,7 +6,7 @@ use App\Entity\Backup;
 use App\Form\BackupType;
 use App\Repository\BackupRepository;
 use App\Repository\WalletRepository;
-use App\Service\BackupBalanceUpdater;
+use App\Service\UpdaterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,17 +20,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class BackupController extends AbstractController
 {
-    private BackupBalanceUpdater $backupBalanceUpdater;
+    private UpdaterInterface $updater;
     private BackupRepository $backupRepository;
     private EntityManagerInterface $entityManager;
 
     public function __construct(
-        BackupBalanceUpdater $backupBalanceUpdater,
+        UpdaterInterface $backupUpdater,
         BackupRepository $backupRepository,
         EntityManagerInterface $entityManager
     )
     {
-        $this->backupBalanceUpdater = $backupBalanceUpdater;
+        $this->updater = $backupUpdater;
         $this->backupRepository = $backupRepository;
         $this->entityManager = $entityManager;
     }
@@ -45,8 +45,8 @@ class BackupController extends AbstractController
 
         return $this->render('backup/index.html.twig', [
             'paginator' => $paginator,
-            'previous' => $offset - WalletRepository::PAGINATOR_PER_PAGE,
-            'next' => min(count($paginator), $offset + WalletRepository::PAGINATOR_PER_PAGE),
+            'previous' => $offset - BackupRepository::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + BackupRepository::PAGINATOR_PER_PAGE),
         ]);
     }
 
@@ -60,7 +60,7 @@ class BackupController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
-            $this->backupBalanceUpdater->compute($this->backupRepository);
+            $this->updater->compute($this->backupRepository);
 
             return $this->redirectToRoute('backup_index');
         }
@@ -79,7 +79,7 @@ class BackupController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$backup->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($backup);
             $this->entityManager->flush();
-            $this->backupBalanceUpdater->compute($this->backupRepository);
+            $this->updater->compute($this->backupRepository);
         }
 
         return $this->redirectToRoute('backup_index');

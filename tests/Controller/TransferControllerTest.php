@@ -25,8 +25,8 @@ class TransferControllerTest extends WebTestCase
         $form = $crawler->filter('button#transfer_to_backup_save')->form();
         $form['transfer_to_backup[amount]'] = '100';
         $crawler = $this->client->submit($form);
-        $this->assertSame("http://localhost/en/backup/", $crawler->getUri());
 
+        $this->assertSame("http://localhost/en/backup/", $crawler->getUri());
         $this->assertSelectorTextContains('td#backup_balance1', '700,00');
         $this->assertSelectorTextContains('td#backup_retiring1', '350,00');
         $this->assertSelectorTextContains('td#backup_holiday1', '350,00');
@@ -37,8 +37,9 @@ class TransferControllerTest extends WebTestCase
         $crawler = $this->client->clickLink('Transfer');
         $form = $crawler->filter('button#transfer_to_wallet_save')->form();
         $form['transfer_to_wallet[amount]'] = '100';
-        $this->client->submit($form);
+        $crawler = $this->client->submit($form);
 
+        $this->assertSame("http://localhost/en/wallet/", $crawler->getUri());
         $this->assertSelectorTextContains('td#wallet_balance1', '170,00');
 
         $this->client->clickLink('Backup');

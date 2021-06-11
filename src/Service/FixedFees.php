@@ -10,7 +10,7 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
-class FixedFees
+class FixedFees implements FeeInterface
 {
     private FeeRepository $feeRepository;
     private EntityManagerInterface $entityManager;
