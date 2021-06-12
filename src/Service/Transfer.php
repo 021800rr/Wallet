@@ -26,8 +26,7 @@ class Transfer implements TransferInterface
         BackupRepository $backupRepository,
         UpdaterInterface $updater,
         WalletRepository $walletRepository
-    )
-    {
+    ) {
         $this->entityManager = $entityManage;
         $this->contractorRepository = $contractorRepository;
         $this->backupUpdater = $backupUpdater;
@@ -84,6 +83,4 @@ class Transfer implements TransferInterface
             'description' => ContractorRepository::INTERNAL_TRANSFER
         ]);
     }
-
-
 }

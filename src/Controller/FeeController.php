@@ -100,8 +100,7 @@ class FeeController extends AbstractController
         FeeInterface $fixedFees,
         UpdaterInterface $updater,
         WalletRepository $walletRepository
-    ): Response
-    {
+    ): Response {
         if ($this->isCsrfTokenValid('fixedfees', $request->request->get('_token'))) {
             $fixedFees->insert();
             $updater->compute($walletRepository);

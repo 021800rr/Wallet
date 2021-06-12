@@ -29,7 +29,8 @@ class BackupBalanceUpdater extends BalanceUpdater implements UpdaterInterface
                 $transaction->setHoliday($predecessor->getHoliday() + $transaction->getAmount() / 2);
             } else {
                 $transaction->setRetiring($predecessor->getRetiring());
-                $transaction->setHoliday($predecessor->getHoliday() + $transaction->getAmount()
+                $transaction->setHoliday(
+                    $predecessor->getHoliday() + $transaction->getAmount()
                 );
             }
         }

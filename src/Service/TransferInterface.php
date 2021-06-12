@@ -8,7 +8,7 @@ use App\Repository\ContractorRepository;
 
 interface TransferInterface
 {
-    function moveToBackup(Backup $backup): void;
+    public function moveToBackup(Backup $backup): void;
 
-    function moveToWallet(Wallet $wallet): void;
+    public function moveToWallet(Wallet $wallet): void;
 }

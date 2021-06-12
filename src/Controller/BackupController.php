@@ -28,8 +28,7 @@ class BackupController extends AbstractController
         UpdaterInterface $backupUpdater,
         BackupRepository $backupRepository,
         EntityManagerInterface $entityManager
-    )
-    {
+    ) {
         $this->updater = $backupUpdater;
         $this->backupRepository = $backupRepository;
         $this->entityManager = $entityManager;

@@ -27,8 +27,7 @@ class WalletController extends AbstractController
         UpdaterInterface $updater,
         WalletRepository $walletRepository,
         EntityManagerInterface $entityManager
-    )
-    {
+    ) {
         $this->updater = $updater;
         $this->walletRepository = $walletRepository;
         $this->entityManager = $entityManager;
