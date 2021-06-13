@@ -15,7 +15,10 @@ class TransferToWalletType extends AbstractType
     {
         $builder
             ->add('amount', null, [
-                'label' => 'Wallet'
+                'label' => 'Wallet',
+                'attr' => [
+                    'required' => true
+                ]
             ])
             ->add('date', DateType::class, [
                 'widget' => 'single_text',

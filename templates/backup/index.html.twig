@@ -1,57 +1,32 @@
 {% extends 'base.html.twig' %}
-
 {% block body %}
-
-    <div class="row bg-light">
-
-        <table class="table table-sm table-hover bg-light">
-            <thead>
+    <table class="table table-hover table-sm">
+        <thead>
             <tr>
-                <th scope="col" class="ps-2">{{ 'Date'|trans }}</th>
-                <th scope="col" class="text-end">{{ 'Amount'|trans }}</th>
-                <th scope="col" class="text-end">{{ 'Balance'|trans }}</th>
-                <th scope="col" class="text-end">{{ 'Retiring'|trans }}</th>
-                <th scope="col" class="text-end">{{ 'Holiday'|trans }}</th>
-                <th scope="col" class="ps-5">{{ 'Contractor'|trans }}</th>
-                <th scope="col" class="text-center" colspan="2">{{ 'Actions'|trans }}</th>
+                <th>{{ 'Date'|trans }}</th>
+                <th class="text-end">{{ 'Amount'|trans }}</th>
+                <th class="text-end">{{ 'Balance'|trans }}</th>
+                <th class="text-end">{{ 'Retiring'|trans }}</th>
+                <th class="text-end">{{ 'Holiday'|trans }}</th>
+                <th class="ps-5">{{ 'Contractor'|trans }}</th>
+                <th class="text-center" colspan="2">{{ 'Actions'|trans }}</th>
             </tr>
-            </thead>
-            <tbody>
+        </thead>
+        <tbody>
             {% for backup in paginator %}
                 <tr>
-                    <td class="ps-2">{{ backup.date|date("Y-m-d") }}</td>
-                    <td
-                            {% if backup.amount < 0 %}
-                                class="text-end text-danger" style="font-weight: bold"
-                            {% else %}
-                                class="text-end"
-                            {% endif %}
-                    >
-                        {{ backup.amount|number_format(2, ',', ' ') }}
-                    </td>
-                    <td class="text-end" id="backup_balance{{ loop.index }}">
-                        {{ backup.balance|number_format(2, ',', ' ') }}
-                    </td>
-                    <td class="text-end" id="backup_retiring{{ loop.index }}">
-                        {{ backup.retiring|number_format(2, ',', ' ') }}
-                    </td>
-                    <td class="text-end" id="backup_holiday{{ loop.index }}">
-                        {{ backup.holiday|number_format(2, ',', ' ') }}
-                    </td>
-                    <td class="ps-5">
-                        {{ backup.contractor.description }}
-                    </td>
-
+                    <td>{{ backup.date|date("Y-m-d") }}</td>
+                    <td class="text-end row_money_amount">{{ backup.amount }}</td>
+                    <td class="text-end row_money" id="backup_balance{{ loop.index }}">{{ backup.balance }}</td>
+                    <td class="text-end row_money" id="backup_retiring{{ loop.index }}">{{ backup.retiring }}</td>
+                    <td class="text-end row_money" id="backup_holiday{{ loop.index }}">{{ backup.holiday }}</td>
+                    <td class="ps-5">{{ backup.contractor.description }}</td>
                     <td class="text-center">{{ include('backup/_edit_a.html.twig') }}</td>
                     <td class="text-center">{{ include('backup/_delete_form.html.twig') }}</td>
                 </tr>
             {% endfor %}
-            </tbody>
-        </table>
-
-        {% set PATH = 'backup_index' %}
-        {{ include('paginator.html.twig') }}
-
-    </div>
-
+        </tbody>
+    </table>
+    {% set PATH = 'backup_index' %}
+    {{ include('paginator.html.twig') }}
 {% endblock %}

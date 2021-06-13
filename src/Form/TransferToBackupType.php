@@ -15,7 +15,11 @@ class TransferToBackupType extends AbstractType
     {
         $builder
             ->add('amount', null, [
-                'label' => 'Backup'
+                'label' => 'Backup',
+                'attr' => [
+                    'autofocus' => true,
+                    'required' => true
+                ]
             ])
             ->add('date', DateType::class, [
                 'widget' => 'single_text',

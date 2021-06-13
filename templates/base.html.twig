@@ -12,61 +12,79 @@
     {% endblock %}
 </head>
 <body>
-
 <div class="container">
     {% if app.user %}
-        <div class="row bg-light text-dark border-bottom">
-            <ul class="nav nav-pills mb-2">
-                <li class="nav-item">
-                    <a class="btn btn-outline-secondary ms-2 mt-2" href="{{ path('wallet_index') }}" id="base_wallet_index">
-                        {{ 'Wallet'|trans }}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-outline-secondary ms-2 mt-2" href="{{ path('wallet_new') }}" id="base_wallet_new">
-                        {{ 'New Receipt'|trans }}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-outline-secondary ms-2 mt-2" href="{{ path('transfer_index') }}" id="base_transfer_index">
-                        {{ 'Transfer'|trans }}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-outline-secondary ms-2 mt-2" href="{{ path('backup_index') }}" id="base_backup_index">
-                        {{ 'Backup'|trans }}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-outline-secondary ms-2 mt-2" href="{{ path('contractor_index') }}" id="base_contractor_index">
-                        {{ 'Contractor'|trans }}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-outline-secondary ms-2 mt-2" href="{{ path('contractor_new') }}" id="base_contractor_new">
-                        {{ 'New Contractor'|trans }}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-outline-secondary ms-2 mt-2" href="{{ path('fee_index') }}" id="base_fee_index">
-                        {{ 'Fee'|trans }}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-outline-secondary ms-2 mt-2" href="{{ path('fee_new') }}" id="base_fee_new">
-                        {{ 'New Fee'|trans }}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-outline-secondary ms-2 mt-2" href="{{ path('app_logout') }}" id="base_app_logout">
-                        {{ 'Logout'|trans }}
-                    </a>
-                </li>
-            </ul>
-        </div>
+        <nav class="navbar navbar-expand-lg">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown me-2">
+                        <a class="btn btn-outline-dark dropdown-toggle"
+                           href="#" id="navbarDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            Menu
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>
+                                <a class="dropdown-item" href="{{ path('transfer_index') }}" id="base_transfer_index">
+                                    {{ 'Transfer'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('backup_index') }}" id="base_backup_index">
+                                    {{ 'Backup'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('contractor_index') }}"
+                                   id="base_contractor_index">
+                                    {{ 'Contractor'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('contractor_new') }}" id="base_contractor_new">
+                                    {{ 'New Contractor'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('fee_index') }}" id="base_fee_index">
+                                    {{ 'Fee'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('fee_new') }}" id="base_fee_new">
+                                    {{ 'New Fee'|trans }}
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('app_logout') }}" id="base_app_logout">
+                                    {{ 'Logout'|trans }}
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item me-2">
+                        <a class="btn btn-outline-dark" href="{{ path('wallet_index') }}" id="base_wallet_index">
+                            {{ 'Wallet'|trans }}
+                        </a>
+                    </li>
+                    <li class="nav-item me-2">
+                        <a class="btn btn-outline-dark" href="{{ path('wallet_new') }}" id="base_wallet_new">
+                            {{ 'New Receipt'|trans }}
+                        </a>
+                    </li>
+                </ul>
+                {{ render(controller(
+                    'App\\Controller\\SearchController::index', {'query':  query|default('') }
+                )) }}
+            </div>
+        </nav>
     {% endif %}
     {% block body %}{% endblock %}
 </div>
-
 </body>
 </html>

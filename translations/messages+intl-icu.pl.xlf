@@ -89,6 +89,10 @@
         <source>Save</source>
         <target>Zapisz</target>
       </trans-unit>
+      <trans-unit id="F.n.Y.J" resname="Search">
+        <source>Search</source>
+        <target>Szukaj</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

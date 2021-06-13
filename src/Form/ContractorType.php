@@ -14,7 +14,11 @@ class ContractorType extends AbstractType
     {
         $builder
             ->add('description', null, [
-                'label' => 'Contractor'
+                'label' => 'Contractor',
+                'attr' => [
+                    'autofocus' => true,
+                    'required' => true
+                ]
             ])
             ->add('account')
             ->add('save', SubmitType::class, [

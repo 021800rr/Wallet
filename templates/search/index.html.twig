@@ -1,0 +1,21 @@
+{{ form_start(form, {
+    'attr': {
+        'class': 'd-flex',
+        'action': path('search_result'),
+    }
+}) }}
+
+    {{ form_widget(form.query, {
+        'attr': {
+            'class': 'me-2',
+            'placeholder': 'Search',
+            'aria-label': 'Search',
+        }
+    }) }}
+
+    {{ form_widget(form.search, {
+        'attr': {
+            'class': 'btn btn-outline-dark'
+        }
+    }) }}
+{{ form_end(form) }}

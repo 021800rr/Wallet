@@ -103,7 +103,7 @@ class WalletController extends AbstractController
                     $wallet->setIsConsistent(false);
                     break;
                 default:
-                    return $this->redirectToRoute('wallet');
+                    return $this->redirectToRoute('wallet_index');
             }
             $this->getDoctrine()->getManager()->flush();
         }

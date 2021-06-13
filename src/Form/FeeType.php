@@ -16,7 +16,12 @@ class FeeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('date')
+            ->add('date', null, [
+                'attr' => [
+                    'autofocus' => true,
+                    'required' => true
+                ]
+            ])
             ->add('amount')
             ->add('contractor', EntityType::class, [
                 'class' => Contractor::class,

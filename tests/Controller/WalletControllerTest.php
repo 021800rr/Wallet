@@ -14,42 +14,43 @@ class WalletControllerTest extends WebTestCase
     public function testNew(): void
     {
         $this->client->request('GET', '/en/wallet');
-        $this->assertSelectorTextContains('td#wallet_balance1', '170,00');
+        $this->assertSelectorTextContains('td#wallet_balance1', '170');
 
         $this->client->clickLink('New Receipt');
         $this->client->submitForm('Save', [
             'wallet[amount]' => '-60',
         ]);
-        $this->assertSelectorTextContains('td#wallet_balance1', '110,00');
+        $this->assertSelectorTextContains('td#wallet_balance1', '110');
     }
 
     public function testEdit(): void
     {
         $crawler = $this->client->request('GET', '/en/wallet');
-        $this->assertSelectorTextContains('td#wallet_balance1', '170,00');
+        $this->assertSelectorTextContains('td#wallet_balance1', '170');
 
-        $this->client->click(
+        $crawler = $this->client->click(
             $crawler->filter('a#wallet_edit1')->link()
         );
-        $this->assertFormValue('form', 'wallet[amount]', '-20');
-        $this->client->submitForm('Save', [
-            'wallet[amount]' => '-40',
-        ]);
-        $this->assertSelectorTextContains('td#wallet_balance1', '150,00');
+        $form = $crawler->selectButton('wallet_save')->form();
+        $values = $form->getValues();
+        $this->assertSame('-20', $values["wallet[amount]"]);
+        $form['wallet[amount]']->setValue(-40);
+        $this->client->submit($form);
+        $this->assertSelectorTextContains('td#wallet_balance1', '150');
     }
 
     public function testDelete(): void
     {
         $crawler = $this->client->request('GET', '/en/wallet');
-        $this->assertSelectorTextContains('td#wallet_balance1', '170,00');
-        $this->assertSelectorTextContains('td#wallet_amount1', '-20,00');
-        $this->assertSelectorTextContains('td#wallet_balance2', '190,00');
-        $this->assertSelectorTextContains('td#wallet_amount2', '-10,00');
+        $this->assertSelectorTextContains('td#wallet_balance1', '170');
+        $this->assertSelectorTextContains('td#wallet_amount1', '-20');
+        $this->assertSelectorTextContains('td#wallet_balance2', '190');
+        $this->assertSelectorTextContains('td#wallet_amount2', '-10');
 
         $this->client->submit(
             $crawler->filter('form#wallet_delete2')->form()
         );
-        $this->assertSelectorTextContains('td#wallet_balance1', '180,00');
+        $this->assertSelectorTextContains('td#wallet_balance1', '180');
     }
 
     public function testChangeIsConsistent(): void

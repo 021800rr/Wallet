@@ -1,13 +1,15 @@
 {% if wallet.isConsistent == 1 %}
-    <form method="post" id="wallet_is_consistent{{ loop.index }}"
-          action="{{ path('wallet_is_consistent', {'id': wallet.id, 'bool': 'false'}) }}">
+    <form method="post" id="search_is_consistent{{ loop.index }}"
+          action="{{ path('search_is_consistent', {'id': wallet.id, 'bool': 'false'}) }}">
         <input type="hidden" name="_token" value="{{ csrf_token('is_consistent' ~ wallet.id) }}">
+        <input type="hidden" name="query" value="{{ query|default('') }}">
         <input type="image" class="submitter" src="/images/ok.png" alt="ok" width="14" height="14"/>
     </form>
 {% else %}
-    <form method="post" id="wallet_is_consistent{{ loop.index }}"
-          action="{{ path('wallet_is_consistent', {'id': wallet.id, 'bool': 'true'}) }}">
+    <form method="post" id="search_is_consistent{{ loop.index }}"
+          action="{{ path('search_is_consistent', {'id': wallet.id, 'bool': 'true'}) }}">
         <input type="hidden" name="_token" value="{{ csrf_token('is_consistent' ~ wallet.id) }}">
         <input type="image" class="submitter" src="/images/question.png" alt="question" width="14" height="14"/>
+        <input type="hidden" name="query" value="{{ query|default('') }}">
     </form>
 {% endif %}

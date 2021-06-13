@@ -20,7 +20,12 @@ class BackupType extends AbstractType
             ->add('date', DateType::class, [
                 'widget' => 'single_text',
             ])
-            ->add('amount')
+            ->add('amount', null, [
+                'attr' => [
+                    'autofocus' => true,
+                    'required' => true
+                ]
+            ])
             ->add('contractor', EntityType::class, [
                 'class' => Contractor::class,
                 'query_builder' => function (EntityRepository $er) {

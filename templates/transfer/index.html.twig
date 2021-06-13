@@ -1,8 +1,6 @@
 {% extends 'base.html.twig' %}
-
 {% block body %}
-
-    <div class="row bg-light text-dark">
+    <div class="row">
         <div class="col" id="transfer_backup">
             {{ form_start(backup, {'attr': {'id': 'transfer_to_backup_form'}}) }}
             {{ form(backup) }}
@@ -14,5 +12,4 @@
             {{ form_end(wallet) }}
         </div>
     </div>
-
 {% endblock %}
