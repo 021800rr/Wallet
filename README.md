@@ -8,7 +8,7 @@ Backup ma dwa subkonta: **Backup** „właściwy” i **Wakacje**…
 Operacja **Przelew** powala na przesłanie części środków między kontami.
 Przelewając środki z Portfela do Backupu, dzielimy je automatycznie po połowie: 
 na Backup „właściwy” i Wakacje.
-Przelewając środki z Backupu „właściwego” do Portfela, zdejmujemy tylko środki z subkonta 
+Przelewając środki z Backupu do Portfela, zdejmujemy tylko środki z subkonta 
 Wakacje. Backup „właściwy” pozastaje nienaruszony.
 
 Używając funkcji **Opłaty Stałe** można zaplanować comiesięczne wydatki i przed 
