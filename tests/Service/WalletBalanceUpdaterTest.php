@@ -3,7 +3,7 @@
 namespace App\Tests\Service;
 
 use App\Entity\Wallet;
-use App\Service\WalletBalanceUpdater;
+use App\Service\BalanceUpdater\WalletBalanceUpdater;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class WalletBalanceUpdaterTest extends KernelTestCase

@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Contractor;
 use App\Form\ContractorType;
 use App\Repository\ContractorRepository;
-use App\Repository\WalletRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

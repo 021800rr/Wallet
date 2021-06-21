@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Backup;
 use App\Entity\Wallet;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 trait WalletBackup
@@ -14,6 +16,10 @@ trait WalletBackup
         return $this->findBy([], ['date' => 'DESC', 'id' => 'DESC']);
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
     public function getCurrentBalance(): float
     {
         return $this->createQueryBuilder('w')

@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\BalanceUpdater;
 
 use App\Entity\Backup;
-use App\Entity\Wallet;
 
-class BackupBalanceUpdater extends BalanceUpdater implements UpdaterInterface
+class BackupBalanceUpdater extends AbstractBalanceUpdater implements BalanceUpdaterInterface
 {
     protected function walk($predecessor, &$transaction, ?array $successors): void
     {

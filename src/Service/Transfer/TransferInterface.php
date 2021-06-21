@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Transfer;
 
 use App\Entity\Backup;
 use App\Entity\Wallet;
-use App\Repository\ContractorRepository;
 
 interface TransferInterface
 {

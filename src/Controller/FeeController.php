@@ -6,9 +6,10 @@ use App\Entity\Fee;
 use App\Form\FeeType;
 use App\Repository\FeeRepository;
 use App\Repository\WalletRepository;
-use App\Service\UpdaterInterface;
-use App\Service\FeeInterface;
+use App\Service\BalanceUpdater\BalanceUpdaterInterface;
+use App\Service\FixedFees\FixedFeesInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -93,12 +94,13 @@ class FeeController extends AbstractController
 
     /**
      * @Route("/insert", name="fee_insert_to_wallet", methods={"POST"})
+     * @throws Exception
      */
     public function insert(
         FeeRepository $feeRepository,
         Request $request,
-        FeeInterface $fixedFees,
-        UpdaterInterface $updater,
+        FixedFeesInterface $fixedFees,
+        BalanceUpdaterInterface $updater,
         WalletRepository $walletRepository
     ): Response {
         if ($this->isCsrfTokenValid('fixedfees', $request->request->get('_token'))) {

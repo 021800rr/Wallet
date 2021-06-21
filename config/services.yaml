@@ -17,14 +17,14 @@ services:
         arguments:
             - '%env(DATABASE_URL)%'
 
-    App\Service\Transfer: ~
-    App\Service\TransferInterface: '@App\Service\Transfer'
+    App\Service\BalanceUpdater\BackupBalanceUpdater: ~
+    App\Service\BalanceUpdater\BalanceUpdaterInterface $backupUpdater: '@App\Service\BalanceUpdater\BackupBalanceUpdater'
 
-    App\Service\BackupBalanceUpdater: ~
-    App\Service\UpdaterInterface $backupUpdater: '@App\Service\BackupBalanceUpdater'
+    App\Service\BalanceUpdater\WalletBalanceUpdater: ~
+    App\Service\BalanceUpdater\BalanceUpdaterInterface: '@App\Service\BalanceUpdater\WalletBalanceUpdater'
 
-    App\Service\WalletBalanceUpdater: ~
-    App\Service\UpdaterInterface: '@App\Service\WalletBalanceUpdater'
+    App\Service\RequestParser\Search: ~
+    App\Service\RequestParser\ControllerInterface $search: '@App\Service\RequestParser\Search'
 
-    App\Service\FixedFees: ~
-    App\Service\FeeInterface: '@App\Service\FixedFees'
+    App\Service\RequestParser\Wallet: ~
+    App\Service\RequestParser\ControllerInterface: '@App\Service\RequestParser\Wallet'

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\FixedFees;
 
 use App\Entity\Fee;
 use App\Entity\Wallet;
@@ -10,7 +10,7 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
-class FixedFees implements FeeInterface
+class FixedFees implements FixedFeesInterface
 {
     private FeeRepository $feeRepository;
     private EntityManagerInterface $entityManager;

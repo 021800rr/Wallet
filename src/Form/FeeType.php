@@ -26,7 +26,8 @@ class FeeType extends AbstractType
             ->add('contractor', EntityType::class, [
                 'class' => Contractor::class,
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('c')->orderBy('c.description', 'ASC');
+                    return $er->createQueryBuilder('c')
+                        ->orderBy('c.description', 'ASC');
                 },
                 'choice_label' => 'description',
             ])

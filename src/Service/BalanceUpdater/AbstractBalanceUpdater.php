@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\BalanceUpdater;
 
 use App\Entity\Backup;
 use App\Entity\Wallet;
@@ -9,7 +9,7 @@ use App\Repository\WalletRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
-abstract class BalanceUpdater implements UpdaterInterface
+abstract class AbstractBalanceUpdater implements BalanceUpdaterInterface
 {
     protected EntityManagerInterface $entityManager;
 

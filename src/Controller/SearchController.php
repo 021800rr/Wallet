@@ -4,11 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Wallet;
 use App\Repository\WalletRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\OffsetQuery\OffsetInterface;
+use App\Service\OffsetQuery\QueryInterface;
+use App\Service\RequestParser\RequestInterface;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,42 +27,35 @@ class SearchController extends AbstractController
     /**
      * @Route("/", name="search_index")
      */
-    public function index(Request $request, string $query = ''): Response
+    public function index(string $query = ''): Response
     {
-        $lastSearchedPhrase = [
-            'query' => $query
-        ];
-
-        $form = $this->createFormBuilder($lastSearchedPhrase)
-            ->add('query', SearchType::class, [
-                'constraints' => new NotBlank(),
-            ])
-            ->add('search', SubmitType::class)
-            ->getForm();
-
         return $this->render('search/index.html.twig', [
-            'form' => $form->createView(),
+            'form' => $this->formHelper($query)->createView()
         ]);
     }
 
     /**
      * @Route("/result", name="search_result"), methods={"POST"}
      */
-    public function search(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createFormBuilder()
-            ->add('query', SearchType::class)
-            ->add('search', SubmitType::class)
-            ->getForm();
-
+    public function search(
+        Request $request,
+        WalletRepository $walletRepository,
+        QueryInterface $queryHelper,
+        OffsetInterface $offsetHelper,
+        RequestInterface $parser
+    ): Response {
+        $form = $this->formHelper();
         $form->handleRequest($request);
-
-        $query = $request->query->get('query') ?? '';
         if ($form->isSubmitted() && $form->isValid()) {
-            $query = ($form->getData())['query'];
+            $data = $form->getData();
+            $query = $data['query'];
+
+            $queryHelper->set($query);
+            $offsetHelper->reset();
+            $offset = 0;
+        } else {
+            list($query, $offset) = $parser->strategy(SearchController::class, $request);
         }
-        $offset = max(0, $request->query->getInt('offset', 0));
-        $walletRepository = $entityManager->getRepository(Wallet::class);
         $paginator = $walletRepository->search($query, $offset);
 
         return $this->render('search/result.html.twig', [
@@ -70,26 +67,46 @@ class SearchController extends AbstractController
     }
 
     /**
+     * @Route("/edit/{id}", name="search_edit", methods={"GET", "POST"}))
+     * @throws Exception
+     */
+    public function edit(Request $request, Wallet $wallet, WalletController $controller): Response
+    {
+        return $controller->edit($request, $wallet, 'search_result');
+    }
+
+    /**
      * @Route("/isconsistent/{id}/{bool}", name="search_is_consistent", methods={"POST"})
      */
-    public function isConsistent(Request $request, Wallet $search, string $bool = ''): Response
-    {
-        $query = '';
-        if ($this->isCsrfTokenValid('is_consistent' . $search->getId(), $request->request->get('_token'))) {
-            $query = $request->request->get('query') ?? '';
-            switch ($bool) {
-                case "true":
-                    $search->setIsConsistent(true);
-                    break;
-                case "false":
-                    $search->setIsConsistent(false);
-                    break;
-                default:
-                    return $this->redirectToRoute('search_result', ['query' => $query]);
-            }
-            $this->getDoctrine()->getManager()->flush();
-        }
+    public function isConsistent(
+        Request $request,
+        Wallet $wallet,
+        WalletController $controller,
+        string $bool = ''
+    ): Response {
+        return $controller->isConsistent($request, $wallet, $bool, 'search_result');
+    }
 
-        return $this->redirectToRoute('search_result', ['query' => $query]);
+    /**
+     * @Route("/delete/{id}", name="search_delete", methods={"POST"})
+     * @throws Exception
+     */
+    public function delete(Request $request, Wallet $wallet, WalletController $controller): Response
+    {
+        return $controller->delete($request, $wallet, 'search_result');
+    }
+
+    private function formHelper(string $query = ''): FormInterface
+    {
+        return $this->createFormBuilder([
+            'query' => $query
+        ], [
+            'action' => $this->generateUrl('search_result'),
+        ])
+            ->add('query', SearchType::class, [
+                'constraints' => new NotBlank(),
+            ])
+            ->add('search', SubmitType::class)
+            ->getForm();
     }
 }

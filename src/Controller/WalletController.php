@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\Wallet;
 use App\Form\WalletType;
 use App\Repository\WalletRepository;
-use App\Service\UpdaterInterface;
+use App\Service\BalanceUpdater\BalanceUpdaterInterface;
+use App\Service\RequestParser\RequestInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,27 +21,30 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class WalletController extends AbstractController
 {
-    private UpdaterInterface $updater;
-    private WalletRepository $walletRepository;
+    private BalanceUpdaterInterface $updater;
+    private WalletRepository $repository;
     private EntityManagerInterface $entityManager;
 
     public function __construct(
-        UpdaterInterface $updater,
-        WalletRepository $walletRepository,
+        BalanceUpdaterInterface $updater,
+        WalletRepository $repository,
         EntityManagerInterface $entityManager
     ) {
         $this->updater = $updater;
-        $this->walletRepository = $walletRepository;
+        $this->repository = $repository;
         $this->entityManager = $entityManager;
     }
 
     /**
      * @Route("/", name="wallet_index")
      */
-    public function index(Request $request): Response
-    {
-        $offset = max(0, $request->query->getInt('offset', 0));
-        $paginator = $this->walletRepository->getPaginator($offset);
+    public function index(
+        Request $request,
+        RequestInterface $parser
+    ): Response {
+        $offset = $parser->strategy(WalletController::class, $request);
+
+        $paginator = $this->repository->getPaginator($offset);
 
         return $this->render('wallet/index.html.twig', [
             'paginator' => $paginator,
@@ -50,6 +55,7 @@ class WalletController extends AbstractController
 
     /**
      * @Route("/new", name="wallet_new", methods={"GET","POST"})
+     * @throws Exception
      */
     public function new(Request $request): Response
     {
@@ -59,7 +65,7 @@ class WalletController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($wallet);
             $this->entityManager->flush();
-            $this->updater->compute($this->walletRepository);
+            $this->updater->compute($this->repository);
 
             return $this->redirectToRoute('wallet_index');
         }
@@ -71,17 +77,19 @@ class WalletController extends AbstractController
 
     /**
      * @Route("/edit/{id}", name="wallet_edit", methods={"GET", "POST"}))
+     * @throws Exception
      */
-    public function edit(Request $request, Wallet $wallet): Response
+    public function edit(Request $request, Wallet $wallet, string $route = ''): Response
     {
+        $route = (!empty($route)) ? $route : 'wallet_index';
         $form = $this->createForm(WalletType::class, $wallet);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
-            $this->updater->compute($this->walletRepository);
+            $this->updater->compute($this->repository);
 
-            return $this->redirectToRoute('wallet_index');
+            return $this->redirectToRoute($route);
         }
 
         return $this->render('wallet/form.html.twig', [
@@ -92,8 +100,9 @@ class WalletController extends AbstractController
     /**
      * @Route("/isconsistent/{id}/{bool}", name="wallet_is_consistent", methods={"POST"})
      */
-    public function isConsistent(Request $request, Wallet $wallet, string $bool = ''): Response
+    public function isConsistent(Request $request, Wallet $wallet, string $bool = '', string $route = ''): Response
     {
+        $route = (!empty($route)) ? $route : 'wallet_index';
         if ($this->isCsrfTokenValid('is_consistent' . $wallet->getId(), $request->request->get('_token'))) {
             switch ($bool) {
                 case "true":
@@ -108,20 +117,22 @@ class WalletController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
         }
 
-        return $this->redirectToRoute('wallet_index');
+        return $this->redirectToRoute($route);
     }
 
     /**
      * @Route("/delete/{id}", name="wallet_delete", methods={"POST"})
+     * @throws Exception
      */
-    public function delete(Request $request, Wallet $wallet): Response
+    public function delete(Request $request, Wallet $wallet, string $route = ''): Response
     {
+        $route = (!empty($route)) ? $route : 'wallet_index';
         if ($this->isCsrfTokenValid('delete' . $wallet->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($wallet);
             $this->entityManager->flush();
-            $this->updater->compute($this->walletRepository);
+            $this->updater->compute($this->repository);
         }
 
-        return $this->redirectToRoute('wallet_index');
+        return $this->redirectToRoute($route);
     }
 }

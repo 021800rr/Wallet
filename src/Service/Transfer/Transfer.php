@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Transfer;
 
 use App\Entity\Backup;
 use App\Entity\Contractor;
@@ -8,48 +8,56 @@ use App\Entity\Wallet;
 use App\Repository\BackupRepository;
 use App\Repository\ContractorRepository;
 use App\Repository\WalletRepository;
+use App\Service\BalanceUpdater\BalanceUpdaterInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 class Transfer implements TransferInterface
 {
     private EntityManagerInterface $entityManager;
     private ContractorRepository $contractorRepository;
-    private UpdaterInterface $backupUpdater;
+    private BalanceUpdaterInterface $backupUpdater;
     private BackupRepository $backupRepository;
-    private UpdaterInterface $updater;
+    private BalanceUpdaterInterface $walletUpdater;
     private WalletRepository $walletRepository;
 
     public function __construct(
         EntityManagerInterface $entityManage,
         ContractorRepository $contractorRepository,
-        UpdaterInterface $backupUpdater,
+        BalanceUpdaterInterface $backupUpdater,
         BackupRepository $backupRepository,
-        UpdaterInterface $updater,
+        BalanceUpdaterInterface $walletUpdater,
         WalletRepository $walletRepository
     ) {
         $this->entityManager = $entityManage;
         $this->contractorRepository = $contractorRepository;
         $this->backupUpdater = $backupUpdater;
         $this->backupRepository = $backupRepository;
-        $this->updater = $updater;
+        $this->walletUpdater = $walletUpdater;
         $this->walletRepository = $walletRepository;
     }
 
+    /**
+     * @throws Exception
+     */
     public function moveToBackup(Backup $backup): void
     {
         $this->persistExport($backup);
         $this->persistImport(new Wallet(), $backup);
 
         $this->backupUpdater->compute($this->backupRepository);
-        $this->updater->compute($this->walletRepository);
+        $this->walletUpdater->compute($this->walletRepository);
     }
 
+    /**
+     * @throws Exception
+     */
     public function moveToWallet(Wallet $wallet): void
     {
         $this->persistExport($wallet);
         $this->persistImport(new Backup(), $wallet);
 
-        $this->updater->compute($this->walletRepository);
+        $this->walletUpdater->compute($this->walletRepository);
         $this->backupUpdater->compute($this->backupRepository);
     }
 

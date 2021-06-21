@@ -7,7 +7,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class WalletRepositoryTest extends KernelTestCase
 {
-    /** @var Doctrine\ORM\EntityManager */
     private $entityManager;
 
     public function testFindAll(): void

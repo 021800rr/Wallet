@@ -6,7 +6,7 @@ use App\Entity\Backup;
 use App\Entity\Wallet;
 use App\Form\TransferToBackupType;
 use App\Form\TransferToWalletType;
-use App\Service\TransferInterface;
+use App\Service\Transfer\TransferInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +22,7 @@ class TransferController extends AbstractController
     /**
      * @Route("/", name="transfer_index", methods={"GET"})
      */
-    public function index(Request $request): Response
+    public function index(): Response
     {
         $backup = new Backup();
         $backupForm = $this->createForm(TransferToBackupType::class, $backup, [

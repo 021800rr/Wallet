@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\BalanceUpdater;
 
 use App\Repository\BackupRepository;
 use App\Repository\WalletRepository;
 use Exception;
 
-interface UpdaterInterface
+interface BalanceUpdaterInterface
 {
     /**
      * @param WalletRepository|BackupRepository $transactionRepository

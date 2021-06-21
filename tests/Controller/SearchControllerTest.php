@@ -29,8 +29,6 @@ class SearchControllerTest extends WebTestCase
 
     public function testChangeIsConsistent(): void
     {
-
-
         $crawler = $this->client->request('GET', '/en/wallet');
         $form = $crawler->selectButton('form_search')->form();
         $form['form[query]']->setValue('all');
@@ -51,5 +49,42 @@ class SearchControllerTest extends WebTestCase
             ->filter('input.submitter')
             ->extract(['src']);
         $this->assertSame("/images/ok.png", $imgUri[0]);
+    }
+
+    public function testEdit(): void
+    {
+        $crawler = $this->client->request('GET', '/en/wallet');
+        $form = $crawler->selectButton('form_search')->form();
+        $form['form[query]']->setValue('all');
+        $crawler = $this->client->submit($form);
+        $this->assertSelectorTextContains('td#search_balance1', '170');
+
+        $crawler = $this->client->click(
+            $crawler->filter('a#wallet_edit1')->link()
+        );
+        $form = $crawler->selectButton('wallet_save')->form();
+        $values = $form->getValues();
+        $this->assertSame('-20', $values["wallet[amount]"]);
+        $form['wallet[amount]']->setValue(-40);
+        $this->client->submit($form);
+        $this->assertSelectorTextContains('td#search_balance1', '150');
+    }
+
+    public function testDelete(): void
+    {
+        $crawler = $this->client->request('GET', '/en/wallet');
+        $form = $crawler->selectButton('form_search')->form();
+        $form['form[query]']->setValue('all');
+        $crawler = $this->client->submit($form);
+
+        $this->assertSelectorTextContains('td#search_balance1', '170');
+        $this->assertSelectorTextContains('td#search_amount1', '-20');
+        $this->assertSelectorTextContains('td#search_balance2', '190');
+        $this->assertSelectorTextContains('td#search_amount2', '-10');
+
+        $this->client->submit(
+            $crawler->filter('form#wallet_delete2')->form()
+        );
+        $this->assertSelectorTextContains('td#search_balance1', '180');
     }
 }

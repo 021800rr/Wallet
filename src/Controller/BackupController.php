@@ -5,9 +5,9 @@ namespace App\Controller;
 use App\Entity\Backup;
 use App\Form\BackupType;
 use App\Repository\BackupRepository;
-use App\Repository\WalletRepository;
-use App\Service\UpdaterInterface;
+use App\Service\BalanceUpdater\BalanceUpdaterInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,17 +20,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class BackupController extends AbstractController
 {
-    private UpdaterInterface $updater;
-    private BackupRepository $backupRepository;
+    private BalanceUpdaterInterface $updater;
+    private BackupRepository $repository;
     private EntityManagerInterface $entityManager;
 
     public function __construct(
-        UpdaterInterface $backupUpdater,
-        BackupRepository $backupRepository,
+        BalanceUpdaterInterface $updater,
+        BackupRepository $repository,
         EntityManagerInterface $entityManager
     ) {
-        $this->updater = $backupUpdater;
-        $this->backupRepository = $backupRepository;
+        $this->updater = $updater;
+        $this->repository = $repository;
         $this->entityManager = $entityManager;
     }
 
@@ -40,7 +40,7 @@ class BackupController extends AbstractController
     public function index(Request $request): Response
     {
         $offset = max(0, $request->query->getInt('offset', 0));
-        $paginator = $this->backupRepository->getPaginator($offset);
+        $paginator = $this->repository->getPaginator($offset);
 
         return $this->render('backup/index.html.twig', [
             'paginator' => $paginator,
@@ -51,6 +51,7 @@ class BackupController extends AbstractController
 
     /**
      * @Route("/edit/{id}", name="backup_edit", methods={"GET","POST"})
+     * @throws Exception
      */
     public function edit(Request $request, Backup $backup): Response
     {
@@ -59,7 +60,7 @@ class BackupController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
-            $this->updater->compute($this->backupRepository);
+            $this->updater->compute($this->repository);
 
             return $this->redirectToRoute('backup_index');
         }
@@ -72,13 +73,14 @@ class BackupController extends AbstractController
 
     /**
      * @Route("/delete/{id}", name="backup_delete", methods={"POST"})
+     * @throws Exception
      */
     public function delete(Request $request, Backup $backup): Response
     {
         if ($this->isCsrfTokenValid('delete'.$backup->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($backup);
             $this->entityManager->flush();
-            $this->updater->compute($this->backupRepository);
+            $this->updater->compute($this->repository);
         }
 
         return $this->redirectToRoute('backup_index');

@@ -5,9 +5,9 @@ namespace App\Tests\Service;
 use App\Entity\Backup;
 use App\Entity\Contractor;
 use App\Entity\Wallet;
-use App\Service\BackupBalanceUpdater;
-use App\Service\Transfer;
-use App\Service\WalletBalanceUpdater;
+use App\Service\BalanceUpdater\BackupBalanceUpdater;
+use App\Service\BalanceUpdater\WalletBalanceUpdater;
+use App\Service\Transfer\Transfer;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class TransferTest extends KernelTestCase

@@ -3,7 +3,7 @@
 namespace App\Tests\Service;
 
 use App\Entity\Backup;
-use App\Service\BackupBalanceUpdater;
+use App\Service\BalanceUpdater\BackupBalanceUpdater;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class BackupBalanceUpdaterTest extends KernelTestCase

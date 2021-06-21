@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\BalanceUpdater;
 
-use Exception;
-
-class WalletBalanceUpdater extends BalanceUpdater implements UpdaterInterface
+class WalletBalanceUpdater extends AbstractBalanceUpdater implements BalanceUpdaterInterface
 {
     protected function walk($predecessor, &$transaction, ?array $successors): void
     {
