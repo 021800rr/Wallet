@@ -89,9 +89,13 @@
         <source>Save</source>
         <target>Zapisz</target>
       </trans-unit>
-      <trans-unit id="F.n.Y.J" resname="Search">
+      <trans-unit id="ScJmuqq" resname="Search">
         <source>Search</source>
         <target>Szukaj</target>
+      </trans-unit>
+      <trans-unit id="Um4Ah8w" resname="Description">
+        <source>Description</source>
+        <target>Opis</target>
       </trans-unit>
     </body>
   </file>

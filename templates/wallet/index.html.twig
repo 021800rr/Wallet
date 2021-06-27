@@ -7,6 +7,7 @@
                 <th class="text-end">{{ 'Amount'|trans }}</th>
                 <th class="text-end">{{ 'Balance'|trans }}</th>
                 <th class="ps-5">{{ 'Contractor'|trans }}</th>
+                <th>{{ 'Description'|trans }}</th>
                 <th class="text-center" colspan="3">{{ 'Actions'|trans }}</th>
             </tr>
         </thead>
@@ -17,6 +18,7 @@
                     <td class="text-end row_money_amount" id="wallet_amount{{ loop.index }}">{{ wallet.amount }}</td>
                     <td class="text-end row_money" id="wallet_balance{{ loop.index }}">{{ wallet.balance }}</td>
                     <td class="ps-5" id="wallet_contractor{{ loop.index }}">{{ wallet.contractor.description }}</td>
+                    <td id="wallet_description{{ loop.index }}">{{ wallet.description }}</td>
                     <td class="text-center">{{ include('wallet/_is_consistent_form.html.twig') }}</td>
                     <td class="text-center">{{ include('wallet/_edit_a.html.twig') }}</td>
                     <td class="text-center">{{ include('wallet/_delete_form.html.twig') }}</td>
