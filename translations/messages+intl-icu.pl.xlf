@@ -97,6 +97,18 @@
         <source>Description</source>
         <target>Opis</target>
       </trans-unit>
+      <trans-unit id="hmYuyzI" resname="Backup's payments by month">
+        <source>Backup's payments by month</source>
+        <target>Backup miesięcznie</target>
+      </trans-unit>
+      <trans-unit id="ypm38bF" resname="Expected">
+        <source>Expected</source>
+        <target>Spodziewana</target>
+      </trans-unit>
+      <trans-unit id="ybPDgkf" resname="Total">
+        <source>Total</source>
+        <target>Total</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

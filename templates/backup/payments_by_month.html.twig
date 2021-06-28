@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+    <div class="row">
+        <div class="col">
+
+            {{ include('backup/_backups.html.twig') }}
+
+        </div>
+        <div class="col">
+
+            {{ include('backup/_expected.html.twig') }}
+            {{ include('backup/_wallet.html.twig') }}
+            {{ include('backup/_backup.html.twig') }}
+            {{ include('backup/_total.html.twig') }}
+
+        </div>
+    </div>
+
+{% endblock %}

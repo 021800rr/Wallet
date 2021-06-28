@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=BackupRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Backup
 {
@@ -23,6 +24,11 @@ class Backup
      * @ORM\Column(type="datetime")
      */
     private DateTimeInterface $date;
+
+    /**
+     * @ORM\Column(type="string", length=7)
+     */
+    private string $yearMonth;
 
     /**
      * @ORM\Column(type="float")
@@ -80,6 +86,25 @@ class Backup
         $this->date = $date;
 
         return $this;
+    }
+
+    public function computeShortDate(): self
+    {
+        $this->yearMonth = $this->date->format('Y-m');
+
+        return $this;
+    }
+
+    public function setYearMonth(string $date): self
+    {
+        $this->yearMonth = $date;
+
+        return $this;
+    }
+
+    public function getYearMonth(): string
+    {
+        return $this->yearMonth;
     }
 
     public function getAmount(): float

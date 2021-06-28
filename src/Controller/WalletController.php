@@ -26,11 +26,11 @@ class WalletController extends AbstractController
     private EntityManagerInterface $entityManager;
 
     public function __construct(
-        BalanceUpdaterInterface $updater,
+        BalanceUpdaterInterface $walletUpdater,
         WalletRepository $repository,
         EntityManagerInterface $entityManager
     ) {
-        $this->updater = $updater;
+        $this->updater = $walletUpdater;
         $this->repository = $repository;
         $this->entityManager = $entityManager;
     }

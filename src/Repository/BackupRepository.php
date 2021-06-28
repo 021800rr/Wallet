@@ -15,8 +15,22 @@ class BackupRepository extends ServiceEntityRepository implements AppPaginatorIn
 {
     use WalletBackup;
 
+    private const PAYMENTS_BY_MONTH_YEARS = 36;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Backup::class);
+    }
+
+    public function paymentsByMonth()
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p.yearMonth', 'SUM(p.amount) as sa')
+            ->where('p.amount > 99')
+            ->groupBy('p.yearMonth')
+            ->orderBy('p.yearMonth', 'DESC')
+            ->setMaxResults(self::PAYMENTS_BY_MONTH_YEARS)
+            ->getQuery()
+            ->getResult();
     }
 }

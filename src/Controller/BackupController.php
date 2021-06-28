@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Backup;
 use App\Form\BackupType;
 use App\Repository\BackupRepository;
+use App\Repository\WalletRepository;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
+use App\Service\ExpectedBackup\Calculator;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -25,11 +27,11 @@ class BackupController extends AbstractController
     private EntityManagerInterface $entityManager;
 
     public function __construct(
-        BalanceUpdaterInterface $updater,
+        BalanceUpdaterInterface $backupUpdater,
         BackupRepository $repository,
         EntityManagerInterface $entityManager
     ) {
-        $this->updater = $updater;
+        $this->updater = $backupUpdater;
         $this->repository = $repository;
         $this->entityManager = $entityManager;
     }
@@ -84,5 +86,27 @@ class BackupController extends AbstractController
         }
 
         return $this->redirectToRoute('backup_index');
+    }
+
+    /**
+     * @Route("/paymentsByMonth", name="payments_by_month", methods={"GET"})
+     * @throws Exception
+     */
+    public function paymentsByMonth(Calculator $calculator, WalletRepository $walletRepository): Response
+    {
+        $paginator = $this->repository->paymentsByMonth();
+        $expected = $calculator->compute($paginator);
+        $walletBalance = $walletRepository->getCurrentBalance();
+        /** @var Backup[] $backupLastRecords */
+        $backupLastRecords = $this->repository->getLastRecord();
+        $backupLastRecord = $backupLastRecords[0];
+
+        return $this->render('backup/payments_by_month.html.twig', [
+            'paginator' => $paginator,
+            'expected' => $expected,
+            'walletBalance' => $walletBalance,
+            'backupLastRecord' => $backupLastRecord,
+            'total' => $walletBalance + $backupLastRecord->getBalance()
+        ]);
     }
 }

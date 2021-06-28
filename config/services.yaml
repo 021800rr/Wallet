@@ -28,3 +28,9 @@ services:
 
     App\Service\RequestParser\Wallet: ~
     App\Service\RequestParser\ControllerInterface: '@App\Service\RequestParser\Wallet'
+
+    App\EntityListener\BackupEntityListener:
+        tags:
+            - { name: 'doctrine.orm.entity_listener', event: 'prePersist', entity: 'App\Entity\Backup' }
+            - { name: 'doctrine.orm.entity_listener', event: 'preUpdate', entity: 'App\Entity\Backup' }
+

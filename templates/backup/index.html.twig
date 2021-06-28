@@ -8,7 +8,7 @@
                 <th class="text-end">{{ 'Balance'|trans }}</th>
                 <th class="text-end">{{ 'Retiring'|trans }}</th>
                 <th class="text-end">{{ 'Holiday'|trans }}</th>
-                <th class="ps-5">{{ 'Description'|trans }}</th>
+                <th class="ps-4">{{ 'Description'|trans }}</th>
                 <th class="text-center" colspan="2">{{ 'Actions'|trans }}</th>
             </tr>
         </thead>
@@ -16,11 +16,11 @@
             {% for backup in paginator %}
                 <tr>
                     <td>{{ backup.date|date("Y-m-d") }}</td>
-                    <td class="text-end row_money_amount">{{ backup.amount }}</td>
+                    <td class="text-end row_money_backup_amount">{{ backup.amount }}</td>
                     <td class="text-end row_money" id="backup_balance{{ loop.index }}">{{ backup.balance }}</td>
                     <td class="text-end row_money" id="backup_retiring{{ loop.index }}">{{ backup.retiring }}</td>
                     <td class="text-end row_money" id="backup_holiday{{ loop.index }}">{{ backup.holiday }}</td>
-                    <td class="ps-5">{{ backup.description }}</td>
+                    <td class="ps-4">{{ backup.description }}</td>
                     <td class="text-center">{{ include('backup/_edit_a.html.twig') }}</td>
                     <td class="text-center">{{ include('backup/_delete_form.html.twig') }}</td>
                 </tr>

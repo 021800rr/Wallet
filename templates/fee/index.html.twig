@@ -5,7 +5,7 @@
             <tr>
                 <th>{{ 'Date'|trans }}</th>
                 <th class="text-end">{{ 'Amount'|trans }}</th>
-                <th class="ps-5">{{ 'Contractor'|trans }}</th>
+                <th class="ps-4">{{ 'Contractor'|trans }}</th>
                 <th class="text-center" colspan="2">{{ 'Actions'|trans }}</th>
             </tr>
         </thead>
@@ -14,7 +14,7 @@
                 <tr>
                     <td>{{ fee.date| format_number({min_integer_digit:'2'}) }}</td>
                     <td class="text-end row_money_amount" id="fee_amount{{ loop.index }}">{{ fee.amount }}</td>
-                    <td class="ps-5" id="fee_contractor{{ loop.index }}">{{ fee.contractor.description }}</td>
+                    <td class="ps-4" id="fee_contractor{{ loop.index }}">{{ fee.contractor.description }}</td>
                     <td class="text-center">{{ include('fee/_edit_a.html.twig') }}</td>
                     <td class="text-center">{{ include('fee/_delete_form.html.twig') }}</td>
                 </tr>

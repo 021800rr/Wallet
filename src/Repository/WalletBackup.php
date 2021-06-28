@@ -24,10 +24,24 @@ trait WalletBackup
     {
         return $this->createQueryBuilder('w')
             ->select('w.balance')
-            ->orderBy('w.id', 'DESC')
+            ->orderBy('w.date', 'DESC')
+            ->addOrderBy('w.id', 'DESC')
             ->getQuery()
             ->setMaxResults(1)
             ->getSingleScalarResult();
+    }
+
+    /**
+     * @return int|mixed|string
+     */
+    public function getLastRecord()
+    {
+        return $this->createQueryBuilder('w')
+            ->orderBy('w.date', 'DESC')
+            ->addOrderBy('w.id', 'DESC')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getResult();
     }
 
     public function getPaginator(int $offset): Paginator

@@ -51,5 +51,5 @@ abstract class AbstractBalanceUpdater implements BalanceUpdaterInterface
      * @param Wallet|Backup $transaction
      * @param ?Backup[]|?Wallet[] $successors
      */
-    abstract protected function walk($predecessor, &$transaction, ?array $successors): void;
+    abstract protected function walk($predecessor, $transaction, ?array $successors): void;
 }
