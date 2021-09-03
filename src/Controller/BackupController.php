@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Backup;
 use App\Form\BackupType;
+use App\Repository\AppPaginatorInterface;
 use App\Repository\BackupRepository;
 use App\Repository\WalletRepository;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
@@ -46,8 +47,8 @@ class BackupController extends AbstractController
 
         return $this->render('backup/index.html.twig', [
             'paginator' => $paginator,
-            'previous' => $offset - BackupRepository::PAGINATOR_PER_PAGE,
-            'next' => min(count($paginator), $offset + BackupRepository::PAGINATOR_PER_PAGE),
+            'previous' => $offset - AppPaginatorInterface::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + AppPaginatorInterface::PAGINATOR_PER_PAGE),
         ]);
     }
 

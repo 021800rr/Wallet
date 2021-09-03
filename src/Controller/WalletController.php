@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Wallet;
 use App\Form\WalletType;
+use App\Repository\AppPaginatorInterface;
 use App\Repository\WalletRepository;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
 use App\Service\RequestParser\RequestInterface;
@@ -48,8 +49,8 @@ class WalletController extends AbstractController
 
         return $this->render('wallet/index.html.twig', [
             'paginator' => $paginator,
-            'previous' => $offset - WalletRepository::PAGINATOR_PER_PAGE,
-            'next' => min(count($paginator), $offset + WalletRepository::PAGINATOR_PER_PAGE),
+            'previous' => $offset - AppPaginatorInterface::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + AppPaginatorInterface::PAGINATOR_PER_PAGE),
         ]);
     }
 
