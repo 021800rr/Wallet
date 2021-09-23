@@ -7,6 +7,7 @@ use App\Entity\Fee;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,7 +23,7 @@ class FeeType extends AbstractType
                     'required' => true
                 ]
             ])
-            ->add('amount')
+            ->add('amount', MoneyType::class, ['currency' => 'PLN'])
             ->add('contractor', EntityType::class, [
                 'class' => Contractor::class,
                 'query_builder' => function (EntityRepository $er) {

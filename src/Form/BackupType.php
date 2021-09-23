@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,7 +21,8 @@ class BackupType extends AbstractType
             ->add('date', DateType::class, [
                 'widget' => 'single_text',
             ])
-            ->add('amount', null, [
+            ->add('amount', MoneyType::class, [
+                'currency' => 'PLN',
                 'attr' => [
                     'autofocus' => true,
                     'required' => true
@@ -34,9 +36,18 @@ class BackupType extends AbstractType
                 'choice_label' => 'description',
                 'disabled' => true,
             ])
-            ->add('balance', null, ['disabled' => true])
-            ->add('retiring', null, ['disabled' => true])
-            ->add('holiday', null, ['disabled' => true])
+            ->add('balance', MoneyType::class, [
+                'currency' => 'PLN',
+                'disabled' => true,
+            ])
+            ->add('retiring', MoneyType::class, [
+                'currency' => 'PLN',
+                'disabled' => true,
+            ])
+            ->add('holiday', MoneyType::class, [
+                'currency' => 'PLN',
+                'disabled' => true,
+            ])
             ->add('description')
             ->add('save', SubmitType::class, [
                 'attr' => [

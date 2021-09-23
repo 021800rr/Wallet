@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Wallet;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -14,7 +15,8 @@ class TransferToWalletType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('amount', null, [
+            ->add('amount', MoneyType::class, [
+                'currency' => 'PLN',
                 'label' => 'Wallet',
                 'attr' => [
                     'required' => true
