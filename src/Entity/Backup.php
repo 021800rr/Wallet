@@ -13,6 +13,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Backup
 {
+    // boolean interest as const:
+    public const INAPPLICABLE = null;
+    public const NOT_PROCESSED = false;
+    public const DONE = true;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -62,13 +67,14 @@ class Backup
     private ?string $description;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean", nullable=true, name="is_consistent")
      */
-    private ?bool $isConsistent;
+    private ?bool $interest;
 
     public function __construct()
     {
         $this->date = new DateTime();
+        $this->interest = null;
     }
 
     public function getId(): int
@@ -179,14 +185,14 @@ class Backup
         return $this;
     }
 
-    public function getIsConsistent(): ?bool
+    public function getInterest(): ?bool
     {
-        return $this->isConsistent;
+        return $this->interest;
     }
 
-    public function setIsConsistent(?bool $isConsistent): self
+    public function setInterest(?bool $interest): self
     {
-        $this->isConsistent = $isConsistent;
+        $this->interest = $interest;
 
         return $this;
     }

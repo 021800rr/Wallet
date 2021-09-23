@@ -67,7 +67,7 @@ class Transfer implements TransferInterface
      */
     private function persistImport($fromAccount, $toAccount): void
     {
-        $contractor = $this->getContractor();
+        $contractor = $this->contractorRepository->getInternalTransferOwner();
         $fromAccount->setContractor($contractor);
         $fromAccount->setAmount(-1 * $toAccount->getAmount());
         $this->entityManager->persist($fromAccount);
@@ -79,16 +79,9 @@ class Transfer implements TransferInterface
      */
     private function persistExport($toAccount): void
     {
-        $contractor = $this->getContractor();
+        $contractor = $this->contractorRepository->getInternalTransferOwner();
         $toAccount->setContractor($contractor);
         $this->entityManager->persist($toAccount);
         $this->entityManager->flush();
-    }
-
-    private function getContractor(): Contractor
-    {
-        return $this->contractorRepository->findOneBy([
-            'description' => ContractorRepository::INTERNAL_TRANSFER
-        ]);
     }
 }

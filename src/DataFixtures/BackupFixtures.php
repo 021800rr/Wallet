@@ -21,7 +21,6 @@ class BackupFixtures extends Fixture implements DependentFixtureInterface
         $backup->setBalance(100.00);
         $backup->setContractor($this->getReference(ContractorFixtures::INTERNAL));
         $backup->setDescription('a fresh one');
-        $backup->setIsConsistent(true);
         $manager->persist($backup);
 
         $backup = new Backup();

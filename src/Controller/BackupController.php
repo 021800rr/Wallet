@@ -4,11 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Backup;
 use App\Form\BackupType;
+use App\Form\InterestType;
 use App\Repository\AppPaginatorInterface;
 use App\Repository\BackupRepository;
 use App\Repository\WalletRepository;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
 use App\Service\ExpectedBackup\Calculator;
+use App\Service\Interest;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -108,6 +110,28 @@ class BackupController extends AbstractController
             'walletBalance' => $walletBalance,
             'backupLastRecord' => $backupLastRecord,
             'total' => $walletBalance + $backupLastRecord->getBalance()
+        ]);
+    }
+
+    /**
+     * @Route("interest", name="interest", methods={"GET", "POST"})
+     * @throws Exception
+     */
+    public function newInterest(Request $request, Interest $interest)
+    {
+        $form = $this->createForm(InterestType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager
+                ->persist($interest->form2Backup($form));
+            $this->entityManager->flush();
+            $this->updater->compute($this->repository);
+
+            return $this->redirectToRoute('backup_index');
+        }
+
+        return $this->render('backup/interest.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 }

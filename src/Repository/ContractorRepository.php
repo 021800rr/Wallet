@@ -36,4 +36,11 @@ class ContractorRepository extends ServiceEntityRepository implements AppPaginat
 
         return new Paginator($query);
     }
+
+    public function getInternalTransferOwner(): Contractor
+    {
+        return $this->findOneBy([
+            'description' => ContractorRepository::INTERNAL_TRANSFER
+        ]);
+    }
 }
