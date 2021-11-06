@@ -20,30 +20,37 @@ abstract class AbstractBalanceUpdater implements BalanceUpdaterInterface
 
     /**
      * @param WalletRepository|BackupRepository $transactionRepository
+     * @param int $id
      * @throws Exception
      */
-    public function compute($transactionRepository): void
+    public function compute($transactionRepository, int $id): void
     {
-        list($predecessor, $transaction, $successors) = $this->setUp($transactionRepository);
+        list($predecessor, $transaction, $successors) = $this->setUp($transactionRepository, $id);
         $this->walk($predecessor, $transaction, $successors);
     }
 
     /**
      * @param WalletRepository|BackupRepository $transactionRepository
-     * @return array [Wallet|Backup, Wallet|Backup, ?Wallet[]|?Backup[]]
+     * @param int $id
+     * @return array [?Wallet|?Backup, ?Wallet|?Backup, ?Wallet[]|?Backup[]]
      * @throws Exception
      */
-    protected function setUp($transactionRepository): array
+    protected function setUp($transactionRepository, int $id): array
     {
         $transactions = array_reverse($transactionRepository->findAll());
         if (2 > count($transactions)) {
             throw new Exception("I cravenly refuse to perform this operation");
         }
-        $predecessor = $transactions[0];
-        $transaction = $transactions[1];
-        $successors = array_slice($transactions, 2);
+        foreach ($transactions as $key => $transaction) {
+            if ($id === $transaction->getId()) {
+                $predecessor = $transactions[$key - 1];
+                $successors = array_slice($transactions, $key + 1);
 
-        return [$predecessor, $transaction, $successors];
+                return [$predecessor, $transaction, $successors];
+            }
+        }
+
+        return [null, null, []];
     }
 
     /**

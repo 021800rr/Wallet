@@ -33,7 +33,7 @@ class WalletControllerTest extends WebTestCase
         );
         $form = $crawler->selectButton('wallet_save')->form();
         $values = $form->getValues();
-        $this->assertSame('-20', $values["wallet[amount]"]);
+        $this->assertSame('-20.00', $values["wallet[amount]"]);
         $form['wallet[amount]']->setValue(-40);
         $this->client->submit($form);
         $this->assertSelectorTextContains('td#wallet_balance1', '150');

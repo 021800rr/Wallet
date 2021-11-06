@@ -42,11 +42,11 @@ class Transfer implements TransferInterface
      */
     public function moveToBackup(Backup $backup): void
     {
-        $this->persistExport($backup);
-        $this->persistImport(new Wallet(), $backup);
+        $backup = $this->persistExport($backup);
+        $wallet = $this->persistImport(new Wallet(), $backup);
 
-        $this->backupUpdater->compute($this->backupRepository);
-        $this->walletUpdater->compute($this->walletRepository);
+        $this->backupUpdater->compute($this->backupRepository, $backup->getId());
+        $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
     }
 
     /**
@@ -54,34 +54,40 @@ class Transfer implements TransferInterface
      */
     public function moveToWallet(Wallet $wallet): void
     {
-        $this->persistExport($wallet);
-        $this->persistImport(new Backup(), $wallet);
+        $wallet = $this->persistExport($wallet);
+        $backup = $this->persistImport(new Backup(), $wallet);
 
-        $this->walletUpdater->compute($this->walletRepository);
-        $this->backupUpdater->compute($this->backupRepository);
+        $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
+        $this->backupUpdater->compute($this->backupRepository, $backup->getId());
     }
 
     /**
      * @param Wallet|Backup $fromAccount
      * @param Backup|Wallet $toAccount
+     * @return Backup|Wallet
      */
-    private function persistImport($fromAccount, $toAccount): void
+    private function persistImport($fromAccount, $toAccount)
     {
         $contractor = $this->contractorRepository->getInternalTransferOwner();
         $fromAccount->setContractor($contractor);
         $fromAccount->setAmount(-1 * $toAccount->getAmount());
         $this->entityManager->persist($fromAccount);
         $this->entityManager->flush();
+
+        return $fromAccount;
     }
 
     /**
      * @param Backup|Wallet $toAccount
+     * @return Backup|Wallet $toAccount
      */
-    private function persistExport($toAccount): void
+    private function persistExport($toAccount)
     {
         $contractor = $this->contractorRepository->getInternalTransferOwner();
         $toAccount->setContractor($contractor);
         $this->entityManager->persist($toAccount);
         $this->entityManager->flush();
+
+        return $toAccount;
     }
 }

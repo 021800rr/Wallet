@@ -27,7 +27,6 @@ class Wallet
     private DateTimeInterface $date;
 
     /**
-     * @TODO Assert ne 0
      * @ORM\Column(type="float")
      */
     private float $amount;

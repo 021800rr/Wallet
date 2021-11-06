@@ -66,7 +66,7 @@ class WalletController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($wallet);
             $this->entityManager->flush();
-            $this->updater->compute($this->repository);
+            $this->updater->compute($this->repository, $wallet->getId());
 
             return $this->redirectToRoute('wallet_index');
         }
@@ -87,8 +87,9 @@ class WalletController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($wallet);
             $this->entityManager->flush();
-            $this->updater->compute($this->repository);
+            $this->updater->compute($this->repository, $wallet->getId());
 
             return $this->redirectToRoute($route);
         }
@@ -115,7 +116,8 @@ class WalletController extends AbstractController
                 default:
                     return $this->redirectToRoute('wallet_index');
             }
-            $this->getDoctrine()->getManager()->flush();
+            $this->entityManager->persist($wallet);
+            $this->entityManager->flush();
         }
 
         return $this->redirectToRoute($route);
@@ -129,9 +131,10 @@ class WalletController extends AbstractController
     {
         $route = (!empty($route)) ? $route : 'wallet_index';
         if ($this->isCsrfTokenValid('delete' . $wallet->getId(), $request->request->get('_token'))) {
+            $wallet->setAmount(0);
+            $this->updater->compute($this->repository, $wallet->getId());
             $this->entityManager->remove($wallet);
             $this->entityManager->flush();
-            $this->updater->compute($this->repository);
         }
 
         return $this->redirectToRoute($route);

@@ -4,12 +4,16 @@ namespace App\Tests\Service;
 
 use App\Entity\Wallet;
 use App\Service\BalanceUpdater\WalletBalanceUpdater;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class WalletBalanceUpdaterTest extends KernelTestCase
 {
     private $entityManager;
 
+    /**
+     * @throws Exception
+     */
     public function testCompute(): void
     {
         $walletRepository = $this->entityManager->getRepository(Wallet::class);
@@ -24,7 +28,7 @@ class WalletBalanceUpdaterTest extends KernelTestCase
         $transaction->setAmount($transaction->getAmount() - 10);
         $this->assertSame(-20.00, $transaction->getAmount());
 
-        $walletBalanceUpdater->compute($walletRepository);
+        $walletBalanceUpdater->compute($walletRepository, $transaction->getId());
 
         $transactions = $walletRepository->findAll();
         $newBalance = ($transactions[0])->getBalance();

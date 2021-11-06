@@ -10,7 +10,8 @@ interface BalanceUpdaterInterface
 {
     /**
      * @param WalletRepository|BackupRepository $transactionRepository
+     * @param int $id
      * @throws Exception
      */
-    public function compute($transactionRepository): void;
+    public function compute($transactionRepository, int $id): void;
 }

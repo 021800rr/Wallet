@@ -99,13 +99,10 @@ class FeeController extends AbstractController
     public function insert(
         FeeRepository $feeRepository,
         Request $request,
-        FixedFeesInterface $fixedFees,
-        BalanceUpdaterInterface $walletUpdater,
-        WalletRepository $walletRepository
+        FixedFeesInterface $fixedFees
     ): Response {
         if ($this->isCsrfTokenValid('fixedfees', $request->request->get('_token'))) {
             $fixedFees->insert();
-            $walletUpdater->compute($walletRepository);
 
             return $this->redirectToRoute('wallet_index');
         }

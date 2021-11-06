@@ -64,8 +64,9 @@ class BackupController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($backup);
             $this->entityManager->flush();
-            $this->updater->compute($this->repository);
+            $this->updater->compute($this->repository, $backup->getId());
 
             return $this->redirectToRoute('backup_index');
         }
@@ -83,9 +84,10 @@ class BackupController extends AbstractController
     public function delete(Request $request, Backup $backup): Response
     {
         if ($this->isCsrfTokenValid('delete'.$backup->getId(), $request->request->get('_token'))) {
+            $backup->setAmount(0);
+            $this->updater->compute($this->repository, $backup->getId());
             $this->entityManager->remove($backup);
             $this->entityManager->flush();
-            $this->updater->compute($this->repository);
         }
 
         return $this->redirectToRoute('backup_index');
@@ -122,10 +124,10 @@ class BackupController extends AbstractController
         $form = $this->createForm(InterestType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager
-                ->persist($interest->form2Backup($form));
+            $backup = $interest->form2Backup($form);
+            $this->entityManager->persist($backup);
             $this->entityManager->flush();
-            $this->updater->compute($this->repository);
+            $this->updater->compute($this->repository, $backup->getId());
 
             return $this->redirectToRoute('backup_index');
         }
