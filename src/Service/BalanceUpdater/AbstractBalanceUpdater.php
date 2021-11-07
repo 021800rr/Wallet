@@ -37,20 +37,25 @@ abstract class AbstractBalanceUpdater implements BalanceUpdaterInterface
      */
     protected function setUp($transactionRepository, int $id): array
     {
-        $transactions = array_reverse($transactionRepository->findAll());
-        if (2 > count($transactions)) {
+        $transactions = $transactionRepository->findAll();
+        if (2 >= count($transactions)) {
             throw new Exception("I cravenly refuse to perform this operation");
         }
+        $successors = [];
         foreach ($transactions as $key => $transaction) {
             if ($id === $transaction->getId()) {
-                $predecessor = $transactions[$key - 1];
-                $successors = array_slice($transactions, $key + 1);
+                try {
+                    $predecessor = $transactions[$key + 1];
+                } catch (Exception $exception) {
+                    throw new Exception("must not modify the first record");
+                }
 
                 return [$predecessor, $transaction, $successors];
             }
+            array_unshift($successors, $transaction);
         }
 
-        return [null, null, []];
+        throw new Exception("no transactions or what? :p");
     }
 
     /**
