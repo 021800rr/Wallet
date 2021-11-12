@@ -3,14 +3,14 @@
 namespace App\Repository;
 
 use App\Entity\Backup;
-use App\Entity\Wallet;
+use App\Entity\AbstractWallet;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-trait WalletBackup
+trait WalletBackupTrait
 {
-    /** @var Wallet[]|Backup[] array */
+    /** @var AbstractWallet[]|Backup[] array */
     public function findAll(): array
     {
         return $this->findBy([], ['date' => 'DESC', 'id' => 'DESC']);
@@ -49,7 +49,7 @@ trait WalletBackup
         $query = $this->createQueryBuilder('w')
             ->addOrderBy('w.date', 'DESC')
             ->addOrderBy('w.id', 'DESC')
-            ->setMaxResults(WalletRepository::PAGINATOR_PER_PAGE)
+            ->setMaxResults(AppPaginatorInterface::PAGINATOR_PER_PAGE)
             ->setFirstResult($offset)
             ->getQuery();
 

@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <table class="table table-hover table-sm">
+        <thead>
+            <tr>
+                <th>{{ 'Date'|trans }}</th>
+                <th class="text-end">{{ 'Amount'|trans }}</th>
+                <th class="text-end">{{ 'CHF'|trans }}</th>
+                <th class="ps-4">{{ 'Contractor'|trans }}</th>
+                <th>{{ 'Description'|trans }}</th>
+                <th class="text-center" colspan="3">{{ 'Actions'|trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for chf in paginator %}
+                <tr>
+                    <td>{{ chf.date|date("Y-m-d") }}</td>
+                    <td class="text-end row_chf_amount" id="chf_amount{{ loop.index }}">{{ chf.amount }}</td>
+                    <td class="text-end row_chf" id="chf_balance{{ loop.index }}">{{ chf.balance }}</td>
+                    <td class="ps-4" id="chf_contractor{{ loop.index }}">{{ chf.contractor.description }}</td>
+                    <td id="chf_description{{ loop.index }}">{{ chf.description }}</td>
+                    <td class="text-center">{{ include('chf/_is_consistent_form.html.twig') }}</td>
+                    <td class="text-center">{{ include('chf/_edit_a.html.twig') }}</td>
+                    <td class="text-center">{{ include('chf/_delete_form.html.twig') }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% set PATH = 'chf_index' %}
+    {{ include('paginator.html.twig') }}
+{% endblock %}

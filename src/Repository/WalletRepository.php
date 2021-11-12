@@ -14,7 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class WalletRepository extends ServiceEntityRepository implements AppPaginatorInterface
 {
-    use WalletBackup;
+    use WalletBackupTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -33,7 +33,7 @@ class WalletRepository extends ServiceEntityRepository implements AppPaginatorIn
             ->setParameter('contractor', '%' . $data . '%')
             ->addOrderBy('w.date', 'DESC')
             ->addOrderBy('w.id', 'DESC')
-            ->setMaxResults(WalletRepository::PAGINATOR_PER_PAGE)
+            ->setMaxResults(AppPaginatorInterface::PAGINATOR_PER_PAGE)
             ->setFirstResult($offset)
             ->getQuery();
 

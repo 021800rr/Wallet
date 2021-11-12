@@ -19,3 +19,9 @@ let cells = Array.prototype.slice.call(document.querySelectorAll(".row_money, .r
 cells.forEach(function(cell){
     cell.textContent = (+cell.textContent).toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' });
 });
+
+let cells_chf = Array.prototype.slice.call(document.querySelectorAll(".row_chf, .row_chf_amount"));
+
+cells_chf.forEach(function(cell){
+    cell.textContent = (+cell.textContent).toLocaleString('pl-PL', { style: 'currency' });
+});

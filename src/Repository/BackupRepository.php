@@ -13,7 +13,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class BackupRepository extends ServiceEntityRepository implements AppPaginatorInterface
 {
-    use WalletBackup;
+    use WalletBackupTrait;
 
     private const PAYMENTS_BY_MONTH_YEARS = 36;
 

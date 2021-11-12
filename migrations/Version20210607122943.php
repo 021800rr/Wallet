@@ -33,7 +33,7 @@ final class Version20210607122943 extends AbstractMigration
                                             description VARCHAR(255) DEFAULT NULL, 
                                             is_consistent BOOLEAN DEFAULT NULL, 
                                             PRIMARY KEY(id))');
-        $this->addSql('CREATE INDEX IDX_3FF0D1ACB0265DC7 ON backup (contractor_id)');
+        $this->addSql('CREATE INDEX IDX_backup_contractor_id ON backup (contractor_id)');
 
         $this->addSql('CREATE TABLE contractor (
                                             id INT NOT NULL, 
@@ -46,7 +46,7 @@ final class Version20210607122943 extends AbstractMigration
                                             date INT NOT NULL, 
                                             amount DOUBLE PRECISION NOT NULL, 
                                             PRIMARY KEY(id))');
-        $this->addSql('CREATE INDEX IDX_964964B5B0265DC7 ON fee (contractor_id)');
+        $this->addSql('CREATE INDEX IDX_fee_contractor_id ON fee (contractor_id)');
 
         $this->addSql('CREATE TABLE wallet (
                                             id INT NOT NULL, 
@@ -57,15 +57,15 @@ final class Version20210607122943 extends AbstractMigration
                                             description VARCHAR(255) DEFAULT NULL, 
                                             is_consistent BOOLEAN DEFAULT NULL, 
                                             PRIMARY KEY(id))');
-        $this->addSql('CREATE INDEX IDX_7C68921FB0265DC7 ON wallet (contractor_id)');
+        $this->addSql('CREATE INDEX IDX_wallet_contractor_id ON wallet (contractor_id)');
 
-        $this->addSql('ALTER TABLE backup ADD CONSTRAINT FK_3FF0D1ACB0265DC7 
+        $this->addSql('ALTER TABLE backup ADD CONSTRAINT FK_backup_contractor_id 
                                FOREIGN KEY (contractor_id) REFERENCES contractor (id)
                                NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('ALTER TABLE fee ADD CONSTRAINT FK_964964B5B0265DC7 
+        $this->addSql('ALTER TABLE fee ADD CONSTRAINT FK_fee_contractor_id 
                                FOREIGN KEY (contractor_id) REFERENCES contractor (id)
                                NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('ALTER TABLE wallet ADD CONSTRAINT FK_7C68921FB0265DC7 
+        $this->addSql('ALTER TABLE wallet ADD CONSTRAINT FK_wallet_contractor_id
                                FOREIGN KEY (contractor_id) REFERENCES contractor (id)
                                NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
@@ -73,9 +73,9 @@ final class Version20210607122943 extends AbstractMigration
     public function down(Schema $schema): void
     {
         $this->addSql('CREATE SCHEMA public');
-        $this->addSql('ALTER TABLE backup DROP CONSTRAINT FK_3FF0D1ACB0265DC7');
-        $this->addSql('ALTER TABLE fee DROP CONSTRAINT FK_964964B5B0265DC7');
-        $this->addSql('ALTER TABLE wallet DROP CONSTRAINT FK_7C68921FB0265DC7');
+        $this->addSql('ALTER TABLE backup DROP CONSTRAINT FK_backup_contractor_id');
+        $this->addSql('ALTER TABLE fee DROP CONSTRAINT FK_fee_contractor_id');
+        $this->addSql('ALTER TABLE wallet DROP CONSTRAINT FK_wallet_contractor_id');
         $this->addSql('DROP SEQUENCE backup_id_seq CASCADE');
         $this->addSql('DROP SEQUENCE contractor_id_seq CASCADE');
         $this->addSql('DROP SEQUENCE fee_id_seq CASCADE');

@@ -2,9 +2,11 @@
 
 namespace App\Service\BalanceUpdater;
 
+use App\Entity\AbstractWallet;
 use App\Entity\Backup;
-use App\Entity\Wallet;
 use App\Repository\BackupRepository;
+use App\Repository\ChfRepository;
+use App\Repository\EurRepository;
 use App\Repository\WalletRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -19,7 +21,7 @@ abstract class AbstractBalanceUpdater implements BalanceUpdaterInterface
     }
 
     /**
-     * @param WalletRepository|BackupRepository $transactionRepository
+     * @param WalletRepository|ChfRepository|EurRepository|BackupRepository $transactionRepository
      * @param int $id
      * @throws Exception
      */
@@ -30,9 +32,9 @@ abstract class AbstractBalanceUpdater implements BalanceUpdaterInterface
     }
 
     /**
-     * @param WalletRepository|BackupRepository $transactionRepository
+     * @param WalletRepository|ChfRepository|EurRepository|BackupRepository $transactionRepository
      * @param int $id
-     * @return array [?Wallet|?Backup, ?Wallet|?Backup, ?Wallet[]|?Backup[]]
+     * @return array [?AbstractWallet|?Backup, ?AbstractWallet|?Backup, ?AbstractWallet[]|?Backup[]]
      * @throws Exception
      */
     protected function setUp($transactionRepository, int $id): array
@@ -59,9 +61,9 @@ abstract class AbstractBalanceUpdater implements BalanceUpdaterInterface
     }
 
     /**
-     * @param Wallet|Backup $predecessor
-     * @param Wallet|Backup $transaction
-     * @param ?Backup[]|?Wallet[] $successors
+     * @param AbstractWallet|Backup $predecessor
+     * @param AbstractWallet|Backup $transaction
+     * @param ?Backup[]|?AbstractWallet[] $successors
      */
     abstract protected function walk($predecessor, $transaction, ?array $successors): void;
 }

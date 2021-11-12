@@ -1,0 +1,13 @@
+{% if eur.isConsistent == 1 %}
+    <form method="post" id="eur_is_consistent{{ loop.index }}"
+          action="{{ path('eur_is_consistent', {'id': eur.id, 'bool': 'false'}) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('is_consistent' ~ eur.id) }}">
+        <input type="image" class="submitter" src="{{ asset('images/ok.png') }}" alt="ok" width="14" height="14"/>
+    </form>
+{% else %}
+    <form method="post" id="eur_is_consistent{{ loop.index }}"
+          action="{{ path('eur_is_consistent', {'id': eur.id, 'bool': 'true'}) }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('is_consistent' ~ eur.id) }}">
+        <input type="image" class="submitter" src="{{ asset('images/question.png') }}" alt="question" width="14" height="14"/>
+    </form>
+{% endif %}
