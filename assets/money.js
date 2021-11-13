@@ -23,5 +23,11 @@ cells.forEach(function(cell){
 let cells_chf = Array.prototype.slice.call(document.querySelectorAll(".row_chf, .row_chf_amount"));
 
 cells_chf.forEach(function(cell){
-    cell.textContent = (+cell.textContent).toLocaleString('pl-PL', { style: 'currency' });
+    cell.textContent = (+cell.textContent).toLocaleString('fr-CH', { style: 'currency', currency: 'CHF' });
+});
+
+let cells_eur = Array.prototype.slice.call(document.querySelectorAll(".row_eur, .row_eur_amount"));
+
+cells_eur.forEach(function(cell){
+    cell.textContent = (+cell.textContent).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
 });
