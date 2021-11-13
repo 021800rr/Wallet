@@ -17,13 +17,13 @@ cells_backup_amount.forEach(function(cell_backup_amount){
 let cells = Array.prototype.slice.call(document.querySelectorAll(".row_money, .row_money_amount, .row_money_backup_amount"));
 
 cells.forEach(function(cell){
-    cell.textContent = (+cell.textContent).toLocaleString('pl-PL', { style: 'currency', currency: 'PLN' });
+    cell.textContent = (+cell.textContent).toLocaleString('de-DE', { style: 'currency', currency: 'PLN' });
 });
 
 let cells_chf = Array.prototype.slice.call(document.querySelectorAll(".row_chf, .row_chf_amount"));
 
 cells_chf.forEach(function(cell){
-    cell.textContent = (+cell.textContent).toLocaleString('fr-CH', { style: 'currency', currency: 'CHF' });
+    cell.textContent = (+cell.textContent).toLocaleString('de-DE', { style: 'currency', currency: 'CHF' });
 });
 
 let cells_eur = Array.prototype.slice.call(document.querySelectorAll(".row_eur, .row_eur_amount"));
