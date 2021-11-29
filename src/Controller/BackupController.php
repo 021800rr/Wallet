@@ -7,6 +7,8 @@ use App\Form\BackupType;
 use App\Form\InterestType;
 use App\Repository\AppPaginatorInterface;
 use App\Repository\BackupRepository;
+use App\Repository\ChfRepository;
+use App\Repository\EurRepository;
 use App\Repository\WalletRepository;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
 use App\Service\ExpectedBackup\Calculator;
@@ -97,19 +99,24 @@ class BackupController extends AbstractController
      * @Route("/paymentsByMonth", name="payments_by_month", methods={"GET"})
      * @throws Exception
      */
-    public function paymentsByMonth(Calculator $calculator, WalletRepository $walletRepository): Response
-    {
+    public function paymentsByMonth(
+        Calculator $calculator,
+        WalletRepository $walletRepository,
+        ChfRepository $chfRepository,
+        EurRepository $eurRepository
+    ): Response {
         $paginator = $this->repository->paymentsByMonth();
         $expected = $calculator->compute($paginator);
         $walletBalance = $walletRepository->getCurrentBalance();
         /** @var Backup[] $backupLastRecords */
-        $backupLastRecords = $this->repository->getLastRecord();
-        $backupLastRecord = $backupLastRecords[0];
+        $backupLastRecord = $this->repository->getLastRecord();
 
         return $this->render('backup/payments_by_month.html.twig', [
             'paginator' => $paginator,
             'expected' => $expected,
             'walletBalance' => $walletBalance,
+            'chfBalance' => $chfRepository->getCurrentBalance(),
+            'eurBalance' => $eurRepository->getCurrentBalance(),
             'backupLastRecord' => $backupLastRecord,
             'total' => $walletBalance + $backupLastRecord->getBalance()
         ]);

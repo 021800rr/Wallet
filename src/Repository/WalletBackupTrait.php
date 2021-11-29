@@ -33,6 +33,7 @@ trait WalletBackupTrait
 
     /**
      * @return int|mixed|string
+     * @throws NonUniqueResultException
      */
     public function getLastRecord()
     {
@@ -41,7 +42,7 @@ trait WalletBackupTrait
             ->addOrderBy('w.id', 'DESC')
             ->getQuery()
             ->setMaxResults(1)
-            ->getResult();
+            ->getOneOrNullResult();
     }
 
     public function getPaginator(int $offset): Paginator
