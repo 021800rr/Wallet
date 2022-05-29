@@ -117,6 +117,9 @@
     "laminas/laminas-code": {
         "version": "4.3.0"
     },
+    "masterminds/html5": {
+        "version": "2.7.5"
+    },
     "monolog/monolog": {
         "version": "2.2.0"
     },
@@ -472,9 +475,6 @@
         "version": "v1.23.0"
     },
     "symfony/polyfill-php80": {
-        "version": "v1.23.0"
-    },
-    "symfony/polyfill-php81": {
         "version": "v1.23.0"
     },
     "symfony/process": {
