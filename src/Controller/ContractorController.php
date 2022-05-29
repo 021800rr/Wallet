@@ -63,13 +63,13 @@ class ContractorController extends AbstractController
     /**
      * @Route("/edit/{id}", name="contractor_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Contractor $contractor): Response
+    public function edit(Request $request, Contractor $contractor, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ContractorType::class, $contractor);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->redirectToRoute('contractor_index');
         }

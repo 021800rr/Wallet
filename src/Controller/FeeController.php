@@ -63,13 +63,13 @@ class FeeController extends AbstractController
     /**
      * @Route("/edit/{id}", name="fee_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Fee $fee): Response
+    public function edit(Request $request, Fee $fee, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(FeeType::class, $fee);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager->flush();
 
             return $this->redirectToRoute('fee_index');
         }
