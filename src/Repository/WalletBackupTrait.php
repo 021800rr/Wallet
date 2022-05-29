@@ -35,7 +35,7 @@ trait WalletBackupTrait
      * @return int|mixed|string
      * @throws NonUniqueResultException
      */
-    public function getLastRecord()
+    public function getLastRecord(): mixed
     {
         return $this->createQueryBuilder('w')
             ->orderBy('w.date', 'DESC')

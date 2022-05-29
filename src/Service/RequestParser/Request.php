@@ -20,7 +20,7 @@ class Request implements RequestInterface
      * @param SymfonyRequest $request
      * @return int|array [string, int] $query, $offset
      */
-    public function strategy(string $controller, SymfonyRequest $request)
+    public function strategy(string $controller, SymfonyRequest $request): int|array
     {
         $result = null;
         switch ($controller) {
