@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="form-floating mb-4 mt-xxl-5">
+            <h4>{{ 'Wallet'|trans }}</h4>
+        </div>
+        <form action="{{ path('app_login') }}" method="post">
+            <div class="form-floating mb-4">
+                <input type="text" id="username" name="_username" value="{{ last_username }}"
+                       class="form-control"
+                       required
+                       autofocus
+                       placeholder="{{ 'Username'|trans }}"
+                       aria-label="{{ 'Username'|trans }}"
+                />
+                <label for="username">{{ 'Username'|trans }}</label>
+            </div>
+            <div class="form-floating mb-4">
+                <input type="password" id="password" name="_password"
+                       class="form-control"
+                       placeholder="{{ 'Password'|trans }}"
+                       aria-label="{{ 'Password'|trans }}"
+                       required
+                />
+                <label for="password">{{ 'Password'|trans }}</label>
+            </div>
+            {# If you want to control the URL the user is redirected to on success
+            <input type="hidden" name="_target_path" value="/account"/> #}
+
+            <div class="form-floating mb-4">
+                <button class="btn btn btn-primary my-3" type="submit">{{ 'Sign in'|trans }}</button>
+            </div>
+            <div class="form-floating mb-4">
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+            </div>
+            <div class="form-floating">
+                {% if app.user %}
+                    {{ 'You are logged in as'|trans }} {{ app.user.getUserIdentifier }}<br>
+                    <a href="{{ path('app_logout') }}">{{ 'Logout'|trans }}</a>
+                {% endif %}
+            </div>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+        </form>
+    </div>
+{% endblock %}
