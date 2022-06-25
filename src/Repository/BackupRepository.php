@@ -15,7 +15,7 @@ class BackupRepository extends ServiceEntityRepository implements AppPaginatorIn
 {
     use WalletBackupTrait;
 
-    private const PAYMENTS_BY_MONTH_YEARS = 36;
+    private const PAYMENTS_BY_MONTH_YEARS = 12;
 
     public function __construct(ManagerRegistry $registry)
     {
