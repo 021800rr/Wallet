@@ -13,15 +13,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/{_locale<%app.supported_locales%>}/transfer", requirements={"_locale": "%app.supported_locales%"})
- * @IsGranted("ROLE_ADMIN")
- */
+#[Route(
+    path: '/{_locale}/transfer',
+    requirements: [
+        '_locale' => 'pl|en',
+    ],
+    locale: 'pl',
+)]
+#[IsGranted('ROLE_ADMIN')]
 class TransferController extends AbstractController
 {
-    /**
-     * @Route("/", name="transfer_index", methods={"GET"})
-     */
+    #[Route('/', name: 'transfer_index', methods: ['GET'])]
     public function index(): Response
     {
         $backup = new Backup();
@@ -40,9 +42,7 @@ class TransferController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/backup", name="transfer_to_backup", methods={"POST"})
-     */
+    #[Route('/backup', name: 'transfer_to_backup', methods: ['POST'])]
     public function backup(Request $request, TransferInterface $agent): Response
     {
         $backup = new Backup();
@@ -57,9 +57,7 @@ class TransferController extends AbstractController
         return $this->redirectToRoute('transfer_index');
     }
 
-    /**
-     * @Route("/wallet", name="transfer_to_wallet", methods={"POST"})
-     */
+    #[Route('/wallet', name: 'transfer_to_wallet', methods: ['POST'])]
     public function wallet(Request $request, TransferInterface $agent): Response
     {
         $wallet = new Wallet();

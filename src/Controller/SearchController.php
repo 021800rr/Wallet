@@ -18,15 +18,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-/**
- * @Route("/{_locale<%app.supported_locales%>}/search")
- * @IsGranted("ROLE_ADMIN")
- */
+#[Route(
+    path: '/{_locale}/search',
+    requirements: [
+        '_locale' => 'pl|en',
+    ],
+    locale: 'pl',
+)]
+#[IsGranted('ROLE_ADMIN')]
 class SearchController extends AbstractController
 {
-    /**
-     * @Route("/", name="search_index")
-     */
+    #[Route('/', name: 'search_index')] // , methods: ['GET'])]
     public function index(string $query = ''): Response
     {
         return $this->render('search/index.html.twig', [
@@ -34,9 +36,7 @@ class SearchController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/result", name="search_result"), methods={"POST"}
-     */
+    #[Route('/result', name: 'search_result')] // , methods: ['POST'])]
     public function search(
         Request $request,
         WalletRepository $walletRepository,
@@ -66,18 +66,13 @@ class SearchController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/edit/{id}", name="search_edit", methods={"GET", "POST"}))
-     * @throws Exception
-     */
+    #[Route('/edit/{id}', name: 'search_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Wallet $wallet, WalletController $controller): Response
     {
         return $controller->edit($request, $wallet, 'search_result');
     }
 
-    /**
-     * @Route("/isconsistent/{id}/{bool}", name="search_is_consistent", methods={"POST"})
-     */
+    #[Route('/isconsistent/{id}/{bool}', name: 'search_is_consistent', methods: ['POST'])]
     public function isConsistent(
         Request $request,
         Wallet $wallet,
@@ -87,10 +82,7 @@ class SearchController extends AbstractController
         return $controller->isConsistent($request, $wallet, $bool, 'search_result');
     }
 
-    /**
-     * @Route("/delete/{id}", name="search_delete", methods={"POST"})
-     * @throws Exception
-     */
+    #[Route('/delete/{id}', name: 'search_delete', methods: ['POST'])]
     public function delete(Request $request, Wallet $wallet, WalletController $controller): Response
     {
         return $controller->delete($request, $wallet, 'search_result');

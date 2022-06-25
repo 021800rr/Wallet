@@ -16,10 +16,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/{_locale<%app.supported_locales%>}/eur")
- * @IsGranted("ROLE_ADMIN")
- */
+#[Route(
+    path: '/{_locale}/eur',
+    requirements: [
+        '_locale' => 'pl|en',
+    ],
+    locale: 'pl',
+)]
+#[IsGranted('ROLE_ADMIN')]
 class EurController extends AbstractController
 {
     private BalanceUpdaterInterface $updater;
@@ -36,9 +40,7 @@ class EurController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @Route("/", name="eur_index")
-     */
+    #[Route('/', name: 'eur_index', methods: ['GET'])]
     public function index(Request $request): Response {
         $offset = max(0, $request->query->getInt('offset', 0));
         $paginator = $this->repository->getPaginator($offset);
@@ -50,10 +52,7 @@ class EurController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/new", name="eur_new", methods={"GET","POST"})
-     * @throws Exception
-     */
+    #[Route('/new', name: 'eur_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ContractorRepository $contractorRepository): Response
     {
         $eur = new Eur();
@@ -74,10 +73,7 @@ class EurController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/edit/{id}", name="eur_edit", methods={"GET", "POST"}))
-     * @throws Exception
-     */
+    #[Route('/edit/{id}', name: 'eur_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Eur $eur, string $route = ''): Response
     {
         $route = (!empty($route)) ? $route : 'eur_index';
@@ -97,9 +93,7 @@ class EurController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/isconsistent/{id}/{bool}", name="eur_is_consistent", methods={"POST"})
-     */
+    #[Route('/isconsistent/{id}/{bool}', name: 'eur_is_consistent', methods: ['POST'])]
     public function isConsistent(Request $request, Eur $eur, string $bool = '', string $route = ''): Response
     {
         $route = (!empty($route)) ? $route : 'eur_index';
@@ -121,10 +115,7 @@ class EurController extends AbstractController
         return $this->redirectToRoute($route);
     }
 
-    /**
-     * @Route("/delete/{id}", name="eur_delete", methods={"POST"})
-     * @throws Exception
-     */
+    #[Route('/delete/{id}', name: 'eur_delete', methods: ['POST'])]
     public function delete(Request $request, Eur $eur, string $route = ''): Response
     {
         $route = (!empty($route)) ? $route : 'eur_index';

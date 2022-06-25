@@ -12,10 +12,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/{_locale<%app.supported_locales%>}/contractor")
- * @IsGranted("ROLE_ADMIN")
- */
+#[Route(
+    path: '/{_locale}/contractor',
+    requirements: [
+        '_locale' => 'pl|en',
+    ],
+    locale: 'pl',
+)]
+#[IsGranted('ROLE_ADMIN')]
 class ContractorController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
@@ -24,9 +28,8 @@ class ContractorController extends AbstractController
     {
         $this->entityManager = $entityManager;
     }
-    /**
-     * @Route("/", name="contractor_index", methods={"GET"})
-     */
+
+    #[Route('/', name: 'contractor_index', methods: ['GET'])]
     public function index(ContractorRepository $contractorRepository, Request $request): Response
     {
         $offset = max(0, $request->query->getInt('offset', 0));
@@ -39,9 +42,7 @@ class ContractorController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/new", name="contractor_new", methods={"GET","POST"})
-     */
+    #[Route('/new', name: 'contractor_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
     {
         $contractor = new Contractor();
@@ -60,9 +61,7 @@ class ContractorController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/edit/{id}", name="contractor_edit", methods={"GET","POST"})
-     */
+    #[Route('/edit/{id}', name: 'contractor_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Contractor $contractor, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ContractorType::class, $contractor);
@@ -79,9 +78,7 @@ class ContractorController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/delete/{id}", name="contractor_delete", methods={"POST"})
-     */
+    #[Route('/delete/{id}', name: 'contractor_delete', methods: ['POST'])]
     public function delete(Request $request, Contractor $contractor): Response
     {
         if ($this->isCsrfTokenValid('delete' . $contractor->getId(), $request->request->get('_token'))) {

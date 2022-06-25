@@ -16,10 +16,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/{_locale<%app.supported_locales%>}/wallet")
- * @IsGranted("ROLE_ADMIN")
- */
+#[Route(
+    path: '/{_locale}/wallet',
+    requirements: [
+        '_locale' => 'pl|en',
+    ],
+    locale: 'pl',
+)]
+#[IsGranted('ROLE_ADMIN')]
 class WalletController extends AbstractController
 {
     private BalanceUpdaterInterface $updater;
@@ -36,9 +40,7 @@ class WalletController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @Route("/", name="wallet_index")
-     */
+    #[Route('/', name: 'wallet_index', methods: ['GET'])]
     public function index(
         Request $request,
         RequestInterface $parser
@@ -54,10 +56,7 @@ class WalletController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/new", name="wallet_new", methods={"GET","POST"})
-     * @throws Exception
-     */
+    #[Route('/new', name: 'wallet_new', methods: ['GET', 'POST'])]
     public function new(Request $request): Response
     {
         $wallet = new Wallet();
@@ -76,10 +75,7 @@ class WalletController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/edit/{id}", name="wallet_edit", methods={"GET", "POST"}))
-     * @throws Exception
-     */
+    #[Route('/edit/{id}', name: 'wallet_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Wallet $wallet, string $route = ''): Response
     {
         $route = (!empty($route)) ? $route : 'wallet_index';
@@ -99,9 +95,7 @@ class WalletController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/isconsistent/{id}/{bool}", name="wallet_is_consistent", methods={"POST"})
-     */
+    #[Route('/isconsistent/{id}/{bool}', name: 'wallet_is_consistent', methods: ['POST'])]
     public function isConsistent(Request $request, Wallet $wallet, string $bool = '', string $route = ''): Response
     {
         $route = (!empty($route)) ? $route : 'wallet_index';
@@ -123,10 +117,7 @@ class WalletController extends AbstractController
         return $this->redirectToRoute($route);
     }
 
-    /**
-     * @Route("/delete/{id}", name="wallet_delete", methods={"POST"})
-     * @throws Exception
-     */
+    #[Route('/delete/{id}', name: 'wallet_delete', methods: ['POST'])]
     public function delete(Request $request, Wallet $wallet, string $route = ''): Response
     {
         $route = (!empty($route)) ? $route : 'wallet_index';

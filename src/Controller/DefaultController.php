@@ -9,10 +9,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
 {
-    /**
-     * @Route("/")
-     * @IsGranted("ROLE_ADMIN")
-     */
+    #[Route('/')]
+    #[IsGranted('ROLE_ADMIN')]
     public function indexNoLocale(): Response
     {
         return $this->redirectToRoute('wallet_index', ['_locale' => 'pl']);
