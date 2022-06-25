@@ -9,44 +9,30 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class AbstractWallet
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    protected int $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    protected $id;
 
-    /**
-     * @ORM\Column(type="date")
-     * @Assert\Type("\DateTimeInterface")
-     */
+    #[ORM\Column(type: 'date')]
+    #[Assert\Type('DateTimeInterface')]
     protected DateTimeInterface $date;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: 'float')]
     protected float $amount;
 
-    /**
-     * @ORM\Column(type="float")
-     * @Assert\Type("float")
-     */
+    #[ORM\Column(type: 'float')]
+    #[Assert\Type('float')]
     protected float $balance = 0.0;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Contractor::class, inversedBy="wallets")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Contractor::class, inversedBy: 'wallets')]
+    #[ORM\JoinColumn(nullable: false)]
     protected Contractor $contractor;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $description;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
+    #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $isConsistent;
 
     public function __construct()

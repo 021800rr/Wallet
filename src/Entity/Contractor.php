@@ -6,49 +6,36 @@ use App\Repository\ContractorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass=ContractorRepository::class)
- * @UniqueEntity("description")
- */
+#[ORM\Entity(repositoryClass: ContractorRepository::class)]
+#[UniqueEntity("description")]
 class Contractor
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
     private int $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(type: "string", length: 255)]
+    #[Assert\NotBlank()]
     private string $description;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $account;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Wallet::class, mappedBy="contractor")
-     */
+    #[ORM\OneToMany(mappedBy: "contractor", targetEntity: Wallet::class)]
     private Collection $wallets;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Backup::class, mappedBy="contractor")
-     */
+    #[ORM\OneToMany(mappedBy: "contractor", targetEntity: Backup::class)]
     private Collection $backups;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Fee::class, mappedBy="contractor")
-     */
+    #[ORM\OneToMany(mappedBy: "contractor", targetEntity: Fee::class)]
     private Collection $fees;
 
-    public function __construct()
+    #[Pure] public function __construct()
     {
         $this->wallets = new ArrayCollection();
         $this->backups = new ArrayCollection();
@@ -84,9 +71,6 @@ class Contractor
         return $this;
     }
 
-    /**
-     * @return Collection|Wallet[]
-     */
     public function getWallets(): Collection
     {
         return $this->wallets;
@@ -102,9 +86,6 @@ class Contractor
         return $this;
     }
 
-    /**
-     * @return Collection|Backup[]
-     */
     public function getBackups(): Collection
     {
         return $this->backups;
@@ -120,9 +101,6 @@ class Contractor
         return $this;
     }
 
-    /**
-     * @return Collection|Fee[]
-     */
     public function getFees(): Collection
     {
         return $this->fees;

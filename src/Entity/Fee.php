@@ -5,33 +5,22 @@ namespace App\Entity;
 use App\Repository\FeeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=FeeRepository::class)
- */
+#[ORM\Entity(repositoryClass: FeeRepository::class)]
 class Fee
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
     private int $id;
 
-    /**
-     * @ORM\Column(type="integer")
-     * 1 - 31 day of payment
-     */
+    #[ORM\Column(type: "integer")]
     private int $date;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: "float")]
     private float $amount;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Contractor::class, inversedBy="fees")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Contractor::class, inversedBy: "fees")]
+    #[ORM\JoinColumn(nullable: false)]
     private Contractor $contractor;
 
     public function getId(): int

@@ -8,6 +8,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * @extends ServiceEntityRepository<Wallet>
+ *
  * @method Wallet|null find($id, $lockMode = null, $lockVersion = null)
  * @method Wallet|null findOneBy(array $criteria, array $orderBy = null)
  * @method Wallet[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)

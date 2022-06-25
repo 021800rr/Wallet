@@ -7,10 +7,8 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=BackupRepository::class)
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Entity(repositoryClass: BackupRepository::class)]
+#[ORM\HasLifecycleCallbacks()]
 class Backup
 {
     // boolean interest as const:
@@ -18,57 +16,37 @@ class Backup
     public const NOT_PROCESSED = false;
     public const DONE = true;
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer")]
     private int $id;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: "datetime")]
     private DateTimeInterface $date;
 
-    /**
-     * @ORM\Column(type="string", length=7)
-     */
+    #[ORM\Column(type: "string", length: 7)]
     private string $yearMonth;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: "float")]
     private float $amount;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: "float")]
     private float $retiring = 0.0;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: "float")]
     private float $holiday = 0.0;
 
-    /**
-     * @ORM\Column(type="float")
-     */
+    #[ORM\Column(type: "float")]
     private float $balance = 0.0;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Contractor::class, inversedBy="backups")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Contractor::class, inversedBy: "backups")]
+    #[ORM\JoinColumn(nullable: false)]
     private Contractor $contractor;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $description;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=true, name="is_consistent")
-     */
+    #[ORM\Column(name: "is_consistent", type: "boolean", nullable: true)]
     private ?bool $interest;
 
     public function __construct()
