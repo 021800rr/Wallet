@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Transfer;
+namespace App\Service;
 
 use App\Entity\Backup;
 use App\Entity\Contractor;
@@ -8,87 +8,79 @@ use App\Entity\Wallet;
 use App\Repository\BackupRepository;
 use App\Repository\ContractorRepository;
 use App\Repository\WalletRepository;
-use App\Service\BalanceUpdater\BalanceUpdaterInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 
 class Transfer implements TransferInterface
 {
     private EntityManagerInterface $entityManager;
     private ContractorRepository $contractorRepository;
-    private BalanceUpdaterInterface $backupUpdater;
+    private UpdaterInterface $backupUpdater;
     private BackupRepository $backupRepository;
-    private BalanceUpdaterInterface $walletUpdater;
+    private UpdaterInterface $updater;
     private WalletRepository $walletRepository;
 
     public function __construct(
         EntityManagerInterface $entityManage,
         ContractorRepository $contractorRepository,
-        BalanceUpdaterInterface $backupUpdater,
+        UpdaterInterface $backupUpdater,
         BackupRepository $backupRepository,
-        BalanceUpdaterInterface $walletUpdater,
+        UpdaterInterface $updater,
         WalletRepository $walletRepository
     ) {
         $this->entityManager = $entityManage;
         $this->contractorRepository = $contractorRepository;
         $this->backupUpdater = $backupUpdater;
         $this->backupRepository = $backupRepository;
-        $this->walletUpdater = $walletUpdater;
+        $this->updater = $updater;
         $this->walletRepository = $walletRepository;
     }
 
-    /**
-     * @throws Exception
-     */
-    public function moveToBackup(Backup $backup, int $currency = 0): void
+    public function moveToBackup(Backup $backup): void
     {
-        $backup = $this->persistExport($backup);
-        $wallet = $this->persistImport(new Wallet(), $backup);
-        if (0 === $currency) {
-            $this->backupUpdater->compute($this->backupRepository, $backup->getId());
-        }
-        $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
+        $this->persistExport($backup);
+        $this->persistImport(new Wallet(), $backup);
+
+        $this->backupUpdater->compute($this->backupRepository);
+        $this->updater->compute($this->walletRepository);
     }
 
-    /**
-     * @throws Exception
-     */
     public function moveToWallet(Wallet $wallet): void
     {
-        $wallet = $this->persistExport($wallet);
-        $backup = $this->persistImport(new Backup(), $wallet);
+        $this->persistExport($wallet);
+        $this->persistImport(new Backup(), $wallet);
 
-        $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
-        $this->backupUpdater->compute($this->backupRepository, $backup->getId());
+        $this->updater->compute($this->walletRepository);
+        $this->backupUpdater->compute($this->backupRepository);
     }
 
     /**
      * @param Wallet|Backup $fromAccount
      * @param Backup|Wallet $toAccount
-     * @return Backup|Wallet
      */
-    private function persistImport($fromAccount, $toAccount): Backup|Wallet
+    private function persistImport($fromAccount, $toAccount): void
     {
-        $contractor = $this->contractorRepository->getInternalTransferOwner();
+        $contractor = $this->getContractor();
         $fromAccount->setContractor($contractor);
         $fromAccount->setAmount(-1 * $toAccount->getAmount());
         $this->entityManager->persist($fromAccount);
         $this->entityManager->flush();
-
-        return $fromAccount;
     }
 
     /**
      * @param Backup|Wallet $toAccount
-     * @return Backup|Wallet $toAccount
      */
-    private function persistExport($toAccount): Backup|Wallet
+    private function persistExport($toAccount): void
     {
-        $contractor = $this->contractorRepository->getInternalTransferOwner();
+        $contractor = $this->getContractor();
         $toAccount->setContractor($contractor);
         $this->entityManager->persist($toAccount);
         $this->entityManager->flush();
+    }
 
-        return $toAccount;
+    private function getContractor(): Contractor
+    {
+        return $this->contractorRepository->findOneBy([
+            'description' => ContractorRepository::INTERNAL_TRANSFER
+        ]);
     }
 }

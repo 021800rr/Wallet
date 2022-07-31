@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Backup;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -25,6 +26,11 @@ class TransferToBackupType extends AbstractType
             ])
             ->add('date', DateType::class, [
                 'widget' => 'single_text',
+            ])
+            ->add('currency', CheckboxType::class, [
+                'label'    => 'currency?',
+                'required' => false,
+                'mapped' => false,
             ])
             ->add('save', SubmitType::class, [
                 'attr' => [

@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Service\Transfer;
+namespace App\Service;
 
 use App\Entity\Backup;
 use App\Entity\Wallet;
+use App\Repository\ContractorRepository;
 
 interface TransferInterface
 {
-    public function moveToBackup(Backup $backup, int $currency = 0): void;
+    public function moveToBackup(Backup $backup): void;
 
     public function moveToWallet(Wallet $wallet): void;
 }

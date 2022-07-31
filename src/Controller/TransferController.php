@@ -49,7 +49,12 @@ class TransferController extends AbstractController
         $backupForm = $this->createForm(TransferToBackupType::class, $backup);
         $backupForm->handleRequest($request);
         if ($backupForm->isSubmitted() && $backupForm->isValid()) {
-            $agent->moveToBackup($backup);
+            $post = $request->request->all();
+            $currency = 0;
+            if (isset($post['transfer_to_backup']['currency'])) {
+                $currency = $post['transfer_to_backup']['currency'];
+            }
+            $agent->moveToBackup($backup, $currency);
 
             return $this->redirectToRoute('backup_index');
         }
