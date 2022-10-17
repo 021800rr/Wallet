@@ -3,6 +3,7 @@
     <table class="table table-hover table-sm">
         <thead>
             <tr>
+                <th>{{ '#' }}</th>
                 <th>{{ 'Date'|trans }}</th>
                 <th class="text-end">{{ 'Amount'|trans }}</th>
                 <th class="text-end">{{ 'Balance'|trans }}</th>
@@ -14,6 +15,7 @@
         <tbody>
             {% for wallet in paginator %}
                 <tr>
+                    <td>{{ wallet.id }}</td>
                     <td>{{ wallet.date|date("Y-m-d") }}</td>
                     <td class="text-end row_money_amount" id="wallet_amount{{ loop.index }}">{{ wallet.amount }}</td>
                     <td class="text-end row_money" id="wallet_balance{{ loop.index }}">{{ wallet.balance }}</td>
