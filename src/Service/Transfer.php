@@ -9,6 +9,7 @@ use App\Repository\BackupRepository;
 use App\Repository\ContractorRepository;
 use App\Repository\WalletRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 class Transfer implements TransferInterface
 {
@@ -35,6 +36,9 @@ class Transfer implements TransferInterface
         $this->walletRepository = $walletRepository;
     }
 
+    /**
+     * @throws Exception
+     */
     public function moveToBackup(Backup $backup): void
     {
         $this->persistExport($backup);
@@ -44,6 +48,9 @@ class Transfer implements TransferInterface
         $this->updater->compute($this->walletRepository);
     }
 
+    /**
+     * @throws Exception
+     */
     public function moveToWallet(Wallet $wallet): void
     {
         $this->persistExport($wallet);
@@ -53,11 +60,7 @@ class Transfer implements TransferInterface
         $this->backupUpdater->compute($this->backupRepository);
     }
 
-    /**
-     * @param Wallet|Backup $fromAccount
-     * @param Backup|Wallet $toAccount
-     */
-    private function persistImport($fromAccount, $toAccount): void
+    private function persistImport(Wallet|Backup $fromAccount, Backup|Wallet $toAccount): void
     {
         $contractor = $this->getContractor();
         $fromAccount->setContractor($contractor);
@@ -66,10 +69,7 @@ class Transfer implements TransferInterface
         $this->entityManager->flush();
     }
 
-    /**
-     * @param Backup|Wallet $toAccount
-     */
-    private function persistExport($toAccount): void
+    private function persistExport(Backup|Wallet $toAccount): void
     {
         $contractor = $this->getContractor();
         $toAccount->setContractor($contractor);

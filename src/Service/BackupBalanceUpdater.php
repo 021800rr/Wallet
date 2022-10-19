@@ -7,7 +7,7 @@ use App\Entity\Wallet;
 
 class BackupBalanceUpdater extends BalanceUpdater implements UpdaterInterface
 {
-    protected function walk($predecessor, &$transaction, ?array $successors): void
+    protected function walk(Wallet|Backup $predecessor, Wallet|Backup &$transaction, ?array $successors): void
     {
         $transaction->setBalance($predecessor->getBalance() + $transaction->getAmount());
         $this->setSubWallets($predecessor, $transaction);

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Wallet;
+use App\Repository\AppPaginatorInterface;
 use App\Repository\WalletRepository;
 use App\Service\OffsetQuery\OffsetInterface;
 use App\Service\OffsetQuery\QueryInterface;
@@ -28,7 +29,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[IsGranted('ROLE_ADMIN')]
 class SearchController extends AbstractController
 {
-    #[Route('/', name: 'search_index')] // , methods: ['GET'])]
+    #[Route('/', name: 'search_index')]
     public function index(string $query = ''): Response
     {
         return $this->render('search/index.html.twig', [
@@ -36,7 +37,7 @@ class SearchController extends AbstractController
         ]);
     }
 
-    #[Route('/result', name: 'search_result')] // , methods: ['POST'])]
+    #[Route('/result', name: 'search_result')]
     public function search(
         Request $request,
         WalletRepository $walletRepository,
@@ -54,15 +55,15 @@ class SearchController extends AbstractController
             $offsetHelper->reset();
             $offset = 0;
         } else {
-            list($query, $offset) = $parser->strategy(SearchController::class, $request);
+            [$query, $offset] = $parser->strategy(SearchController::class, $request);
         }
         $paginator = $walletRepository->search($query, $offset);
 
         return $this->render('search/result.html.twig', [
             'query' => $query,
             'paginator' => $paginator,
-            'previous' => $offset - WalletRepository::PAGINATOR_PER_PAGE,
-            'next' => min(count($paginator), $offset + WalletRepository::PAGINATOR_PER_PAGE),
+            'previous' => $offset - AppPaginatorInterface::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + AppPaginatorInterface::PAGINATOR_PER_PAGE),
         ]);
     }
 

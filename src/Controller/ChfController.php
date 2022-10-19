@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,7 +42,8 @@ class ChfController extends AbstractController
     }
 
     #[Route('/', name: 'chf_index', methods: ['GET'])]
-    public function index(Request $request): Response {
+    public function index(Request $request): Response
+    {
         $offset = max(0, $request->query->getInt('offset', 0));
         $paginator = $this->repository->getPaginator($offset);
 
@@ -52,8 +54,11 @@ class ChfController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/new', name: 'chf_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, ContractorRepository $contractorRepository): Response
+    public function new(Request $request, ContractorRepository $contractorRepository): RedirectResponse|Response
     {
         $chf = new Chf();
         $form = $this->createForm(ChfType::class, $chf);
@@ -73,8 +78,11 @@ class ChfController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/edit/{id}', name: 'chf_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Chf $chf, string $route = ''): Response
+    public function edit(Request $request, Chf $chf, string $route = ''): RedirectResponse|Response
     {
         $route = (!empty($route)) ? $route : 'chf_index';
         $form = $this->createForm(ChfType::class, $chf);
@@ -94,7 +102,7 @@ class ChfController extends AbstractController
     }
 
     #[Route('/isconsistent/{id}/{bool}', name: 'chf_is_consistent', methods: ['POST'])]
-    public function isConsistent(Request $request, Chf $chf, string $bool = '', string $route = ''): Response
+    public function isConsistent(Request $request, Chf $chf, string $bool = '', string $route = ''): RedirectResponse
     {
         $route = (!empty($route)) ? $route : 'chf_index';
         if ($this->isCsrfTokenValid('is_consistent' . $chf->getId(), $request->request->get('_token'))) {
@@ -115,8 +123,11 @@ class ChfController extends AbstractController
         return $this->redirectToRoute($route);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/delete/{id}', name: 'chf_delete', methods: ['POST'])]
-    public function delete(Request $request, Chf $chf, string $route = ''): Response
+    public function delete(Request $request, Chf $chf, string $route = ''): RedirectResponse
     {
         $route = (!empty($route)) ? $route : 'chf_index';
         if ($this->isCsrfTokenValid('delete' . $chf->getId(), $request->request->get('_token'))) {

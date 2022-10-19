@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,7 +42,8 @@ class EurController extends AbstractController
     }
 
     #[Route('/', name: 'eur_index', methods: ['GET'])]
-    public function index(Request $request): Response {
+    public function index(Request $request): Response
+    {
         $offset = max(0, $request->query->getInt('offset', 0));
         $paginator = $this->repository->getPaginator($offset);
 
@@ -52,8 +54,11 @@ class EurController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/new', name: 'eur_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, ContractorRepository $contractorRepository): Response
+    public function new(Request $request, ContractorRepository $contractorRepository): RedirectResponse|Response
     {
         $eur = new Eur();
         $form = $this->createForm(EurType::class, $eur);
@@ -73,8 +78,11 @@ class EurController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/edit/{id}', name: 'eur_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Eur $eur, string $route = ''): Response
+    public function edit(Request $request, Eur $eur, string $route = ''): RedirectResponse|Response
     {
         $route = (!empty($route)) ? $route : 'eur_index';
         $form = $this->createForm(EurType::class, $eur);
@@ -94,7 +102,7 @@ class EurController extends AbstractController
     }
 
     #[Route('/isconsistent/{id}/{bool}', name: 'eur_is_consistent', methods: ['POST'])]
-    public function isConsistent(Request $request, Eur $eur, string $bool = '', string $route = ''): Response
+    public function isConsistent(Request $request, Eur $eur, string $bool = '', string $route = ''): RedirectResponse
     {
         $route = (!empty($route)) ? $route : 'eur_index';
         if ($this->isCsrfTokenValid('is_consistent' . $eur->getId(), $request->request->get('_token'))) {
@@ -115,8 +123,11 @@ class EurController extends AbstractController
         return $this->redirectToRoute($route);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/delete/{id}', name: 'eur_delete', methods: ['POST'])]
-    public function delete(Request $request, Eur $eur, string $route = ''): Response
+    public function delete(Request $request, Eur $eur, string $route = ''): RedirectResponse
     {
         $route = (!empty($route)) ? $route : 'eur_index';
         if ($this->isCsrfTokenValid('delete' . $eur->getId(), $request->request->get('_token'))) {

@@ -30,13 +30,15 @@ class InterestType extends AbstractType
                 'widget' => 'single_text',
                 'data' => new DateTime('first day of'),
             ])
-            ->add('retiring_tax', MoneyType::class, array_merge([
+            ->add('retiring_tax', MoneyType::class, array_merge(
+                [
                     'label' => 'Backup\'s Tax',
                     'attr' => [
                         'autofocus' => true,
                         'required' => true
                     ],
-                ], $paramsArray
+                ],
+                $paramsArray
             ))
             ->add('retiring', MoneyType::class, array_merge(['label' => 'Backup'], $paramsArray))
             ->add('holiday_tax', MoneyType::class, array_merge(['label' => 'Holiday\'s Tax'], $paramsArray))

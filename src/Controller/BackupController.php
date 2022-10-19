@@ -14,9 +14,12 @@ use App\Service\BalanceUpdater\BalanceUpdaterInterface;
 use App\Service\ExpectedBackup\Calculator;
 use App\Service\Interest;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -58,8 +61,11 @@ class BackupController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/edit/{id}', name: 'backup_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Backup $backup): Response
+    public function edit(Request $request, Backup $backup): RedirectResponse|Response
     {
         $form = $this->createForm(BackupType::class, $backup);
         $form->handleRequest($request);
@@ -78,8 +84,11 @@ class BackupController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/delete/{id}', name: 'backup_delete', methods: ['POST'])]
-    public function delete(Request $request, Backup $backup): Response
+    public function delete(Request $request, Backup $backup): RedirectResponse
     {
         if ($this->isCsrfTokenValid('delete'.$backup->getId(), $request->request->get('_token'))) {
             $backup->setAmount(0);
@@ -91,6 +100,11 @@ class BackupController extends AbstractController
         return $this->redirectToRoute('backup_index');
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     * @throws Exception
+     */
     #[Route('/paymentsByMonth', name: 'backup_payments_by_month', methods: ['GET'])]
     public function paymentsByMonth(
         Calculator $calculator,
@@ -115,8 +129,11 @@ class BackupController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/interest', name: 'backup_interest', methods: ['GET', 'POST'])]
-    public function newInterest(Request $request, Interest $interest)
+    public function newInterest(Request $request, Interest $interest): RedirectResponse|Response
     {
         $form = $this->createForm(InterestType::class);
         $form->handleRequest($request);

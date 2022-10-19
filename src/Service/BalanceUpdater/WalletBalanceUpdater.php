@@ -2,9 +2,12 @@
 
 namespace App\Service\BalanceUpdater;
 
+use App\Entity\AbstractWallet;
+use App\Entity\Backup;
+
 class WalletBalanceUpdater extends AbstractBalanceUpdater implements BalanceUpdaterInterface
 {
-    protected function walk($predecessor, $transaction, ?array $successors): void
+    protected function walk(AbstractWallet|Backup $predecessor, AbstractWallet|Backup $transaction, ?array $successors): void
     {
         $transaction->setBalance($predecessor->getBalance() + $transaction->getAmount());
         $this->entityManager->persist($transaction);

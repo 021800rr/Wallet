@@ -41,6 +41,11 @@ class Calculator
 
     private function computeNumberOfMonth(DateTime $firstDate, DateTime $lastDate): int
     {
+        /** @var int $firstYear */
+        /** @var int $lastYear */
+        /** @var int $firstMonth */
+        /** @var int $lastMonth */
+
         $firstYear = $firstDate->format('Y');
         $lastYear = $lastDate->format('Y');
 

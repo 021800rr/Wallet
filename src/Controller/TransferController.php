@@ -9,6 +9,7 @@ use App\Form\TransferToWalletType;
 use App\Service\Transfer\TransferInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -43,7 +44,7 @@ class TransferController extends AbstractController
     }
 
     #[Route('/backup', name: 'transfer_to_backup', methods: ['POST'])]
-    public function backup(Request $request, TransferInterface $agent): Response
+    public function backup(Request $request, TransferInterface $agent): RedirectResponse
     {
         $backup = new Backup();
         $backupForm = $this->createForm(TransferToBackupType::class, $backup);
@@ -63,7 +64,7 @@ class TransferController extends AbstractController
     }
 
     #[Route('/wallet', name: 'transfer_to_wallet', methods: ['POST'])]
-    public function wallet(Request $request, TransferInterface $agent): Response
+    public function wallet(Request $request, TransferInterface $agent): RedirectResponse
     {
         $wallet = new Wallet();
         $walletForm = $this->createForm(TransferToWalletType::class, $wallet);

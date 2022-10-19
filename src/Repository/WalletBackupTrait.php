@@ -10,7 +10,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 trait WalletBackupTrait
 {
-    /** @var AbstractWallet[]|Backup[] array */
+    /** @return AbstractWallet[]|Backup[] array */
     public function findAll(): array
     {
         return $this->findBy([], ['date' => 'DESC', 'id' => 'DESC']);

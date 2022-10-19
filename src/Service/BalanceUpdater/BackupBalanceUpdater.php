@@ -2,11 +2,12 @@
 
 namespace App\Service\BalanceUpdater;
 
+use App\Entity\AbstractWallet;
 use App\Entity\Backup;
 
 class BackupBalanceUpdater extends AbstractBalanceUpdater implements BalanceUpdaterInterface
 {
-    protected function walk($predecessor, $transaction, ?array $successors): void
+    protected function walk(AbstractWallet|Backup $predecessor, AbstractWallet|Backup $transaction, ?array $successors): void
     {
         /** @var Backup $transaction */
         if (Backup::INAPPLICABLE === $transaction->getInterest()) {

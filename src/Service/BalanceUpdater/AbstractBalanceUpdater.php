@@ -25,7 +25,7 @@ abstract class AbstractBalanceUpdater implements BalanceUpdaterInterface
      * @param int $id
      * @throws Exception
      */
-    public function compute($transactionRepository, int $id): void
+    public function compute(WalletRepository|ChfRepository|EurRepository|BackupRepository $transactionRepository, int $id): void
     {
         list($predecessor, $transaction, $successors) = $this->setUp($transactionRepository, $id);
         $this->walk($predecessor, $transaction, $successors);
@@ -37,7 +37,7 @@ abstract class AbstractBalanceUpdater implements BalanceUpdaterInterface
      * @return array [?AbstractWallet|?Backup, ?AbstractWallet|?Backup, ?AbstractWallet[]|?Backup[]]
      * @throws Exception
      */
-    protected function setUp($transactionRepository, int $id): array
+    protected function setUp(WalletRepository|ChfRepository|EurRepository|BackupRepository $transactionRepository, int $id): array
     {
         $transactions = $transactionRepository->findAll();
         if (2 >= count($transactions)) {
@@ -65,5 +65,5 @@ abstract class AbstractBalanceUpdater implements BalanceUpdaterInterface
      * @param AbstractWallet|Backup $transaction
      * @param ?Backup[]|?AbstractWallet[] $successors
      */
-    abstract protected function walk($predecessor, $transaction, ?array $successors): void;
+    abstract protected function walk(AbstractWallet|Backup $predecessor, AbstractWallet|Backup $transaction, ?array $successors): void;
 }

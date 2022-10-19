@@ -62,12 +62,7 @@ class Transfer implements TransferInterface
         $this->backupUpdater->compute($this->backupRepository, $backup->getId());
     }
 
-    /**
-     * @param Wallet|Backup $fromAccount
-     * @param Backup|Wallet $toAccount
-     * @return Backup|Wallet
-     */
-    private function persistImport($fromAccount, $toAccount): Backup|Wallet
+    private function persistImport(Wallet|Backup $fromAccount, Backup|Wallet $toAccount): Backup|Wallet
     {
         $contractor = $this->contractorRepository->getInternalTransferOwner();
         $fromAccount->setContractor($contractor);
@@ -78,11 +73,7 @@ class Transfer implements TransferInterface
         return $fromAccount;
     }
 
-    /**
-     * @param Backup|Wallet $toAccount
-     * @return Backup|Wallet $toAccount
-     */
-    private function persistExport($toAccount): Backup|Wallet
+    private function persistExport(Backup|Wallet $toAccount): Backup|Wallet
     {
         $contractor = $this->contractorRepository->getInternalTransferOwner();
         $toAccount->setContractor($contractor);

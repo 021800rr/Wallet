@@ -21,8 +21,8 @@ class Interest
         $dataArray = $this->simplifyFormArray($form);
 
         $backup->setDate($dataArray['date']);
-        $backup->setRetiring($dataArray['retiring'] );
-        $backup->setHoliday($dataArray['holiday'] );
+        $backup->setRetiring($dataArray['retiring']);
+        $backup->setHoliday($dataArray['holiday']);
         $backup->setContractor($dataArray['contractor']);
         $backup->setAmount($dataArray['amount']);
         $backup->setBalance($dataArray['balance']);

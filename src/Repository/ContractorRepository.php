@@ -30,7 +30,7 @@ class ContractorRepository extends ServiceEntityRepository implements AppPaginat
     {
         $query = $this->createQueryBuilder('c')
             ->addOrderBy('c.description', 'ASC')
-            ->setMaxResults(ContractorRepository::PAGINATOR_PER_PAGE)
+            ->setMaxResults(AppPaginatorInterface::PAGINATOR_PER_PAGE)
             ->setFirstResult($offset)
             ->getQuery();
 

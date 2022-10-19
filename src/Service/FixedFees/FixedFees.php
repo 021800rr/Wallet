@@ -23,7 +23,8 @@ class FixedFees implements FixedFeesInterface
         EntityManagerInterface  $entityManage,
         FeeRepository           $feeRepository,
         BalanceUpdaterInterface $walletUpdater,
-        WalletRepository        $walletRepository)
+        WalletRepository        $walletRepository
+    )
     {
         $this->entityManager = $entityManage;
         $this->feeRepository = $feeRepository;

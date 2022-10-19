@@ -12,5 +12,5 @@ interface UpdaterInterface
      * @param WalletRepository|BackupRepository $transactionRepository
      * @throws Exception
      */
-    public function compute($transactionRepository): void;
+    public function compute(WalletRepository|BackupRepository $transactionRepository): void;
 }

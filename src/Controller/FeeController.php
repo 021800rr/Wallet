@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -42,7 +43,7 @@ class FeeController extends AbstractController
     }
 
     #[Route('/new', name: 'fee_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
+    public function new(Request $request): RedirectResponse|Response
     {
         $fee = new Fee();
         $form = $this->createForm(FeeType::class, $fee);
@@ -61,7 +62,7 @@ class FeeController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'fee_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Fee $fee, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Fee $fee, EntityManagerInterface $entityManager): RedirectResponse|Response
     {
         $form = $this->createForm(FeeType::class, $fee);
         $form->handleRequest($request);
@@ -78,7 +79,7 @@ class FeeController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'fee_delete', methods: ['POST'])]
-    public function delete(Request $request, Fee $fee): Response
+    public function delete(Request $request, Fee $fee): RedirectResponse
     {
         if ($this->isCsrfTokenValid('delete' . $fee->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($fee);
@@ -93,7 +94,7 @@ class FeeController extends AbstractController
         FeeRepository $feeRepository,
         Request $request,
         FixedFeesInterface $fixedFees
-    ): Response {
+    ): RedirectResponse|Response {
         if ($this->isCsrfTokenValid('fixedfees', $request->request->get('_token'))) {
             $fixedFees->insert();
 

@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -56,8 +57,11 @@ class WalletController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/new', name: 'wallet_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
+    public function new(Request $request): RedirectResponse|Response
     {
         $wallet = new Wallet();
         $form = $this->createForm(WalletType::class, $wallet);
@@ -75,8 +79,11 @@ class WalletController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/edit/{id}', name: 'wallet_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Wallet $wallet, string $route = ''): Response
+    public function edit(Request $request, Wallet $wallet, string $route = ''): RedirectResponse|Response
     {
         $route = (!empty($route)) ? $route : 'wallet_index';
         $form = $this->createForm(WalletType::class, $wallet);
@@ -96,7 +103,7 @@ class WalletController extends AbstractController
     }
 
     #[Route('/isconsistent/{id}/{bool}', name: 'wallet_is_consistent', methods: ['POST'])]
-    public function isConsistent(Request $request, Wallet $wallet, string $bool = '', string $route = ''): Response
+    public function isConsistent(Request $request, Wallet $wallet, string $bool = '', string $route = ''): RedirectResponse
     {
         $route = (!empty($route)) ? $route : 'wallet_index';
         if ($this->isCsrfTokenValid('is_consistent' . $wallet->getId(), $request->request->get('_token'))) {
@@ -117,8 +124,11 @@ class WalletController extends AbstractController
         return $this->redirectToRoute($route);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/delete/{id}', name: 'wallet_delete', methods: ['POST'])]
-    public function delete(Request $request, Wallet $wallet, string $route = ''): Response
+    public function delete(Request $request, Wallet $wallet, string $route = ''): RedirectResponse
     {
         $route = (!empty($route)) ? $route : 'wallet_index';
         if ($this->isCsrfTokenValid('delete' . $wallet->getId(), $request->request->get('_token'))) {

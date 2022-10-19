@@ -4,10 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Contractor;
 use App\Form\ContractorType;
+use App\Repository\AppPaginatorInterface;
 use App\Repository\ContractorRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,8 +39,8 @@ class ContractorController extends AbstractController
 
         return $this->render('contractor/index.html.twig', [
             'paginator' => $paginator,
-            'previous' => $offset - ContractorRepository::PAGINATOR_PER_PAGE,
-            'next' => min(count($paginator), $offset + ContractorRepository::PAGINATOR_PER_PAGE),
+            'previous' => $offset - AppPaginatorInterface::PAGINATOR_PER_PAGE,
+            'next' => min(count($paginator), $offset + AppPaginatorInterface::PAGINATOR_PER_PAGE),
         ]);
     }
 
@@ -62,7 +64,7 @@ class ContractorController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'contractor_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Contractor $contractor, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Contractor $contractor, EntityManagerInterface $entityManager): RedirectResponse|Response
     {
         $form = $this->createForm(ContractorType::class, $contractor);
         $form->handleRequest($request);
@@ -79,7 +81,7 @@ class ContractorController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'contractor_delete', methods: ['POST'])]
-    public function delete(Request $request, Contractor $contractor): Response
+    public function delete(Request $request, Contractor $contractor): RedirectResponse
     {
         if ($this->isCsrfTokenValid('delete' . $contractor->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($contractor);
