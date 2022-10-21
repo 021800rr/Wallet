@@ -25,7 +25,7 @@ class BackupRepository extends ServiceEntityRepository implements AppPaginatorIn
     public function paymentsByMonth()
     {
         return $this->createQueryBuilder('p')
-            ->select('p.yearMonth', 'SUM(p.amount) as sa')
+            ->select('p.yearMonth', 'SUM(p.amount) as sum_of_amount')
             ->where('p.amount > 99')
             ->groupBy('p.yearMonth')
             ->orderBy('p.yearMonth', 'DESC')

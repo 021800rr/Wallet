@@ -9,7 +9,7 @@
     {% for backup in paginator %}
         <tr>
             <td>{{ backup.yearMonth }}</td>
-            <td class="text-end row_money">{{ backup.sa }}</td>
+            <td class="text-end row_money" id="backup_sum_of_amount{{ loop.index }}">{{ backup.sum_of_amount }}</td>
         </tr>
     {% endfor %}
     </tbody>

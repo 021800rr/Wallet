@@ -18,7 +18,7 @@ class Calculator
 
         $sum = 0;
         foreach ($backups as $backup) {
-            $sum += $backup['sa'];
+            $sum += $backup['sum_of_amount'];
         }
 
         $firstDate = $this->foretellDate($backup['yearMonth']);
