@@ -91,6 +91,13 @@
                     {{ 'New Receipt'|trans }}
                 </a>
             </li>
+            {% if 'wallet_index' == app.request.attributes.get('_route') %}
+                <li class="nav-item me-2">
+                    <a class="btn btn-outline-dark" href="{{ path('wallet_check') }}" id="base_wallet_new">
+                        {{ 'Check'|trans }}
+                    </a>
+                </li>
+            {% endif %}
         </ul>
         {{ render(controller(
             'App\\Controller\\SearchController::index', {'query':  query|default('') }

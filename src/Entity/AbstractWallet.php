@@ -23,7 +23,7 @@ abstract class AbstractWallet
 
     #[ORM\Column(type: 'float')]
     #[Assert\Type('float')]
-    protected float $balance = 0.0;
+    protected float $balance = 0.00;
 
     #[ORM\ManyToOne(targetEntity: Contractor::class, inversedBy: 'wallets')]
     #[ORM\JoinColumn(nullable: false)]
@@ -76,7 +76,7 @@ abstract class AbstractWallet
 
     public function setBalance(float $balance): self
     {
-        $this->balance = $balance;
+        $this->balance = round($balance, 2);
 
         return $this;
     }

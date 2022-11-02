@@ -67,7 +67,7 @@ class SearchControllerTest extends WebTestCase
         $this->assertSame('-20.00', $values["wallet[amount]"]);
         $form['wallet[amount]']->setValue(-40);
         $this->client->submit($form);
-        $this->assertSelectorTextContains('td#search_balance1', '150');
+        $this->assertSelectorTextContains('td#search_balance1', '151');
     }
 
     public function testDelete(): void
@@ -79,7 +79,7 @@ class SearchControllerTest extends WebTestCase
 
         $this->assertSelectorTextContains('td#search_balance1', '170');
         $this->assertSelectorTextContains('td#search_amount1', '-20');
-        $this->assertSelectorTextContains('td#search_balance2', '190');
+        $this->assertSelectorTextContains('td#search_balance2', '191');
         $this->assertSelectorTextContains('td#search_amount2', '-10');
 
         $this->client->submit(

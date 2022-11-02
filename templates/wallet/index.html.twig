@@ -20,7 +20,16 @@
                     <td class="text-end row_money_amount" id="wallet_amount{{ loop.index }}">{{ wallet.amount }}</td>
                     <td class="text-end row_money" id="wallet_balance{{ loop.index }}">{{ wallet.balance }}</td>
                     <td class="ps-4" id="wallet_contractor{{ loop.index }}">{{ wallet.contractor.description }}</td>
-                    <td id="wallet_description{{ loop.index }}">{{ wallet.description }}</td>
+                    <td id="wallet_description{{ loop.index }}">
+                        {% if wallet.balanceSupervisor is defined and wallet.balanceSupervisor is not null %}
+                            <span class="alert-danger">
+                                {{ 'A different balance value is expected:'|trans }}
+                                {{ wallet.balanceSupervisor }}
+                            </span>
+                            <br>
+                        {% endif %}
+                        {{ wallet.description }}
+                    </td>
                     <td class="text-center">{{ include('wallet/_is_consistent_form.html.twig') }}</td>
                     <td class="text-center">{{ include('wallet/_edit_a.html.twig') }}</td>
                     <td class="text-center">{{ include('wallet/_delete_form.html.twig') }}</td>

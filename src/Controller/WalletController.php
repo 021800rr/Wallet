@@ -6,6 +6,7 @@ use App\Entity\Wallet;
 use App\Form\WalletType;
 use App\Repository\AppPaginatorInterface;
 use App\Repository\WalletRepository;
+use App\Service\BalanceSupervisor;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
 use App\Service\RequestParser\RequestInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,7 +16,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route(
     path: '/{_locale}/wallet',
@@ -103,8 +106,12 @@ class WalletController extends AbstractController
     }
 
     #[Route('/isconsistent/{id}/{bool}', name: 'wallet_is_consistent', methods: ['POST'])]
-    public function isConsistent(Request $request, Wallet $wallet, string $bool = '', string $route = ''): RedirectResponse
-    {
+    public function isConsistent(
+        Request $request,
+        Wallet $wallet,
+        string $bool = '',
+        string $route = ''
+    ): RedirectResponse {
         $route = (!empty($route)) ? $route : 'wallet_index';
         if ($this->isCsrfTokenValid('is_consistent' . $wallet->getId(), $request->request->get('_token'))) {
             switch ($bool) {
@@ -137,6 +144,27 @@ class WalletController extends AbstractController
             $this->entityManager->remove($wallet);
             $this->entityManager->flush();
         }
+
+        return $this->redirectToRoute($route);
+    }
+
+    #[Route('/check', name: 'wallet_check', methods: ['GET'])]
+    public function check(
+        BalanceSupervisor $supervisor,
+        SessionInterface $session,
+        TranslatorInterface $translator
+    ): RedirectResponse {
+        $supervisor->setWallets($this->repository->getAllRecords());
+        $wallets = $supervisor->crawl();
+        $caught = false;
+        foreach ($wallets as $wallet) {
+            $session->getFlashBag()->add('error', $wallet->__toString());
+            $caught = true;
+        }
+        if (false === $caught) {
+            $session->getFlashBag()->add('success', $translator->trans('Passed'));
+        }
+        $route = (!empty($route)) ? $route : 'wallet_index';
 
         return $this->redirectToRoute($route);
     }

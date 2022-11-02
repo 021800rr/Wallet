@@ -109,6 +109,22 @@
         <source>Total</source>
         <target>Total</target>
       </trans-unit>
+      <trans-unit id="WV.Qhd8" resname="Interest">
+        <source>Interest</source>
+        <target>Odsetki</target>
+      </trans-unit>
+      <trans-unit id="nWCEHgp" resname="Check">
+        <source>Check</source>
+        <target>Sprawdź</target>
+      </trans-unit>
+      <trans-unit id="Q2.nG7l" resname="Passed">
+        <source>Passed</source>
+        <target>OK</target>
+      </trans-unit>
+      <trans-unit id="5FKtmu5" resname="A different balance value is expected:">
+        <source>A different balance value is expected:</source>
+        <target>Oczekiwana jest inna wartość salda:</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

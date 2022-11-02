@@ -24,7 +24,7 @@ class WalletFixtures extends Fixture implements DependentFixtureInterface
         $wallet = new Wallet();
         $wallet->setDate(new DateTime('2021-05-12'));
         $wallet->setAmount(-10.00);
-        $wallet->setBalance(190.00);
+        $wallet->setBalance(191.00);
         $wallet->setContractor($this->getReference(ContractorFixtures::ALLEGRO));
 
         $manager->persist($wallet);
