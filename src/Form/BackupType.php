@@ -6,26 +6,21 @@ use App\Entity\Backup;
 use App\Entity\Contractor;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class BackupType extends AbstractType
+class BackupType extends AbstractAccountType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        parent::buildForm($builder, $options);
         $builder
-            ->add('date', DateType::class, [
-                'widget' => 'single_text',
-            ])
             ->add('amount', MoneyType::class, [
                 'currency' => 'PLN',
                 'attr' => [
                     'autofocus' => true,
-                    'required' => true
+                    'required' => true,
                 ]
             ])
             ->add('contractor', EntityType::class, [
@@ -47,12 +42,6 @@ class BackupType extends AbstractType
             ->add('holiday', MoneyType::class, [
                 'currency' => 'PLN',
                 'disabled' => true,
-            ])
-            ->add('description')
-            ->add('save', SubmitType::class, [
-                'attr' => [
-                    'class' => 'save btn btn-primary  my-3',
-                ],
             ])
         ;
     }

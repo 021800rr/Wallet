@@ -12,7 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Contractor|null findOneBy(array $criteria, array $orderBy = null)
  * @method Contractor[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ContractorRepository extends ServiceEntityRepository implements AppPaginatorInterface
+class ContractorRepository extends ServiceEntityRepository implements ContractorRepositoryInterface
 {
     public const INTERNAL_TRANSFER = 'przelew własny';
 
@@ -30,7 +30,7 @@ class ContractorRepository extends ServiceEntityRepository implements AppPaginat
     {
         $query = $this->createQueryBuilder('c')
             ->addOrderBy('c.description', 'ASC')
-            ->setMaxResults(AppPaginatorInterface::PAGINATOR_PER_PAGE)
+            ->setMaxResults(PaginatorEnum::PerPage->value)
             ->setFirstResult($offset)
             ->getQuery();
 

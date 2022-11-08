@@ -8,7 +8,7 @@ class Search extends AbstractParser implements ControllerInterface
 {
     /**
      * @param SymfonyRequest $request
-     * @return array [string, int] $query, $offset
+     * @return array
      */
     public function run(SymfonyRequest $request): array
     {

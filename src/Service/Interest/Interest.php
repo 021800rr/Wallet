@@ -1,18 +1,15 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Interest;
 
 use App\Entity\Backup;
-use App\Repository\ContractorRepository;
+use App\Repository\ContractorRepositoryInterface;
 use Symfony\Component\Form\FormInterface;
 
 class Interest
 {
-    private ContractorRepository $contractorRepository;
-
-    public function __construct(ContractorRepository $contractorRepository)
+    public function __construct(private readonly ContractorRepositoryInterface $contractorRepository)
     {
-        $this->contractorRepository = $contractorRepository;
     }
 
     public function form2Backup(FormInterface $form): Backup

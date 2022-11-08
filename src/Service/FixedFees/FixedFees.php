@@ -4,8 +4,8 @@ namespace App\Service\FixedFees;
 
 use App\Entity\Fee;
 use App\Entity\Wallet;
-use App\Repository\FeeRepository;
-use App\Repository\WalletRepository;
+use App\Repository\FeeRepositoryInterface;
+use App\Repository\WalletRepositoryInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
 use DateInterval;
 use DateTime;
@@ -14,27 +14,18 @@ use Exception;
 
 class FixedFees implements FixedFeesInterface
 {
-    private FeeRepository $feeRepository;
-    private EntityManagerInterface $entityManager;
-    private BalanceUpdaterInterface $walletUpdater;
-    private WalletRepository $walletRepository;
-
     public function __construct(
-        EntityManagerInterface  $entityManage,
-        FeeRepository           $feeRepository,
-        BalanceUpdaterInterface $walletUpdater,
-        WalletRepository        $walletRepository
+        private readonly EntityManagerInterface $entityManager,
+        private readonly FeeRepositoryInterface $fee,
+        private readonly BalanceUpdaterInterface $walletUpdater,
+        private readonly WalletRepositoryInterface $walletRepository
     ) {
-        $this->entityManager = $entityManage;
-        $this->feeRepository = $feeRepository;
-        $this->walletUpdater = $walletUpdater;
-        $this->walletRepository = $walletRepository;
     }
 
     /** @throws Exception */
     public function insert(): void
     {
-        foreach ($this->feeRepository->findAll() as $fee) {
+        foreach ($this->fee->findAll() as $fee) {
             $wallet = new Wallet();
 
             $wallet->setDate($this->getDate($fee));

@@ -4,9 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Wallet;
 use App\Form\WalletType;
-use App\Repository\AppPaginatorInterface;
-use App\Repository\WalletRepository;
-use App\Service\BalanceSupervisor;
+use App\Repository\PaginatorEnum;
+use App\Repository\WalletRepositoryInterface;
+use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
 use App\Service\RequestParser\RequestInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,33 +30,24 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[IsGranted('ROLE_ADMIN')]
 class WalletController extends AbstractController
 {
-    private BalanceUpdaterInterface $updater;
-    private WalletRepository $repository;
-    private EntityManagerInterface $entityManager;
-
     public function __construct(
-        BalanceUpdaterInterface $walletUpdater,
-        WalletRepository $repository,
-        EntityManagerInterface $entityManager
+        private readonly BalanceUpdaterInterface $walletUpdater,
+        private readonly WalletRepositoryInterface $repository,
+        private readonly EntityManagerInterface $entityManager
     ) {
-        $this->updater = $walletUpdater;
-        $this->repository = $repository;
-        $this->entityManager = $entityManager;
     }
 
     #[Route('/', name: 'wallet_index', methods: ['GET'])]
-    public function index(
-        Request $request,
-        RequestInterface $parser
-    ): Response {
+    public function index(Request $request, RequestInterface $parser): Response
+    {
         $offset = $parser->strategy(WalletController::class, $request);
 
         $paginator = $this->repository->getPaginator($offset);
 
         return $this->render('wallet/index.html.twig', [
             'paginator' => $paginator,
-            'previous' => $offset - AppPaginatorInterface::PAGINATOR_PER_PAGE,
-            'next' => min(count($paginator), $offset + AppPaginatorInterface::PAGINATOR_PER_PAGE),
+            'previous' => $offset - PaginatorEnum::PerPage->value,
+            'next' => min(count($paginator), $offset + PaginatorEnum::PerPage->value),
         ]);
     }
 
@@ -72,7 +63,7 @@ class WalletController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($wallet);
             $this->entityManager->flush();
-            $this->updater->compute($this->repository, $wallet->getId());
+            $this->walletUpdater->compute($this->repository, $wallet->getId());
 
             return $this->redirectToRoute('wallet_index');
         }
@@ -95,7 +86,7 @@ class WalletController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($wallet);
             $this->entityManager->flush();
-            $this->updater->compute($this->repository, $wallet->getId());
+            $this->walletUpdater->compute($this->repository, $wallet->getId());
 
             return $this->redirectToRoute($route);
         }
@@ -140,7 +131,7 @@ class WalletController extends AbstractController
         $route = (!empty($route)) ? $route : 'wallet_index';
         if ($this->isCsrfTokenValid('delete' . $wallet->getId(), $request->request->get('_token'))) {
             $wallet->setAmount(0);
-            $this->updater->compute($this->repository, $wallet->getId());
+            $this->walletUpdater->compute($this->repository, $wallet->getId());
             $this->entityManager->remove($wallet);
             $this->entityManager->flush();
         }
@@ -150,7 +141,7 @@ class WalletController extends AbstractController
 
     #[Route('/check', name: 'wallet_check', methods: ['GET'])]
     public function check(
-        BalanceSupervisor $supervisor,
+        BalanceSupervisorInterface $supervisor,
         SessionInterface $session,
         TranslatorInterface $translator
     ): RedirectResponse {
@@ -164,8 +155,7 @@ class WalletController extends AbstractController
         if (false === $caught) {
             $session->getFlashBag()->add('success', $translator->trans('Passed'));
         }
-        $route = (!empty($route)) ? $route : 'wallet_index';
 
-        return $this->redirectToRoute($route);
+        return $this->redirectToRoute('wallet_index');
     }
 }

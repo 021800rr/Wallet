@@ -5,14 +5,13 @@ namespace App\Controller;
 use App\Entity\Backup;
 use App\Form\BackupType;
 use App\Form\InterestType;
-use App\Repository\AppPaginatorInterface;
-use App\Repository\BackupRepository;
-use App\Repository\ChfRepository;
-use App\Repository\EurRepository;
-use App\Repository\WalletRepository;
+use App\Repository\AccountRepositoryInterface;
+use App\Repository\PaginatorEnum;
+use App\Repository\BackupRepositoryInterface;
+use App\Repository\WalletRepositoryInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
-use App\Service\ExpectedBackup\Calculator;
-use App\Service\Interest;
+use App\Service\ExpectedBackup\CalculatorInterface;
+use App\Service\Interest\InterestInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -34,18 +33,11 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_ADMIN')]
 class BackupController extends AbstractController
 {
-    private BalanceUpdaterInterface $updater;
-    private BackupRepository $repository;
-    private EntityManagerInterface $entityManager;
-
     public function __construct(
-        BalanceUpdaterInterface $backupUpdater,
-        BackupRepository $repository,
-        EntityManagerInterface $entityManager
+        private readonly BalanceUpdaterInterface $backupUpdater,
+        private readonly BackupRepositoryInterface $repository,
+        private readonly EntityManagerInterface $entityManager
     ) {
-        $this->updater = $backupUpdater;
-        $this->repository = $repository;
-        $this->entityManager = $entityManager;
     }
 
     #[Route('/', name: 'backup_index', methods: ['GET'])]
@@ -56,8 +48,8 @@ class BackupController extends AbstractController
 
         return $this->render('backup/index.html.twig', [
             'paginator' => $paginator,
-            'previous' => $offset - AppPaginatorInterface::PAGINATOR_PER_PAGE,
-            'next' => min(count($paginator), $offset + AppPaginatorInterface::PAGINATOR_PER_PAGE),
+            'previous' => $offset - PaginatorEnum::PerPage->value,
+            'next' => min(count($paginator), $offset + PaginatorEnum::PerPage->value),
         ]);
     }
 
@@ -73,7 +65,7 @@ class BackupController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($backup);
             $this->entityManager->flush();
-            $this->updater->compute($this->repository, $backup->getId());
+            $this->backupUpdater->compute($this->repository, $backup->getId());
 
             return $this->redirectToRoute('backup_index');
         }
@@ -92,7 +84,7 @@ class BackupController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$backup->getId(), $request->request->get('_token'))) {
             $backup->setAmount(0);
-            $this->updater->compute($this->repository, $backup->getId());
+            $this->backupUpdater->compute($this->repository, $backup->getId());
             $this->entityManager->remove($backup);
             $this->entityManager->flush();
         }
@@ -107,10 +99,10 @@ class BackupController extends AbstractController
      */
     #[Route('/paymentsByMonth', name: 'backup_payments_by_month', methods: ['GET'])]
     public function paymentsByMonth(
-        Calculator $calculator,
-        WalletRepository $walletRepository,
-        ChfRepository $chfRepository,
-        EurRepository $eurRepository
+        CalculatorInterface $calculator,
+        WalletRepositoryInterface $walletRepository,
+        AccountRepositoryInterface $chf,
+        AccountRepositoryInterface $eur
     ): Response {
         $paginator = $this->repository->paymentsByMonth();
         $expected = $calculator->compute($paginator);
@@ -122,8 +114,8 @@ class BackupController extends AbstractController
             'paginator' => $paginator,
             'expected' => $expected,
             'walletBalance' => $walletBalance,
-            'chfBalance' => $chfRepository->getCurrentBalance(),
-            'eurBalance' => $eurRepository->getCurrentBalance(),
+            'chfBalance' => $chf->getCurrentBalance(),
+            'eurBalance' => $eur->getCurrentBalance(),
             'backupLastRecord' => $backupLastRecord,
             'total' => $walletBalance + $backupLastRecord->getBalance()
         ]);
@@ -133,7 +125,7 @@ class BackupController extends AbstractController
      * @throws Exception
      */
     #[Route('/interest', name: 'backup_interest', methods: ['GET', 'POST'])]
-    public function newInterest(Request $request, Interest $interest): RedirectResponse|Response
+    public function newInterest(Request $request, InterestInterface $interest): RedirectResponse|Response
     {
         $form = $this->createForm(InterestType::class);
         $form->handleRequest($request);
@@ -141,7 +133,7 @@ class BackupController extends AbstractController
             $backup = $interest->form2Backup($form);
             $this->entityManager->persist($backup);
             $this->entityManager->flush();
-            $this->updater->compute($this->repository, $backup->getId());
+            $this->backupUpdater->compute($this->repository, $backup->getId());
 
             return $this->redirectToRoute('backup_index');
         }

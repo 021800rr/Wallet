@@ -4,9 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Eur;
 use App\Form\EurType;
-use App\Repository\AppPaginatorInterface;
-use App\Repository\EurRepository;
-use App\Repository\ContractorRepository;
+use App\Repository\AccountRepositoryInterface;
+use App\Repository\ContractorRepositoryInterface;
+use App\Repository\PaginatorEnum;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -27,30 +27,23 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_ADMIN')]
 class EurController extends AbstractController
 {
-    private BalanceUpdaterInterface $updater;
-    private EurRepository $repository;
-    private EntityManagerInterface $entityManager;
-
     public function __construct(
-        BalanceUpdaterInterface $walletUpdater,
-        EurRepository $repository,
-        EntityManagerInterface $entityManager
+        private readonly BalanceUpdaterInterface $walletUpdater,
+        private readonly AccountRepositoryInterface $eur,
+        private readonly EntityManagerInterface $entityManager
     ) {
-        $this->updater = $walletUpdater;
-        $this->repository = $repository;
-        $this->entityManager = $entityManager;
     }
 
     #[Route('/', name: 'eur_index', methods: ['GET'])]
     public function index(Request $request): Response
     {
         $offset = max(0, $request->query->getInt('offset', 0));
-        $paginator = $this->repository->getPaginator($offset);
+        $paginator = $this->eur->getPaginator($offset);
 
         return $this->render('eur/index.html.twig', [
             'paginator' => $paginator,
-            'previous' => $offset - AppPaginatorInterface::PAGINATOR_PER_PAGE,
-            'next' => min(count($paginator), $offset + AppPaginatorInterface::PAGINATOR_PER_PAGE),
+            'previous' => $offset - PaginatorEnum::PerPage->value,
+            'next' => min(count($paginator), $offset + PaginatorEnum::PerPage->value),
         ]);
     }
 
@@ -58,7 +51,7 @@ class EurController extends AbstractController
      * @throws Exception
      */
     #[Route('/new', name: 'eur_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, ContractorRepository $contractorRepository): RedirectResponse|Response
+    public function new(Request $request, ContractorRepositoryInterface $contractorRepository): RedirectResponse|Response
     {
         $eur = new Eur();
         $form = $this->createForm(EurType::class, $eur);
@@ -68,7 +61,7 @@ class EurController extends AbstractController
             $eur->setContractor($contractor);
             $this->entityManager->persist($eur);
             $this->entityManager->flush();
-            $this->updater->compute($this->repository, $eur->getId());
+            $this->walletUpdater->compute($this->eur, $eur->getId());
 
             return $this->redirectToRoute('eur_index');
         }
@@ -91,7 +84,7 @@ class EurController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($eur);
             $this->entityManager->flush();
-            $this->updater->compute($this->repository, $eur->getId());
+            $this->walletUpdater->compute($this->eur, $eur->getId());
 
             return $this->redirectToRoute($route);
         }
@@ -132,7 +125,7 @@ class EurController extends AbstractController
         $route = (!empty($route)) ? $route : 'eur_index';
         if ($this->isCsrfTokenValid('delete' . $eur->getId(), $request->request->get('_token'))) {
             $eur->setAmount(0);
-            $this->updater->compute($this->repository, $eur->getId());
+            $this->walletUpdater->compute($this->eur, $eur->getId());
             $this->entityManager->remove($eur);
             $this->entityManager->flush();
         }

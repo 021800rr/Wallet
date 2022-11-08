@@ -8,7 +8,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class FrancWalletFixtures extends Fixture implements DependentFixtureInterface
+class ChfWalletFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
@@ -25,6 +25,14 @@ class FrancWalletFixtures extends Fixture implements DependentFixtureInterface
         $chf->setDate(new DateTime('2021-11-04'));
         $chf->setAmount(20.02);
         $chf->setBalance(30.03);
+        $chf->setContractor($this->getReference(ContractorFixtures::INTERNAL));
+
+        $manager->persist($chf);
+
+        $chf = new Chf();
+        $chf->setDate(new DateTime('2021-11-26'));
+        $chf->setAmount(40.04);
+        $chf->setBalance(70.07);
         $chf->setContractor($this->getReference(ContractorFixtures::INTERNAL));
 
         $manager->persist($chf);

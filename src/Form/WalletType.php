@@ -6,21 +6,16 @@ use App\Entity\Contractor;
 use App\Entity\Wallet;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class WalletType extends AbstractType
+class WalletType extends AbstractAccountType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        parent::buildForm($builder, $options);
         $builder
-            ->add('date', DateType::class, [
-                'widget' => 'single_text',
-            ])
             ->add('amount', MoneyType::class, [
                 'currency' => 'PLN',
                 'attr' => [
@@ -34,12 +29,6 @@ class WalletType extends AbstractType
                     return $er->createQueryBuilder('c')->orderBy('c.description', 'ASC');
                 },
                 'choice_label' => 'description',
-            ])
-            ->add('description')
-            ->add('save', SubmitType::class, [
-                'attr' => [
-                    'class' => 'save btn btn-primary  my-3',
-                ],
             ])
         ;
     }

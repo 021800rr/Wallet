@@ -17,7 +17,7 @@ class BackupControllerTest extends WebTestCase
         $this->assertSelectorTextContains('td#backup_balance1', '600');
 
         $this->client->click(
-            $crawler->filter('#1-edit')
+            $crawler->filter('#backup_edit1')
                 ->link()
         );
         $this->client->submitForm('Save', [

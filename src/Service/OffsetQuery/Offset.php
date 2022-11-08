@@ -11,7 +11,7 @@ class Offset extends AbstractSession implements OffsetInterface
         if (null !== $request->query->get('offset')) {
             $intOffset = $request->query->getInt('offset', 0);
 
-            $this->session->set('offset', $intOffset);
+            $this->requestStack->getSession()->set('offset', $intOffset);
         }
     }
 
@@ -21,11 +21,11 @@ class Offset extends AbstractSession implements OffsetInterface
             return $request->query->getInt('offset', 0);
         }
 
-        return $this->session->get('offset', 0);
+        return $this->requestStack->getSession()->get('offset', 0);
     }
 
     public function reset()
     {
-        $this->session->set('offset', 0);
+        $this->requestStack->getSession()->set('offset', 0);
     }
 }

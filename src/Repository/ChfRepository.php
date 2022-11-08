@@ -11,9 +11,9 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Chf|null findOneBy(array $criteria, array $orderBy = null)
  * @method Chf[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ChfRepository extends ServiceEntityRepository implements AppPaginatorInterface
+class ChfRepository extends ServiceEntityRepository implements AccountRepositoryInterface
 {
-    use WalletBackupTrait;
+    use AccountTrait;
 
     public function __construct(ManagerRegistry $registry)
     {

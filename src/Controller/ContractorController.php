@@ -4,8 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Contractor;
 use App\Form\ContractorType;
-use App\Repository\AppPaginatorInterface;
-use App\Repository\ContractorRepository;
+use App\Repository\ContractorRepositoryInterface;
+use App\Repository\PaginatorEnum;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,23 +24,20 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_ADMIN')]
 class ContractorController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     #[Route('/', name: 'contractor_index', methods: ['GET'])]
-    public function index(ContractorRepository $contractorRepository, Request $request): Response
+    public function index(ContractorRepositoryInterface $contractorRepository, Request $request): Response
     {
         $offset = max(0, $request->query->getInt('offset', 0));
         $paginator = $contractorRepository->getPaginator($offset);
 
         return $this->render('contractor/index.html.twig', [
             'paginator' => $paginator,
-            'previous' => $offset - AppPaginatorInterface::PAGINATOR_PER_PAGE,
-            'next' => min(count($paginator), $offset + AppPaginatorInterface::PAGINATOR_PER_PAGE),
+            'previous' => $offset - PaginatorEnum::PerPage->value,
+            'next' => min(count($paginator), $offset + PaginatorEnum::PerPage->value),
         ]);
     }
 
@@ -64,13 +61,13 @@ class ContractorController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'contractor_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Contractor $contractor, EntityManagerInterface $entityManager): RedirectResponse|Response
+    public function edit(Request $request, Contractor $contractor): RedirectResponse|Response
     {
         $form = $this->createForm(ContractorType::class, $contractor);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            $this->entityManager->flush();
 
             return $this->redirectToRoute('contractor_index');
         }

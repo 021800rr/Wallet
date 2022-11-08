@@ -6,19 +6,16 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class Request implements RequestInterface
 {
-    private ControllerInterface $search;
-    private ControllerInterface $wallet;
-
-    public function __construct(ControllerInterface $search, ControllerInterface $wallet)
-    {
-        $this->search = $search;
-        $this->wallet = $wallet;
+    public function __construct(
+        private readonly ControllerInterface $search,
+        private readonly ControllerInterface $wallet
+    ) {
     }
 
     /**
      * @param string $controller
      * @param SymfonyRequest $request
-     * @return int|array [string, int] $query, $offset
+     * @return int|array
      */
     public function strategy(string $controller, SymfonyRequest $request): int|array
     {

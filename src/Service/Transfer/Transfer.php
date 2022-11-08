@@ -2,39 +2,26 @@
 
 namespace App\Service\Transfer;
 
+use App\Entity\AbstractAccount;
 use App\Entity\Backup;
-use App\Entity\Contractor;
 use App\Entity\Wallet;
-use App\Repository\BackupRepository;
-use App\Repository\ContractorRepository;
-use App\Repository\WalletRepository;
+use App\Repository\BackupRepositoryInterface;
+use App\Repository\ContractorRepositoryInterface;
+use App\Repository\WalletRepositoryInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
 class Transfer implements TransferInterface
 {
-    private EntityManagerInterface $entityManager;
-    private ContractorRepository $contractorRepository;
-    private BalanceUpdaterInterface $backupUpdater;
-    private BackupRepository $backupRepository;
-    private BalanceUpdaterInterface $walletUpdater;
-    private WalletRepository $walletRepository;
-
     public function __construct(
-        EntityManagerInterface $entityManage,
-        ContractorRepository $contractorRepository,
-        BalanceUpdaterInterface $backupUpdater,
-        BackupRepository $backupRepository,
-        BalanceUpdaterInterface $walletUpdater,
-        WalletRepository $walletRepository
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ContractorRepositoryInterface $contractorRepository,
+        private readonly BalanceUpdaterInterface $backupUpdater,
+        private readonly BackupRepositoryInterface $backupRepository,
+        private readonly BalanceUpdaterInterface $walletUpdater,
+        private readonly WalletRepositoryInterface $walletRepository
     ) {
-        $this->entityManager = $entityManage;
-        $this->contractorRepository = $contractorRepository;
-        $this->backupUpdater = $backupUpdater;
-        $this->backupRepository = $backupRepository;
-        $this->walletUpdater = $walletUpdater;
-        $this->walletRepository = $walletRepository;
     }
 
     /**
@@ -62,7 +49,7 @@ class Transfer implements TransferInterface
         $this->backupUpdater->compute($this->backupRepository, $backup->getId());
     }
 
-    private function persistImport(Wallet|Backup $fromAccount, Backup|Wallet $toAccount): Backup|Wallet
+    private function persistImport(AbstractAccount $fromAccount, AbstractAccount $toAccount): AbstractAccount
     {
         $contractor = $this->contractorRepository->getInternalTransferOwner();
         $fromAccount->setContractor($contractor);
@@ -73,7 +60,7 @@ class Transfer implements TransferInterface
         return $fromAccount;
     }
 
-    private function persistExport(Backup|Wallet $toAccount): Backup|Wallet
+    private function persistExport(AbstractAccount $toAccount): AbstractAccount
     {
         $contractor = $this->contractorRepository->getInternalTransferOwner();
         $toAccount->setContractor($contractor);

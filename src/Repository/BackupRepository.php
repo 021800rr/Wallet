@@ -11,9 +11,9 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Backup|null findOneBy(array $criteria, array $orderBy = null)
  * @method Backup[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class BackupRepository extends ServiceEntityRepository implements AppPaginatorInterface
+class BackupRepository extends ServiceEntityRepository implements BackupRepositoryInterface
 {
-    use WalletBackupTrait;
+    use AccountTrait;
 
     private const PAYMENTS_BY_MONTH_YEARS = 12;
 

@@ -7,10 +7,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 abstract class AbstractSession
 {
-    protected SessionInterface $session;
-
-    public function __construct(RequestStack $requestStack)
+    public function __construct(protected readonly RequestStack $requestStack)
     {
-        $this->session = $requestStack->getSession();
     }
 }

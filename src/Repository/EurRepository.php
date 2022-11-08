@@ -11,9 +11,9 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Eur|null findOneBy(array $criteria, array $orderBy = null)
  * @method Eur[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class EurRepository extends ServiceEntityRepository implements AppPaginatorInterface
+class EurRepository extends ServiceEntityRepository implements AccountRepositoryInterface
 {
-    use WalletBackupTrait;
+    use AccountTrait;
 
     public function __construct(ManagerRegistry $registry)
     {

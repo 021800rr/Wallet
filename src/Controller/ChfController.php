@@ -4,9 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Chf;
 use App\Form\ChfType;
-use App\Repository\AppPaginatorInterface;
-use App\Repository\ChfRepository;
-use App\Repository\ContractorRepository;
+use App\Repository\AccountRepositoryInterface;
+use App\Repository\ContractorRepositoryInterface;
+use App\Repository\PaginatorEnum;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -27,30 +27,23 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_ADMIN')]
 class ChfController extends AbstractController
 {
-    private BalanceUpdaterInterface $updater;
-    private ChfRepository $repository;
-    private EntityManagerInterface $entityManager;
-
     public function __construct(
-        BalanceUpdaterInterface $walletUpdater,
-        ChfRepository $repository,
-        EntityManagerInterface $entityManager
+        private readonly BalanceUpdaterInterface $walletUpdater,
+        private readonly AccountRepositoryInterface $chf,
+        private readonly EntityManagerInterface $entityManager
     ) {
-        $this->updater = $walletUpdater;
-        $this->repository = $repository;
-        $this->entityManager = $entityManager;
     }
 
     #[Route('/', name: 'chf_index', methods: ['GET'])]
     public function index(Request $request): Response
     {
         $offset = max(0, $request->query->getInt('offset', 0));
-        $paginator = $this->repository->getPaginator($offset);
+        $paginator = $this->chf->getPaginator($offset);
 
         return $this->render('chf/index.html.twig', [
             'paginator' => $paginator,
-            'previous' => $offset - AppPaginatorInterface::PAGINATOR_PER_PAGE,
-            'next' => min(count($paginator), $offset + AppPaginatorInterface::PAGINATOR_PER_PAGE),
+            'previous' => $offset - PaginatorEnum::PerPage->value,
+            'next' => min(count($paginator), $offset + PaginatorEnum::PerPage->value),
         ]);
     }
 
@@ -58,7 +51,7 @@ class ChfController extends AbstractController
      * @throws Exception
      */
     #[Route('/new', name: 'chf_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, ContractorRepository $contractorRepository): RedirectResponse|Response
+    public function new(Request $request, ContractorRepositoryInterface $contractorRepository): RedirectResponse|Response
     {
         $chf = new Chf();
         $form = $this->createForm(ChfType::class, $chf);
@@ -68,7 +61,7 @@ class ChfController extends AbstractController
             $chf->setContractor($contractor);
             $this->entityManager->persist($chf);
             $this->entityManager->flush();
-            $this->updater->compute($this->repository, $chf->getId());
+            $this->walletUpdater->compute($this->chf, $chf->getId());
 
             return $this->redirectToRoute('chf_index');
         }
@@ -91,7 +84,7 @@ class ChfController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($chf);
             $this->entityManager->flush();
-            $this->updater->compute($this->repository, $chf->getId());
+            $this->walletUpdater->compute($this->chf, $chf->getId());
 
             return $this->redirectToRoute($route);
         }
@@ -132,7 +125,7 @@ class ChfController extends AbstractController
         $route = (!empty($route)) ? $route : 'chf_index';
         if ($this->isCsrfTokenValid('delete' . $chf->getId(), $request->request->get('_token'))) {
             $chf->setAmount(0);
-            $this->updater->compute($this->repository, $chf->getId());
+            $this->walletUpdater->compute($this->chf, $chf->getId());
             $this->entityManager->remove($chf);
             $this->entityManager->flush();
         }

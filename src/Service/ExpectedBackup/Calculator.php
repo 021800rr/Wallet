@@ -5,7 +5,7 @@ namespace App\Service\ExpectedBackup;
 use DateTime;
 use Exception;
 
-class Calculator
+class Calculator implements CalculatorInterface
 {
     /**
      * @throws Exception
@@ -16,6 +16,7 @@ class Calculator
             throw new Exception('no backups');
         }
 
+        $backup['yearMonth'] = '1970-01';
         $sum = 0;
         foreach ($backups as $backup) {
             $sum += $backup['sum_of_amount'];

@@ -29,16 +29,12 @@ class Contractor
     #[ORM\OneToMany(mappedBy: "contractor", targetEntity: Wallet::class)]
     private Collection $wallets;
 
-    #[ORM\OneToMany(mappedBy: "contractor", targetEntity: Backup::class)]
-    private Collection $backups;
-
     #[ORM\OneToMany(mappedBy: "contractor", targetEntity: Fee::class)]
     private Collection $fees;
 
     #[Pure] public function __construct()
     {
         $this->wallets = new ArrayCollection();
-        $this->backups = new ArrayCollection();
         $this->fees = new ArrayCollection();
     }
 
@@ -81,21 +77,6 @@ class Contractor
         if (!$this->wallets->contains($wallet)) {
             $this->wallets[] = $wallet;
             $wallet->setContractor($this);
-        }
-
-        return $this;
-    }
-
-    public function getBackups(): Collection
-    {
-        return $this->backups;
-    }
-
-    public function addBackup(Backup $backup): self
-    {
-        if (!$this->backups->contains($backup)) {
-            $this->backups[] = $backup;
-            $backup->setContractor($this);
         }
 
         return $this;

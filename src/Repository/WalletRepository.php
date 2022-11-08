@@ -14,9 +14,9 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Wallet|null findOneBy(array $criteria, array $orderBy = null)
  * @method Wallet[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class WalletRepository extends ServiceEntityRepository implements AppPaginatorInterface
+class WalletRepository extends ServiceEntityRepository implements WalletRepositoryInterface
 {
-    use WalletBackupTrait;
+    use AccountTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -35,7 +35,7 @@ class WalletRepository extends ServiceEntityRepository implements AppPaginatorIn
             ->setParameter('contractor', '%' . $data . '%')
             ->addOrderBy('w.date', 'DESC')
             ->addOrderBy('w.id', 'DESC')
-            ->setMaxResults(AppPaginatorInterface::PAGINATOR_PER_PAGE)
+            ->setMaxResults(PaginatorEnum::PerPage->value)
             ->setFirstResult($offset)
             ->getQuery();
 

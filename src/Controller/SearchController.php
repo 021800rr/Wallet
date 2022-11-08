@@ -3,12 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Wallet;
-use App\Repository\AppPaginatorInterface;
-use App\Repository\WalletRepository;
+use App\Repository\PaginatorEnum;
+use App\Repository\WalletRepositoryInterface;
 use App\Service\OffsetQuery\OffsetInterface;
 use App\Service\OffsetQuery\QueryInterface;
 use App\Service\RequestParser\RequestInterface;
-use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
@@ -40,7 +39,7 @@ class SearchController extends AbstractController
     #[Route('/result', name: 'search_result')]
     public function search(
         Request $request,
-        WalletRepository $walletRepository,
+        WalletRepositoryInterface $walletRepository,
         QueryInterface $queryHelper,
         OffsetInterface $offsetHelper,
         RequestInterface $parser
@@ -62,8 +61,8 @@ class SearchController extends AbstractController
         return $this->render('search/result.html.twig', [
             'query' => $query,
             'paginator' => $paginator,
-            'previous' => $offset - AppPaginatorInterface::PAGINATOR_PER_PAGE,
-            'next' => min(count($paginator), $offset + AppPaginatorInterface::PAGINATOR_PER_PAGE),
+            'previous' => $offset - PaginatorEnum::PerPage->value,
+            'next' => min(count($paginator), $offset + PaginatorEnum::PerPage->value),
         ]);
     }
 

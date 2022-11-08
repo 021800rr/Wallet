@@ -8,7 +8,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-trait WalletBackupTrait
+trait AccountTrait
 {
     /** @return AbstractWallet[]|Backup[] array */
     public function findAll(): array
@@ -50,7 +50,7 @@ trait WalletBackupTrait
         $query = $this->createQueryBuilder('w')
             ->addOrderBy('w.date', 'DESC')
             ->addOrderBy('w.id', 'DESC')
-            ->setMaxResults(AppPaginatorInterface::PAGINATOR_PER_PAGE)
+            ->setMaxResults(PaginatorEnum::PerPage->value)
             ->setFirstResult($offset)
             ->getQuery();
 

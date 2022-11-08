@@ -1,24 +1,22 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\BalanceSupervisor;
 
 use App\Entity\Wallet;
-use App\Repository\WalletRepository;
+use App\Repository\WalletRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Generator;
 
-class BalanceSupervisor
+class BalanceSupervisor implements BalanceSupervisorInterface
 {
     /** @var Wallet[]  */
     private array $wallets;
     private float $initialBalance;
-    private WalletRepository $repository;
-    private EntityManagerInterface $entityManager;
 
-    public function __construct(WalletRepository $repository, EntityManagerInterface $entityManager)
-    {
-        $this->repository = $repository;
-        $this->entityManager = $entityManager;
+    public function __construct(
+        private readonly WalletRepositoryInterface $repository,
+        private readonly EntityManagerInterface $entityManager
+    ) {
     }
 
     /**

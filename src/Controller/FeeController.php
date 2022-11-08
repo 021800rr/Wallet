@@ -4,12 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Fee;
 use App\Form\FeeType;
-use App\Repository\FeeRepository;
-use App\Repository\WalletRepository;
-use App\Service\BalanceUpdater\BalanceUpdaterInterface;
+use App\Repository\FeeRepositoryInterface;
 use App\Service\FixedFees\FixedFeesInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,18 +24,15 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_ADMIN')]
 class FeeController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     #[Route('/', name: 'fee_index', methods: ['GET'])]
-    public function index(FeeRepository $feeRepository): Response
+    public function index(FeeRepositoryInterface $fee): Response
     {
         return $this->render('fee/index.html.twig', [
-            'fees' => $feeRepository->findAll(),
+            'fees' => $fee->findAll(),
         ]);
     }
 
@@ -91,7 +85,7 @@ class FeeController extends AbstractController
 
     #[Route('/insert', name: 'fee_insert_to_wallet', methods: ['POST'])]
     public function insert(
-        FeeRepository $feeRepository,
+        FeeRepositoryInterface $fee,
         Request $request,
         FixedFeesInterface $fixedFees
     ): RedirectResponse|Response {
@@ -102,7 +96,7 @@ class FeeController extends AbstractController
         }
 
         return $this->render('fee/index.html.twig', [
-            'fees' => $feeRepository->findAll(),
+            'fees' => $fee->findAll(),
         ]);
     }
 }

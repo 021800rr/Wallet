@@ -2,18 +2,15 @@
 
 namespace App\Service\BalanceUpdater;
 
-use App\Repository\BackupRepository;
-use App\Repository\ChfRepository;
-use App\Repository\EurRepository;
-use App\Repository\WalletRepository;
+use App\Repository\AccountRepositoryInterface;
 use Exception;
 
 interface BalanceUpdaterInterface
 {
     /**
-     * @param WalletRepository|ChfRepository|EurRepository|BackupRepository $transactionRepository
+     * @param AccountRepositoryInterface $accountRepository
      * @param int $id
      * @throws Exception
      */
-    public function compute(WalletRepository|ChfRepository|EurRepository|BackupRepository $transactionRepository, int $id): void;
+    public function compute(AccountRepositoryInterface $accountRepository, int $id): void;
 }

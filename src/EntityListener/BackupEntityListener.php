@@ -7,12 +7,12 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 
 class BackupEntityListener
 {
-    public function prePersist(Backup $backup, LifecycleEventArgs $event)
+    public function prePersist(Backup $backup, LifecycleEventArgs $event): void
     {
         $backup->computeShortDate();
     }
 
-    public function preUpdate(Backup $backup, LifecycleEventArgs $event)
+    public function preUpdate(Backup $backup, LifecycleEventArgs $event): void
     {
         $backup->computeShortDate();
     }

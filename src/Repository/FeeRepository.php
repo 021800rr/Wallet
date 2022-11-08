@@ -11,7 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Fee|null findOneBy(array $criteria, array $orderBy = null)
  * @method Fee[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class FeeRepository extends ServiceEntityRepository implements AppPaginatorInterface
+class FeeRepository extends ServiceEntityRepository implements FeeRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

@@ -3,73 +3,34 @@
 namespace App\Entity;
 
 use App\Repository\BackupRepository;
-use DateTime;
-use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BackupRepository::class)]
 #[ORM\HasLifecycleCallbacks()]
-class Backup
+class Backup extends AbstractAccount
 {
     // boolean interest as const:
     public const INAPPLICABLE = null;
     public const NOT_PROCESSED = false;
     public const DONE = true;
 
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer")]
-    private int $id;
-
-    #[ORM\Column(type: "datetime")]
-    private DateTimeInterface $date;
-
-    #[ORM\Column(type: "string", length: 7)]
+    #[ORM\Column(type: 'string', length: 7)]
     private string $yearMonth;
 
-    #[ORM\Column(type: "float")]
-    private float $amount;
-
-    #[ORM\Column(type: "float")]
+    #[ORM\Column(type: 'float')]
     private float $retiring = 0.0;
 
-    #[ORM\Column(type: "float")]
+    #[ORM\Column(type: 'float')]
     private float $holiday = 0.0;
 
-    #[ORM\Column(type: "float")]
-    private float $balance = 0.0;
-
-    #[ORM\ManyToOne(targetEntity: Contractor::class, inversedBy: "backups")]
-    #[ORM\JoinColumn(nullable: false)]
-    private Contractor $contractor;
-
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    private ?string $description;
-
-    #[ORM\Column(name: "is_consistent", type: "boolean", nullable: true)]
+    #[ORM\Column(type: 'boolean', nullable: true)]
     private ?bool $interest;
 
     public function __construct()
     {
-        $this->date = new DateTime();
+        parent::__construct();
+
         $this->interest = null;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getDate(): DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(DateTimeInterface $date): self
-    {
-        $this->date = $date;
-
-        return $this;
     }
 
     public function computeShortDate(): self
@@ -89,18 +50,6 @@ class Backup
     public function getYearMonth(): string
     {
         return $this->yearMonth;
-    }
-
-    public function getAmount(): float
-    {
-        return $this->amount;
-    }
-
-    public function setAmount(float $amount): self
-    {
-        $this->amount = $amount;
-
-        return $this;
     }
 
     public function getRetiring(): float
@@ -123,42 +72,6 @@ class Backup
     public function setHoliday(float $holiday): self
     {
         $this->holiday = $holiday;
-
-        return $this;
-    }
-
-    public function getBalance(): float
-    {
-        return $this->balance;
-    }
-
-    public function setBalance(float $balance): self
-    {
-        $this->balance = $balance;
-
-        return $this;
-    }
-
-    public function getContractor(): Contractor
-    {
-        return $this->contractor;
-    }
-
-    public function setContractor(Contractor $contractor): self
-    {
-        $this->contractor = $contractor;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
 
         return $this;
     }
