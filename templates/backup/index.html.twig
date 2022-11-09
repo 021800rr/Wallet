@@ -15,7 +15,7 @@
         <tbody>
             {% for backup in paginator %}
                 <tr>
-                    <td>{{ backup.date|date("Y-m-d") }}</td>
+                    <td id="backup_date{{ loop.index }}">{{ backup.date|date("Y-m-d") }}</td>
                     <td class="text-end row_money_backup_amount" id="backup_amount{{ loop.index }}">{{ backup.amount }}</td>
                     <td class="text-end row_money" id="backup_balance{{ loop.index }}">{{ backup.balance }}</td>
                     <td class="text-end row_money" id="backup_retiring{{ loop.index }}">{{ backup.retiring }}</td>

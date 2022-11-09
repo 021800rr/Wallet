@@ -6,7 +6,7 @@ use App\Entity\Backup;
 use App\Repository\ContractorRepositoryInterface;
 use Symfony\Component\Form\FormInterface;
 
-class Interest
+class Interest implements InterestInterface
 {
     public function __construct(private readonly ContractorRepositoryInterface $contractorRepository)
     {
