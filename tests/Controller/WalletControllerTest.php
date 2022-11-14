@@ -53,7 +53,7 @@ class WalletControllerTest extends WebTestCase
         $this->assertSelectorTextContains('td#wallet_balance1', '180');
     }
 
-    public function testChangeIsConsistent(): void
+    public function testIsConsistent(): void
     {
         $crawler = $this->client->request('GET', '/en/wallet');
         $imgUri = $crawler
