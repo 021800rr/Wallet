@@ -12,7 +12,7 @@
         <tbody>
             {% for fee in fees %}
                 <tr>
-                    <td>{{ fee.date| format_number({min_integer_digit:'2'}) }}</td>
+                    <td id="fee_date{{ loop.index }}">{{ fee.date| format_number({min_integer_digit:'2'}) }}</td>
                     <td class="text-end row_money_amount" id="fee_amount{{ loop.index }}">{{ fee.amount }}</td>
                     <td class="ps-4" id="fee_contractor{{ loop.index }}">{{ fee.contractor.description }}</td>
                     <td class="text-center">{{ include('fee/_edit_a.html.twig') }}</td>
