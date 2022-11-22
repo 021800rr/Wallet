@@ -15,6 +15,32 @@ class SearchControllerTest extends WebTestCase
     {
         $crawler = $this->client->request('GET', '/en/wallet');
         $form = $crawler->selectButton('form_search')->form();
+        $form['form[query]']->setValue('191');
+        $this->client->submit($form);
+
+        $i = 1;
+        do {
+            $this->assertSelectorTextContains('td#search_balance' . $i, '191');
+            $lastFoundIndex = $i;
+            $i++;
+        } while ($i < 2);
+        $this->assertSame(1, $lastFoundIndex);
+
+        $crawler = $this->client->request('GET', '/en/wallet');
+        $form = $crawler->selectButton('form_search')->form();
+        $form['form[query]']->setValue('-10');
+        $this->client->submit($form);
+
+        $i = 1;
+        do {
+            $this->assertSelectorTextContains('td#search_amount' . $i, '-10');
+            $lastFoundIndex = $i;
+            $i++;
+        } while ($i < 2);
+        $this->assertSame(1, $lastFoundIndex);
+
+        $crawler = $this->client->request('GET', '/en/wallet');
+        $form = $crawler->selectButton('form_search')->form();
         $form['form[query]']->setValue('all');
         $this->client->submit($form);
 
