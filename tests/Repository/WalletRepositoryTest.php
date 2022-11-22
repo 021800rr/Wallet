@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class WalletRepositoryTest extends KernelTestCase
 {
-    private $entityManager;
+    use SetupTrait;
 
     public function testFindAll(): void
     {
@@ -15,22 +15,5 @@ class WalletRepositoryTest extends KernelTestCase
             ->getRepository(Wallet::class)
             ->findAll();
         $this->assertSame(3, count($walletTransactions));
-    }
-
-    protected function setUp(): void
-    {
-        $kernel = self::bootKernel();
-
-        $this->entityManager = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        $this->entityManager->close();
-        $this->entityManager = null;
     }
 }

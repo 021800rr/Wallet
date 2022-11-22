@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class ContractorRepositoryTest extends KernelTestCase
 {
-    private $entityManager;
+    use SetupTrait;
 
     public function testFindAll(): void
     {
@@ -15,22 +15,5 @@ class ContractorRepositoryTest extends KernelTestCase
             ->getRepository(Contractor::class)
             ->findAll();
         $this->assertSame(5, count($contractors));
-    }
-
-    protected function setUp(): void
-    {
-        $kernel = self::bootKernel();
-
-        $this->entityManager = $kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        $this->entityManager->close();
-        $this->entityManager = null;
     }
 }
