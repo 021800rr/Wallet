@@ -16,4 +16,14 @@ class ContractorRepositoryTest extends KernelTestCase
             ->findAll();
         $this->assertSame(5, count($contractors));
     }
+
+    public function testGetInternalTransferOwner(): void
+    {
+        $contractor = $this->entityManager
+            ->getRepository(Contractor::class)
+            ->getInternalTransferOwner();
+
+        $this->assertSame(5, $contractor->getId());
+        $this->assertSame("przelew własny", $contractor->getDescription());
+    }
 }
