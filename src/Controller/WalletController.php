@@ -146,10 +146,10 @@ class WalletController extends AbstractController
         TranslatorInterface $translator
     ): RedirectResponse {
         $supervisor->setWallets($this->repository->getAllRecords());
-        /** @var Wallet[] $wallets */
-        $wallets = $supervisor->crawl();
+        /** @var Wallet[] $generator */
+        $generator = $supervisor->crawl($this->repository);
         $caught = false;
-        foreach ($wallets as $wallet) {
+        foreach ($generator as $wallet) {
             $session->getFlashBag()->add('error', $wallet->__toString());
             $caught = true;
         }

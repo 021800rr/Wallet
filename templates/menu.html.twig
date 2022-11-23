@@ -97,6 +97,12 @@
                         {{ 'Check'|trans }}
                     </a>
                 </li>
+            {% elseif 'chf_index' == app.request.attributes.get('_route') %}
+                <li class="nav-item me-2">
+                    <a class="btn btn-outline-dark" href="{{ path('chf_check') }}" id="base_wallet_new">
+                        {{ 'Check'|trans }}
+                    </a>
+                </li>
             {% endif %}
         </ul>
         {{ render(controller(

@@ -56,4 +56,15 @@ trait AccountTrait
 
         return new Paginator($query);
     }
+
+    public function getAllRecords(): array
+    {
+        return array_reverse(
+            $this->createQueryBuilder('w')
+                ->addOrderBy('w.date', 'DESC')
+                ->addOrderBy('w.id', 'DESC')
+                ->getQuery()
+                ->getResult()
+        );
+    }
 }

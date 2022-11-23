@@ -7,6 +7,7 @@ use App\Form\ChfType;
 use App\Repository\AccountRepositoryInterface;
 use App\Repository\ContractorRepositoryInterface;
 use App\Repository\PaginatorEnum;
+use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -15,7 +16,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route(
     path: '/{_locale}/chf',
@@ -131,5 +134,25 @@ class ChfController extends AbstractController
         }
 
         return $this->redirectToRoute($route);
+    }
+
+    #[Route('/check', name: 'chf_check', methods: ['GET'])]
+    public function check(
+        BalanceSupervisorInterface $supervisor,
+        SessionInterface $session,
+        TranslatorInterface $translator
+    ): RedirectResponse {
+        $supervisor->setWallets($this->chf->getAllRecords());
+        $generator = $supervisor->crawl($this->chf);
+        $caught = false;
+        foreach ($generator as $wallet) {
+            $session->getFlashBag()->add('error', $wallet->__toString());
+            $caught = true;
+        }
+        if (false === $caught) {
+            $session->getFlashBag()->add('success', $translator->trans('Passed'));
+        }
+
+        return $this->redirectToRoute('chf_index');
     }
 }

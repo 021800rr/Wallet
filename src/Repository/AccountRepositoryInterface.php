@@ -7,4 +7,6 @@ interface AccountRepositoryInterface extends AppRepositoryInterface
     public function getCurrentBalance();
 
     public function getLastRecord();
+
+    public function getAllRecords();
 }

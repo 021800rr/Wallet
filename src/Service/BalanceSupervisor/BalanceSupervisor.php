@@ -2,57 +2,52 @@
 
 namespace App\Service\BalanceSupervisor;
 
+use App\Entity\Chf;
 use App\Entity\Wallet;
-use App\Repository\WalletRepositoryInterface;
+use App\Repository\AccountRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Generator;
 
 class BalanceSupervisor implements BalanceSupervisorInterface
 {
-    /** @var Wallet[]  */
-    private array $wallets;
+    /** @var Wallet[]|Chf[] */
+    private array $supervisors;
     private float $initialBalance;
 
-    public function __construct(
-        private readonly WalletRepositoryInterface $repository,
-        private readonly EntityManagerInterface $entityManager
-    ) {
+    public function __construct(private readonly EntityManagerInterface $entityManager)
+    {
     }
 
     /**
-     * @param Wallet[] $wallets
+     * @param Wallet[]|Chf[] $wallets
      * @return void
      */
     public function setWallets(array $wallets): void
     {
-        $this->wallets = $wallets;
-        $initialWallet = $wallets[0];
-        $this->initialBalance = $initialWallet->getBalance();
+        $this->supervisors = $wallets;
+        $this->initialBalance = $wallets[0]->getBalance();
     }
 
-    public function crawl(): Generator
+    public function crawl(AccountRepositoryInterface $repository): Generator
     {
-        $caught = false;
-        $lastBalance = $this->initialBalance;
-        for ($step = 1; $step < count($this->wallets); $step++) {
-            $supervisorWallet = $this->wallets[$step];
-            $wallet = $this->repository->find($supervisorWallet->getId());
-            $lastBalanceSupervisor = $wallet->getBalanceSupervisor();
-            $supervisorWallet->setBalanceSupervisor(round($lastBalance + $wallet->getAmount(), 2));
-            if ($wallet->getBalance() !== $supervisorWallet->getBalanceSupervisor()) {
-                $wallet->setBalanceSupervisor($supervisorWallet->getBalanceSupervisor());
+        for ($step = 1; $step < count($this->supervisors); $step++) {
+            /** @var Wallet|Chf $wallet */
+            $wallet = $repository->find($this->supervisors[$step]->getId());
+            $balanceSupervisorBefore = $wallet->getBalanceSupervisor();
+            $checker = (round($this->initialBalance + $wallet->getAmount(), 2));
+            if ($wallet->getBalance() !== $checker) {
+                $wallet->setBalanceSupervisor($checker);
                 yield($wallet);
+                $this->entityManager->persist($wallet);
             } else {
                 $wallet->setBalanceSupervisor(null);
             }
-            if ($lastBalanceSupervisor !== $wallet->getBalanceSupervisor()) {
+            $balanceSupervisorAfter = $wallet->getBalanceSupervisor();
+            if ($balanceSupervisorBefore !== $balanceSupervisorAfter) {
                 $this->entityManager->persist($wallet);
-                $caught = true;
             }
-            $lastBalance = $wallet->getBalance();
+            $this->initialBalance = $wallet->getBalance();
         }
-        if ($caught) {
-            $this->entityManager->flush();
-        }
+        $this->entityManager->flush();
     }
 }
