@@ -2,7 +2,7 @@
 
 namespace App\Tests\Repository;
 
-trait SetupTrait
+trait Setup
 {
     private $entityManager;
 

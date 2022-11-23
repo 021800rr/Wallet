@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class BackupRepositoryTest extends KernelTestCase
 {
-    use SetupTrait;
+    use Setup;
 
     public function testPaymentsByMonth(): void
     {

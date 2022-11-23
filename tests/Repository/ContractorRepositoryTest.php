@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class ContractorRepositoryTest extends KernelTestCase
 {
-    use SetupTrait;
+    use Setup;
 
     public function testFindAll(): void
     {

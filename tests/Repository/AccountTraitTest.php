@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class AccountTraitTest extends KernelTestCase
 {
-    use SetupTrait;
+    use Setup;
 
     public function testBackupGetCurrentBalance(): void
     {

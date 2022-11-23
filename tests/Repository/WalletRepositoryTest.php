@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class WalletRepositoryTest extends KernelTestCase
 {
-    use SetupTrait;
+    use Setup;
 
     public function testFindAll(): void
     {
