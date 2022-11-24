@@ -13,7 +13,7 @@ class WalletFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $wallet = new Wallet();
-        $wallet->setDate(new DateTime('2021-05-11'));
+        $wallet->setDate(new DateTime('2021-05-10'));
         $wallet->setAmount(-1);
         $wallet->setBalance(200.00);
         $wallet->setContractor($this->getReference(ContractorFixtures::MEDIA_EXPERT));
@@ -30,7 +30,7 @@ class WalletFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($wallet);
 
         $wallet = new Wallet();
-        $wallet->setDate(new DateTime('2021-05-12'));
+        $wallet->setDate(new DateTime('2021-05-13'));
         $wallet->setAmount(-20.);
         $wallet->setBalance(170.00);
         $wallet->setContractor($this->getReference(ContractorFixtures::ALLEGRO));
