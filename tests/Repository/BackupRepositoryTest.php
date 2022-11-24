@@ -15,7 +15,7 @@ class BackupRepositoryTest extends KernelTestCase
             ->getRepository(Backup::class)
             ->paymentsByMonth();
 
-        $this->assertSame("2021-05", $paymentsByMonth[0]['yearMonth']);
-        $this->assertSame("600", $paymentsByMonth[0]['sum_of_amount']);
+        $this->assertSame("2021-06", $paymentsByMonth[0]['yearMonth']);
+        $this->assertSame("300", $paymentsByMonth[0]['sum_of_amount']);
     }
 }

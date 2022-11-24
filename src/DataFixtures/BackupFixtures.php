@@ -34,8 +34,8 @@ class BackupFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($backup);
 
         $backup = new Backup();
-        $backup->setDate(new DateTime('2021-05-03'));
-        $backup->setYearMonth('2021-05');
+        $backup->setDate(new DateTime('2021-06-03'));
+        $backup->setYearMonth('2021-06');
         $backup->setAmount(300);
         $backup->setRetiring(300);
         $backup->setHoliday(300);

@@ -8,6 +8,17 @@ use Exception;
 class Calculator implements CalculatorInterface
 {
     /**
+     * @var array $backups
+     * [
+     *      [
+     *          'yearMonth' => string 2021-06,
+     *          'sum_of_amount' => float 300,
+     *      ],
+     *      [
+     *          'yearMonth' => string 2021-05,
+     *          'sum_of_amount' => float 300,
+     *      ],
+     * ]
      * @throws Exception
      */
     public function compute(array $backups): float

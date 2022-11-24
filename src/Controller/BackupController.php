@@ -104,14 +104,14 @@ class BackupController extends AbstractController
         AccountRepositoryInterface $chf,
         AccountRepositoryInterface $eur
     ): Response {
-        $paginator = $this->repository->paymentsByMonth();
-        $expected = $calculator->compute($paginator);
+        $backups = $this->repository->paymentsByMonth();
+        $expected = $calculator->compute($backups);
         $walletBalance = $walletRepository->getCurrentBalance();
         /** @var Backup[] $backupLastRecords */
         $backupLastRecord = $this->repository->getLastRecord();
 
         return $this->render('backup/payments_by_month.html.twig', [
-            'paginator' => $paginator,
+            'backups' => $backups,
             'expected' => $expected,
             'walletBalance' => $walletBalance,
             'chfBalance' => $chf->getCurrentBalance(),

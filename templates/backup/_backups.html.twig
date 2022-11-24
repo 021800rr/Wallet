@@ -6,7 +6,7 @@
     </tr>
     </thead>
     <tbody>
-    {% for backup in paginator %}
+    {% for backup in backups %}
         <tr>
             <td>{{ backup.yearMonth }}</td>
             <td class="text-end row_money" id="backup_sum_of_amount{{ loop.index }}">{{ backup.sum_of_amount }}</td>
