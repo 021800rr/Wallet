@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Contractor;
+
 interface ContractorRepositoryInterface extends AppRepositoryInterface
 {
-    public function getInternalTransferOwner();
+    public function getInternalTransferOwner(): Contractor;
 }

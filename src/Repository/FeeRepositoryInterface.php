@@ -4,5 +4,5 @@ namespace App\Repository;
 
 interface FeeRepositoryInterface
 {
-    public function findAll();
+    public function findAll(): array;
 }

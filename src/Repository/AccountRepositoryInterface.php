@@ -4,9 +4,9 @@ namespace App\Repository;
 
 interface AccountRepositoryInterface extends AppRepositoryInterface
 {
-    public function getCurrentBalance();
+    public function getCurrentBalance(): float;
 
-    public function getLastRecord();
+    public function getLastRecord(): mixed;
 
-    public function getAllRecords();
+    public function getAllRecords(): array;
 }

@@ -7,11 +7,11 @@ use Symfony\Component\HttpFoundation\Request;
 interface OffsetInterface
 {
     // set offset from valid request
-    public function set(Request $request);
+    public function set(Request $request): void;
 
     //get offset from remembered request
     public function get(Request $request): int;
 
     // set offset to 0
-    public function reset();
+    public function reset(): void;
 }

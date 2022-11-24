@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Offset extends AbstractSession implements OffsetInterface
 {
-    public function set(Request $request)
+    public function set(Request $request): void
     {
         if (null !== $request->query->get('offset')) {
             $intOffset = $request->query->getInt('offset', 0);
@@ -24,7 +24,7 @@ class Offset extends AbstractSession implements OffsetInterface
         return $this->requestStack->getSession()->get('offset', 0);
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->requestStack->getSession()->set('offset', 0);
     }
