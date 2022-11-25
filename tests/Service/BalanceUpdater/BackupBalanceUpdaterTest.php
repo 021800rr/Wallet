@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Service;
+namespace App\Tests\Service\BalanceUpdater;
 
 use App\Entity\Backup;
 use App\Service\BalanceUpdater\BackupBalanceUpdater;
