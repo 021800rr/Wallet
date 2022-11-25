@@ -32,7 +32,7 @@ class ChfController extends AbstractController
 {
     public function __construct(
         private readonly BalanceUpdaterInterface $walletUpdater,
-        private readonly AccountRepositoryInterface $chf,
+        private readonly AccountRepositoryInterface $chfRepository,
         private readonly EntityManagerInterface $entityManager
     ) {
     }
@@ -41,7 +41,7 @@ class ChfController extends AbstractController
     public function index(Request $request): Response
     {
         $offset = max(0, $request->query->getInt('offset', 0));
-        $paginator = $this->chf->getPaginator($offset);
+        $paginator = $this->chfRepository->getPaginator($offset);
 
         return $this->render('chf/index.html.twig', [
             'paginator' => $paginator,
@@ -64,7 +64,7 @@ class ChfController extends AbstractController
             $chf->setContractor($contractor);
             $this->entityManager->persist($chf);
             $this->entityManager->flush();
-            $this->walletUpdater->compute($this->chf, $chf->getId());
+            $this->walletUpdater->compute($this->chfRepository, $chf->getId());
 
             return $this->redirectToRoute('chf_index');
         }
@@ -87,7 +87,7 @@ class ChfController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($chf);
             $this->entityManager->flush();
-            $this->walletUpdater->compute($this->chf, $chf->getId());
+            $this->walletUpdater->compute($this->chfRepository, $chf->getId());
 
             return $this->redirectToRoute($route);
         }
@@ -128,7 +128,7 @@ class ChfController extends AbstractController
         $route = (!empty($route)) ? $route : 'chf_index';
         if ($this->isCsrfTokenValid('delete' . $chf->getId(), $request->request->get('_token'))) {
             $chf->setAmount(0);
-            $this->walletUpdater->compute($this->chf, $chf->getId());
+            $this->walletUpdater->compute($this->chfRepository, $chf->getId());
             $this->entityManager->remove($chf);
             $this->entityManager->flush();
         }
@@ -142,8 +142,8 @@ class ChfController extends AbstractController
         SessionInterface $session,
         TranslatorInterface $translator
     ): RedirectResponse {
-        $supervisor->setWallets($this->chf->getAllRecords());
-        $generator = $supervisor->crawl($this->chf);
+        $supervisor->setWallets($this->chfRepository->getAllRecords());
+        $generator = $supervisor->crawl($this->chfRepository);
         $caught = false;
         foreach ($generator as $wallet) {
             $session->getFlashBag()->add('error', $wallet->__toString());

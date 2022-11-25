@@ -23,19 +23,19 @@ services:
     App\Service\BalanceUpdater\BalanceUpdaterInterface: '@App\Service\BalanceUpdater\WalletBalanceUpdater'
 
     App\Repository\ChfRepository: ~
-    App\Repository\AccountRepositoryInterface $chf: '@App\Repository\ChfRepository'
+    App\Repository\AccountRepositoryInterface $chfRepository: '@App\Repository\ChfRepository'
 
     App\Repository\EurRepository: ~
-    App\Repository\AccountRepositoryInterface $eur: '@App\Repository\EurRepository'
+    App\Repository\AccountRepositoryInterface $eurRepository: '@App\Repository\EurRepository'
 
     App\Repository\FeeRepository: ~
-    App\Repository\FeeRepositoryInterface $fee: '@App\Repository\FeeRepository'
+    App\Repository\FeeRepositoryInterface $feeRepository: '@App\Repository\FeeRepository'
 
-    App\Service\RequestParser\Search: ~
-    App\Service\RequestParser\ControllerInterface $search: '@App\Service\RequestParser\Search'
+    App\Service\RequestParser\SearchHelper: ~
+    App\Service\RequestParser\ControllerHelperInterface $searchHelper: '@App\Service\RequestParser\SearchHelper'
 
-    App\Service\RequestParser\Wallet: ~
-    App\Service\RequestParser\ControllerInterface: '@App\Service\RequestParser\Wallet'
+    App\Service\RequestParser\WalletHelper: ~
+    App\Service\RequestParser\ControllerHelperInterface $walletHelper: '@App\Service\RequestParser\WalletHelper'
 
     App\EntityListener\BackupEntityListener:
         tags:

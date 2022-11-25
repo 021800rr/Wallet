@@ -29,7 +29,7 @@ class EurController extends AbstractController
 {
     public function __construct(
         private readonly BalanceUpdaterInterface $walletUpdater,
-        private readonly AccountRepositoryInterface $eur,
+        private readonly AccountRepositoryInterface $eurRepository,
         private readonly EntityManagerInterface $entityManager
     ) {
     }
@@ -38,7 +38,7 @@ class EurController extends AbstractController
     public function index(Request $request): Response
     {
         $offset = max(0, $request->query->getInt('offset', 0));
-        $paginator = $this->eur->getPaginator($offset);
+        $paginator = $this->eurRepository->getPaginator($offset);
 
         return $this->render('eur/index.html.twig', [
             'paginator' => $paginator,
@@ -61,7 +61,7 @@ class EurController extends AbstractController
             $eur->setContractor($contractor);
             $this->entityManager->persist($eur);
             $this->entityManager->flush();
-            $this->walletUpdater->compute($this->eur, $eur->getId());
+            $this->walletUpdater->compute($this->eurRepository, $eur->getId());
 
             return $this->redirectToRoute('eur_index');
         }
@@ -84,7 +84,7 @@ class EurController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($eur);
             $this->entityManager->flush();
-            $this->walletUpdater->compute($this->eur, $eur->getId());
+            $this->walletUpdater->compute($this->eurRepository, $eur->getId());
 
             return $this->redirectToRoute($route);
         }
@@ -125,7 +125,7 @@ class EurController extends AbstractController
         $route = (!empty($route)) ? $route : 'eur_index';
         if ($this->isCsrfTokenValid('delete' . $eur->getId(), $request->request->get('_token'))) {
             $eur->setAmount(0);
-            $this->walletUpdater->compute($this->eur, $eur->getId());
+            $this->walletUpdater->compute($this->eurRepository, $eur->getId());
             $this->entityManager->remove($eur);
             $this->entityManager->flush();
         }

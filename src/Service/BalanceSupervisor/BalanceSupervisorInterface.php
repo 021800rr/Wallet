@@ -9,5 +9,5 @@ interface BalanceSupervisorInterface
 {
     public function setWallets(array $wallets);
 
-    public function crawl(AccountRepositoryInterface $repository): Generator;
+    public function crawl(AccountRepositoryInterface $accountRepository): Generator;
 }

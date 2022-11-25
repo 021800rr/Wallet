@@ -4,7 +4,7 @@ namespace App\Service\RequestParser;
 
 use Symfony\Component\HttpFoundation\Request  as SymfonyRequest;
 
-interface RequestInterface
+interface RequestParserInterface
 {
     /**
      * @param string $controller

@@ -34,9 +34,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class BackupController extends AbstractController
 {
     public function __construct(
-        private readonly BalanceUpdaterInterface $backupUpdater,
-        private readonly BackupRepositoryInterface $repository,
-        private readonly EntityManagerInterface $entityManager
+        private readonly BalanceUpdaterInterface   $backupUpdater,
+        private readonly BackupRepositoryInterface $backupRepository,
+        private readonly EntityManagerInterface    $entityManager
     ) {
     }
 
@@ -44,7 +44,7 @@ class BackupController extends AbstractController
     public function index(Request $request): Response
     {
         $offset = max(0, $request->query->getInt('offset', 0));
-        $paginator = $this->repository->getPaginator($offset);
+        $paginator = $this->backupRepository->getPaginator($offset);
 
         return $this->render('backup/index.html.twig', [
             'paginator' => $paginator,
@@ -65,7 +65,7 @@ class BackupController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($backup);
             $this->entityManager->flush();
-            $this->backupUpdater->compute($this->repository, $backup->getId());
+            $this->backupUpdater->compute($this->backupRepository, $backup->getId());
 
             return $this->redirectToRoute('backup_index');
         }
@@ -84,7 +84,7 @@ class BackupController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$backup->getId(), $request->request->get('_token'))) {
             $backup->setAmount(0);
-            $this->backupUpdater->compute($this->repository, $backup->getId());
+            $this->backupUpdater->compute($this->backupRepository, $backup->getId());
             $this->entityManager->remove($backup);
             $this->entityManager->flush();
         }
@@ -101,21 +101,21 @@ class BackupController extends AbstractController
     public function paymentsByMonth(
         CalculatorInterface $calculator,
         WalletRepositoryInterface $walletRepository,
-        AccountRepositoryInterface $chf,
-        AccountRepositoryInterface $eur
+        AccountRepositoryInterface $chfRepository,
+        AccountRepositoryInterface $eurRepository
     ): Response {
-        $backups = $this->repository->paymentsByMonth();
+        $backups = $this->backupRepository->paymentsByMonth();
         $expected = $calculator->compute($backups);
         $walletBalance = $walletRepository->getCurrentBalance();
         /** @var Backup[] $backupLastRecords */
-        $backupLastRecord = $this->repository->getLastRecord();
+        $backupLastRecord = $this->backupRepository->getLastRecord();
 
         return $this->render('backup/payments_by_month.html.twig', [
             'backups' => $backups,
             'expected' => $expected,
             'walletBalance' => $walletBalance,
-            'chfBalance' => $chf->getCurrentBalance(),
-            'eurBalance' => $eur->getCurrentBalance(),
+            'chfBalance' => $chfRepository->getCurrentBalance(),
+            'eurBalance' => $eurRepository->getCurrentBalance(),
             'backupLastRecord' => $backupLastRecord,
             'total' => $walletBalance + $backupLastRecord->getBalance()
         ]);
@@ -133,7 +133,7 @@ class BackupController extends AbstractController
             $backup = $interest->form2Backup($form);
             $this->entityManager->persist($backup);
             $this->entityManager->flush();
-            $this->backupUpdater->compute($this->repository, $backup->getId());
+            $this->backupUpdater->compute($this->backupRepository, $backup->getId());
 
             return $this->redirectToRoute('backup_index');
         }

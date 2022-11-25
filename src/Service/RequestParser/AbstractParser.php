@@ -2,12 +2,12 @@
 
 namespace App\Service\RequestParser;
 
-use App\Service\OffsetQuery\OffsetInterface;
-use App\Service\OffsetQuery\QueryInterface;
+use App\Service\OffsetQuery\OffsetHelperInterface;
+use App\Service\OffsetQuery\QueryHelperInterface;
 
 abstract class AbstractParser
 {
-    public function __construct(protected OffsetInterface $offset, protected QueryInterface $query)
+    public function __construct(protected OffsetHelperInterface $offsetHelper, protected QueryHelperInterface $queryHelper)
     {
     }
 }

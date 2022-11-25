@@ -29,10 +29,10 @@ class FeeController extends AbstractController
     }
 
     #[Route('/', name: 'fee_index', methods: ['GET'])]
-    public function index(FeeRepositoryInterface $fee): Response
+    public function index(FeeRepositoryInterface $feeRepository): Response
     {
         return $this->render('fee/index.html.twig', [
-            'fees' => $fee->findAll(),
+            'fees' => $feeRepository->findAll(),
         ]);
     }
 
@@ -85,7 +85,7 @@ class FeeController extends AbstractController
 
     #[Route('/insert', name: 'fee_insert_to_wallet', methods: ['POST'])]
     public function insert(
-        FeeRepositoryInterface $fee,
+        FeeRepositoryInterface $feeRepository,
         Request $request,
         FixedFeesInterface $fixedFees
     ): RedirectResponse|Response {
@@ -96,7 +96,7 @@ class FeeController extends AbstractController
         }
 
         return $this->render('fee/index.html.twig', [
-            'fees' => $fee->findAll(),
+            'fees' => $feeRepository->findAll(),
         ]);
     }
 }

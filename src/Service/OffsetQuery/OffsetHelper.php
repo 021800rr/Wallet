@@ -4,9 +4,9 @@ namespace App\Service\OffsetQuery;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class Offset extends AbstractSession implements OffsetInterface
+class OffsetHelper extends AbstractSession implements OffsetHelperInterface
 {
-    public function set(Request $request): void
+    public function setOffset(Request $request): void
     {
         if (null !== $request->query->get('offset')) {
             $intOffset = $request->query->getInt('offset', 0);
@@ -15,7 +15,7 @@ class Offset extends AbstractSession implements OffsetInterface
         }
     }
 
-    public function get(Request $request): int
+    public function getOffset(Request $request): int
     {
         if (null !== $request->query->get('offset')) {
             return $request->query->getInt('offset', 0);
@@ -24,7 +24,7 @@ class Offset extends AbstractSession implements OffsetInterface
         return $this->requestStack->getSession()->get('offset', 0);
     }
 
-    public function reset(): void
+    public function resetOffset(): void
     {
         $this->requestStack->getSession()->set('offset', 0);
     }

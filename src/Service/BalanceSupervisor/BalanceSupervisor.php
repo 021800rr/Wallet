@@ -28,25 +28,25 @@ class BalanceSupervisor implements BalanceSupervisorInterface
         $this->initialBalance = $wallets[0]->getBalance();
     }
 
-    public function crawl(AccountRepositoryInterface $repository): Generator
+    public function crawl(AccountRepositoryInterface $accountRepository): Generator
     {
         for ($step = 1; $step < count($this->supervisors); $step++) {
-            /** @var Wallet|Chf $wallet */
-            $wallet = $repository->find($this->supervisors[$step]->getId());
-            $balanceSupervisorBefore = $wallet->getBalanceSupervisor();
-            $checker = (round($this->initialBalance + $wallet->getAmount(), 2));
-            if ($wallet->getBalance() !== $checker) {
-                $wallet->setBalanceSupervisor($checker);
-                yield($wallet);
-                $this->entityManager->persist($wallet);
+            /** @var Wallet|Chf $account */
+            $account = $accountRepository->find($this->supervisors[$step]->getId());
+            $balanceSupervisorBefore = $account->getBalanceSupervisor();
+            $checker = (round($this->initialBalance + $account->getAmount(), 2));
+            if ($account->getBalance() !== $checker) {
+                $account->setBalanceSupervisor($checker);
+                yield($account);
+                $this->entityManager->persist($account);
             } else {
-                $wallet->setBalanceSupervisor(null);
+                $account->setBalanceSupervisor(null);
             }
-            $balanceSupervisorAfter = $wallet->getBalanceSupervisor();
+            $balanceSupervisorAfter = $account->getBalanceSupervisor();
             if ($balanceSupervisorBefore !== $balanceSupervisorAfter) {
-                $this->entityManager->persist($wallet);
+                $this->entityManager->persist($account);
             }
-            $this->initialBalance = $wallet->getBalance();
+            $this->initialBalance = $account->getBalance();
         }
         $this->entityManager->flush();
     }

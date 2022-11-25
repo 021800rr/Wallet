@@ -8,7 +8,7 @@ use App\Repository\PaginatorEnum;
 use App\Repository\WalletRepositoryInterface;
 use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
-use App\Service\RequestParser\RequestInterface;
+use App\Service\RequestParser\RequestParserInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -31,18 +31,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class WalletController extends AbstractController
 {
     public function __construct(
-        private readonly BalanceUpdaterInterface $walletUpdater,
-        private readonly WalletRepositoryInterface $repository,
-        private readonly EntityManagerInterface $entityManager
+        private readonly BalanceUpdaterInterface   $walletUpdater,
+        private readonly WalletRepositoryInterface $walletRepository,
+        private readonly EntityManagerInterface    $entityManager
     ) {
     }
 
     #[Route('/', name: 'wallet_index', methods: ['GET'])]
-    public function index(Request $request, RequestInterface $parser): Response
+    public function index(Request $request, RequestParserInterface $requestParser): Response
     {
-        $offset = $parser->strategy(WalletController::class, $request);
+        $offset = $requestParser->strategy(WalletController::class, $request);
 
-        $paginator = $this->repository->getPaginator($offset);
+        $paginator = $this->walletRepository->getPaginator($offset);
 
         return $this->render('wallet/index.html.twig', [
             'paginator' => $paginator,
@@ -63,7 +63,7 @@ class WalletController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($wallet);
             $this->entityManager->flush();
-            $this->walletUpdater->compute($this->repository, $wallet->getId());
+            $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
 
             return $this->redirectToRoute('wallet_index');
         }
@@ -86,7 +86,7 @@ class WalletController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($wallet);
             $this->entityManager->flush();
-            $this->walletUpdater->compute($this->repository, $wallet->getId());
+            $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
 
             return $this->redirectToRoute($route);
         }
@@ -131,7 +131,7 @@ class WalletController extends AbstractController
         $route = (!empty($route)) ? $route : 'wallet_index';
         if ($this->isCsrfTokenValid('delete' . $wallet->getId(), $request->request->get('_token'))) {
             $wallet->setAmount(0);
-            $this->walletUpdater->compute($this->repository, $wallet->getId());
+            $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
             $this->entityManager->remove($wallet);
             $this->entityManager->flush();
         }
@@ -145,9 +145,9 @@ class WalletController extends AbstractController
         SessionInterface $session,
         TranslatorInterface $translator
     ): RedirectResponse {
-        $supervisor->setWallets($this->repository->getAllRecords());
+        $supervisor->setWallets($this->walletRepository->getAllRecords());
         /** @var Wallet[] $generator */
-        $generator = $supervisor->crawl($this->repository);
+        $generator = $supervisor->crawl($this->walletRepository);
         $caught = false;
         foreach ($generator as $wallet) {
             $session->getFlashBag()->add('error', $wallet->__toString());

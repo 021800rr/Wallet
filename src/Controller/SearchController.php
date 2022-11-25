@@ -5,9 +5,10 @@ namespace App\Controller;
 use App\Entity\Wallet;
 use App\Repository\PaginatorEnum;
 use App\Repository\WalletRepositoryInterface;
-use App\Service\OffsetQuery\OffsetInterface;
-use App\Service\OffsetQuery\QueryInterface;
-use App\Service\RequestParser\RequestInterface;
+use App\Service\OffsetQuery\OffsetHelperInterface;
+use App\Service\OffsetQuery\QueryHelperInterface;
+use App\Service\RequestParser\RequestParserInterface;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
@@ -32,29 +33,29 @@ class SearchController extends AbstractController
     public function index(string $query = ''): Response
     {
         return $this->render('search/index.html.twig', [
-            'form' => $this->formHelper($query)->createView()
+            'form' => $this->getForm($query)->createView()
         ]);
     }
 
     #[Route('/result', name: 'search_result')]
     public function search(
-        Request $request,
+        Request                   $request,
         WalletRepositoryInterface $walletRepository,
-        QueryInterface $queryHelper,
-        OffsetInterface $offsetHelper,
-        RequestInterface $parser
+        QueryHelperInterface      $queryHelper,
+        OffsetHelperInterface     $offsetHelper,
+        RequestParserInterface    $requestParser
     ): Response {
-        $form = $this->formHelper();
+        $form = $this->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $query = $data['query'];
 
-            $queryHelper->set($query);
-            $offsetHelper->reset();
+            $queryHelper->setQuery($query);
+            $offsetHelper->resetOffset();
             $offset = 0;
         } else {
-            [$query, $offset] = $parser->strategy(SearchController::class, $request);
+            [$query, $offset] = $requestParser->strategy(SearchController::class, $request);
         }
         $paginator = $walletRepository->search($query, $offset);
 
@@ -66,29 +67,35 @@ class SearchController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/edit/{id}', name: 'search_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Wallet $wallet, WalletController $controller): Response
+    public function edit(Request $request, Wallet $wallet, WalletController $walletController): Response
     {
-        return $controller->edit($request, $wallet, 'search_result');
+        return $walletController->edit($request, $wallet, 'search_result');
     }
 
     #[Route('/isconsistent/{id}/{bool}', name: 'search_is_consistent', methods: ['POST'])]
     public function isConsistent(
-        Request $request,
-        Wallet $wallet,
-        WalletController $controller,
-        string $bool = ''
+        Request          $request,
+        Wallet           $wallet,
+        WalletController $walletController,
+        string           $bool = ''
     ): Response {
-        return $controller->isConsistent($request, $wallet, $bool, 'search_result');
+        return $walletController->isConsistent($request, $wallet, $bool, 'search_result');
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/delete/{id}', name: 'search_delete', methods: ['POST'])]
-    public function delete(Request $request, Wallet $wallet, WalletController $controller): Response
+    public function delete(Request $request, Wallet $wallet, WalletController $walletController): Response
     {
-        return $controller->delete($request, $wallet, 'search_result');
+        return $walletController->delete($request, $wallet, 'search_result');
     }
 
-    private function formHelper(string $query = ''): FormInterface
+    private function getForm(string $query = ''): FormInterface
     {
         return $this->createFormBuilder([
             'query' => $query

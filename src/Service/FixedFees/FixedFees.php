@@ -16,7 +16,7 @@ class FixedFees implements FixedFeesInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly FeeRepositoryInterface $fee,
+        private readonly FeeRepositoryInterface $feeRepository,
         private readonly BalanceUpdaterInterface $walletUpdater,
         private readonly WalletRepositoryInterface $walletRepository
     ) {
@@ -25,7 +25,7 @@ class FixedFees implements FixedFeesInterface
     /** @throws Exception */
     public function insert(): void
     {
-        foreach ($this->fee->findAll() as $fee) {
+        foreach ($this->feeRepository->findAll() as $fee) {
             $wallet = new Wallet();
 
             $wallet->setDate($this->getDate($fee));
