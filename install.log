@@ -1,0 +1,13 @@
+  132  sudo apt install php-pgsql
+  133  symfony console doctrine:migrations:migrate
+  134  symfony console doctrine:fixtures:load
+  137  symfony server:ca:install
+  138  symfony server:start -d
+  152  composer require symfony/webpack-encore-bundle
+  153  yarn install
+  155  npm install --save-dev webpack webpack-cli webpack-dev-server
+  157  yarn add sass-loader@^13.0.0 sass --dev
+  159  yarn add jquery --dev
+  160  yarn add bootstrap --dev
+  168  yarn add @popperjs/core --dev
+  171  yarn dev
