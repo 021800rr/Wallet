@@ -2,11 +2,27 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use App\Repository\BackupRepository;
+use App\State\BackupProcessor;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BackupRepository::class)]
 #[ORM\HasLifecycleCallbacks()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['backup:read']],
+    order: ['date' => 'DESC', 'id' => 'DESC']
+)]
+#[GetCollection]
+#[Patch(
+    denormalizationContext: ['groups' => 'backup:patch'],
+    processor: BackupProcessor::class,
+)]
+#[Delete(processor: BackupProcessor::class,)]
 class Backup extends AbstractAccount
 {
     // boolean interest as const:
@@ -17,9 +33,11 @@ class Backup extends AbstractAccount
     #[ORM\Column(type: 'string', length: 7)]
     private string $yearMonth;
 
+    #[Groups(['backup:read', 'payments:read'])]
     #[ORM\Column(type: 'float')]
     private float $retiring = 0.0;
 
+    #[Groups(['backup:read', 'payments:read'])]
     #[ORM\Column(type: 'float')]
     private float $holiday = 0.0;
 

@@ -5,30 +5,37 @@ namespace App\Entity;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class AbstractAccount
 {
+    #[Groups('account:read')]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     protected $id;
 
+    #[Groups(['account:read', 'backup:read', 'payments:read', 'account:create' , 'account:update', 'backup:patch'])]
     #[ORM\Column(type: 'date')]
     #[Assert\Type('DateTimeInterface')]
     protected DateTimeInterface $date;
 
+    #[Groups(['account:read', 'backup:read', 'payments:read', 'account:create' , 'account:update', 'backup:patch'])]
     #[ORM\Column(type: 'float')]
     protected float $amount;
 
+    #[Groups(['account:read', 'backup:read', 'payments:read'])]
     #[ORM\Column(type: 'float')]
     #[Assert\Type('float')]
     protected float $balance = 0.00;
 
+    #[Groups(['account:read', 'account:create' , 'account:update'])]
     #[ORM\ManyToOne(targetEntity: Contractor::class, inversedBy: 'wallets')]
     #[ORM\JoinColumn(nullable: false)]
     protected Contractor $contractor;
 
+    #[Groups(['account:read', 'backup:read', 'payments:read', 'account:create' , 'account:update', 'backup:patch'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     protected ?string $description;
 

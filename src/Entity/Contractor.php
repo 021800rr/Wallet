@@ -2,23 +2,42 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Repository\ContractorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ContractorRepository::class)]
 #[UniqueEntity("description")]
+#[ApiResource(
+    normalizationContext: ['groups' => ['contractor:read']],
+)]
+#[GetCollection]
+#[Post(
+    denormalizationContext: ['groups' => ['contractor:create']],
+)]
+#[Patch(
+    denormalizationContext: ['groups' => ['contractor:patch']],
+)]
+#[Delete]
 class Contractor
 {
+    #[Groups(['contractor:read', 'account:read', 'fee:read'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: "integer")]
     private int $id;
 
+    #[Groups(['contractor:read', 'contractor:create', 'contractor:patch', 'account:read', 'fee:read'])]
     #[ORM\Column(type: "string", length: 255)]
     #[Assert\NotBlank()]
     private string $description;

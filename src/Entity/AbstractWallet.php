@@ -3,13 +3,16 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class AbstractWallet extends AbstractAccount
 {
+    #[Groups(['account:read', 'account:patch'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     protected ?bool $isConsistent;
 
+    #[Groups('account:read')]
     #[ORM\Column(type: 'float', nullable: true)]
     #[Assert\Type('float')]
     protected ?float $balance_supervisor;
