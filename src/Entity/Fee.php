@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use App\Controller\ApiFeeController;
 use App\Repository\FeeRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -18,6 +19,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[GetCollection]
 #[Post(
     denormalizationContext: ['groups' => ['fee:create']],
+)]
+#[Post(
+    uriTemplate: '/fee/insert/to/wallet',
+    controller: ApiFeeController::class,
+    input: false,
+    output: false,
+    name: 'insert',
 )]
 #[Patch(
     denormalizationContext: ['groups' => ['fee:patch']],

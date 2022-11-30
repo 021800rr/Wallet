@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Fee;
 use App\Form\FeeType;
+use App\Handler\FeeHandler;
 use App\Repository\FeeRepositoryInterface;
 use App\Service\FixedFees\FixedFeesInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -86,11 +87,12 @@ class FeeController extends AbstractController
     #[Route('/insert', name: 'fee_insert_to_wallet', methods: ['POST'])]
     public function insert(
         FeeRepositoryInterface $feeRepository,
-        Request $request,
-        FixedFeesInterface $fixedFees
+        Request                $request,
+        FixedFeesInterface     $fixedFees,
+        FeeHandler             $feeHandler,
     ): RedirectResponse|Response {
         if ($this->isCsrfTokenValid('fixedfees', $request->request->get('_token'))) {
-            $fixedFees->insert();
+            $feeHandler->handle($fixedFees);
 
             return $this->redirectToRoute('wallet_index');
         }
