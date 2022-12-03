@@ -14,19 +14,21 @@
         </thead>
         <tbody>
             {% for wallet in paginator %}
+                {% if wallet.balanceSupervisor is defined and wallet.balanceSupervisor is not null %}
+                    {% set bg_color = true %}
+                {% else %}
+                    {% set bg_color = false %}
+                {% endif %}
                 <tr>
                     <td>{{ wallet.id }}</td>
                     <td>{{ wallet.date|date("Y-m-d") }}</td>
                     <td class="text-end row_money_amount" id="wallet_amount{{ loop.index }}">{{ wallet.amount }}</td>
                     <td class="text-end row_money" id="wallet_balance{{ loop.index }}">{{ wallet.balance }}</td>
                     <td class="ps-4" id="wallet_contractor{{ loop.index }}">{{ wallet.contractor.description }}</td>
-                    <td id="wallet_description{{ loop.index }}">
-                        {% if wallet.balanceSupervisor is defined and wallet.balanceSupervisor is not null %}
-                            <span class="alert-danger">
-                                {{ 'A different balance value is expected:'|trans }}
-                                {{ wallet.balanceSupervisor }}
-                            </span>
-                            <br>
+                    <td id="wallet_description{{ loop.index }}" {% if bg_color %}class="td-danger"{% endif %}>
+                        {% if bg_color %}
+                            {{ 'A different balance value is expected:'|trans }}
+                            {{ wallet.balanceSupervisor }}
                         {% endif %}
                         {{ wallet.description }}
                     </td>

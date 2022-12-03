@@ -78,7 +78,7 @@ class WalletControllerTest extends WebTestCase
         $this->client->request('GET', '/en/wallet');
         $this->client->clickLink('Check');
         $this->assertSelectorTextContains('div.alert-danger', '2 : 2021-05-12 : -10 : 191 : 190 : Allegro');
-        $this->assertSelectorTextContains('span.alert-danger', 'A different balance value is expected: 171');
+        $this->assertSelectorTextContains('td.td-danger', 'A different balance value is expected: 171');
     }
 
     public function testBalanceAdjustment(): void
