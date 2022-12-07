@@ -26,7 +26,7 @@ class BackupRepository extends ServiceEntityRepository implements BackupReposito
     {
         return $this->createQueryBuilder('p')
             ->select('p.yearMonth', 'SUM(p.amount) as sum_of_amount')
-            ->where('p.amount > 99')
+//            ->where('p.amount > 99')
             ->groupBy('p.yearMonth')
             ->orderBy('p.yearMonth', 'DESC')
             ->setMaxResults(self::PAYMENTS_BY_MONTH_YEARS)
