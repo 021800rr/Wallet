@@ -43,7 +43,4 @@ opłaty stałe) możemy cieszyć się wzrastającymi zasobami na wakacje...
 - `grant all privileges on database account to myuser;`
 - `symfony console doctrine:migrations:migrate`
 - `symfony console doctrine:fixtures:load`
-- Store Sessions in a Database (PostgreSQL).   
-  https://symfony.com/doc/current/session/database.html  
-  https://symfony.com/doc/current/session/database.html#postgresql
 - `symfony server:start -d`
