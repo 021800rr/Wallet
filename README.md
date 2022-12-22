@@ -5,7 +5,7 @@ Program pozwala kontrolować stan konta oraz nim zarządzać.
 Zdefiniowane są dwa konta: **Portfel** i **Backup**.
 Backup ma dwa subkonta: **Backup** „właściwy” i **Wakacje**…
 
-Operacja **Przelew** powala na przesłanie części środków między kontami.
+Operacja **Przelew** pozwala na przesłanie części środków między kontami.
 Przelewając środki z Portfela do Backupu, dzielimy je automatycznie po połowie: 
 na Backup „właściwy” i Wakacje.
 Przelewając środki z Backupu do Portfela, zdejmujemy tylko środki z subkonta 
