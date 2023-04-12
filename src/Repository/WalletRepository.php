@@ -25,17 +25,25 @@ class WalletRepository extends ServiceEntityRepository implements WalletReposito
 
     public function search(string $data, int $offset): Paginator
     {
+
         $query = $this->createQueryBuilder('w')
-            ->leftJoin('w.contractor', 'c')
-            ->where('w.amount = :amount')
-            ->orWhere('w.balance = :balance')
-            ->orWhere('LOWER(c.description) like LOWER(:contractor)')
-            ->setParameter('amount', (float)$data)
-            ->setParameter('balance', (float)$data)
+            ->innerJoin('w.contractor', 'c')
+            ->where('LOWER(c.description) like LOWER(:contractor)')
+            ->orWhere('LOWER(w.description) like LOWER(:description)')
             ->setParameter('contractor', '%' . $data . '%')
+            ->setParameter('description', '%' . $data . '%')
             ->addOrderBy('w.date', 'DESC')
-            ->addOrderBy('w.id', 'DESC')
-            ->setMaxResults(PaginatorEnum::PerPage->value)
+            ->addOrderBy('w.id', 'DESC');
+
+        if ((float) $data) {
+            $query
+                ->orWhere('w.amount = :amount')
+                ->orWhere('w.balance = :balance')
+                ->setParameter('amount', (float) $data)
+                ->setParameter('balance', (float) $data);
+        }
+
+        $query
             ->setFirstResult($offset)
             ->getQuery();
 
