@@ -54,7 +54,7 @@ opłaty stałe) możemy cieszyć się wzrastającymi zasobami na wakacje...
 - `create database account_dev`
 - `create database account_dev_test`
 - `create user rr with encrypted password 'rr';`
-- `grant all privileges on database account to rr;`
+
 - `grant all privileges on database account_dev to rr;`
 - `grant all privileges on database account_dev_test to rr;`
 - `alter user rr createdb;`
@@ -69,3 +69,6 @@ php bin/console --env=test doctrine:schema:create
 php bin/console --env=test doctrine:fixtures:load
 php bin/phpunit
 ```
+
+- `create user ... with encrypted password '...';`
+- `grant all privileges on database account to ...;`
