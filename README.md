@@ -35,12 +35,26 @@ opłaty stałe) możemy cieszyć się wzrastającymi zasobami na wakacje...
 - `git clone git@github.com:021800rr/Wallet.git`
 - `cd Wallet/`
 - `composer install`
-- `yarn install`
-- `symfony run yarn encore dev`
+
+- `npm install node-sass sass-loader --save-dev`
+- `npm install bootstrap @popperjs/core bs-custom-file-input --save-dev`
+- `symfony run npm run dev`
+
+[//]: # (- `yarn install`)
+[//]: # (- `yarn add sass-loader@^13.0.0 sass --dev`)
+[//]: # (- `yarn add jquery --dev`)
+[//]: # (- `yarn add bootstrap --dev`)
+[//]: # (- `yarn add controllers --dev`)
+[//]: # (- `yarn add @popperjs/core --dev`)
+[//]: # (- `symfony run yarn encore dev`)
+
 - `vi .env.local`
+
 - `create database account;`
-- `create user myuser with encrypted password 'mypass';`
-- `grant all privileges on database account to myuser;`
+- `create user rr with encrypted password 'rr';`
+- `grant all privileges on database account_dev to rr;`
+
 - `symfony console doctrine:migrations:migrate`
 - `symfony console doctrine:fixtures:load`
-- `symfony server:start -d`
+
+[//]: # (- `symfony server:start -d`)
