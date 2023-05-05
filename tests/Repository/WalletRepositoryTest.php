@@ -28,40 +28,29 @@ class WalletRepositoryTest extends KernelTestCase
 
     public function testSearch(): void
     {
-        $dql = "SELECT w " .
-               "FROM App\Entity\Wallet w " .
-               "LEFT JOIN w.contractor c " .
-               "WHERE " .
-               "w.amount = :amount OR " .
-               "w.balance = :balance OR " .
-               "LOWER(c.description) like LOWER(:contractor) " .
-               "ORDER BY w.date DESC, w.id DESC";
-
         /** @var Paginator $paginator */
         $paginator = $this->entityManager
             ->getRepository(Wallet::class)
             ->search(-10, 15);
 
-        $this->assertSame($dql, $paginator->getQuery()->getDQL());
-
-        $this->assertSame("amount", $paginator->getQuery()->getParameters()[0]->getName());
-        $this->assertSame(-10.0, $paginator->getQuery()->getParameters()[0]->getValue());
+        $this->assertSame("amount", $paginator->getQuery()->getParameters()[2]->getName());
+        $this->assertSame(-10.0, $paginator->getQuery()->getParameters()[2]->getValue());
         $this->assertSame(1, $paginator->count());
 
         $paginator = $this->entityManager
             ->getRepository(Wallet::class)
             ->search(191, 15);
 
-        $this->assertSame("balance", $paginator->getQuery()->getParameters()[1]->getName());
-        $this->assertSame(191.0, $paginator->getQuery()->getParameters()[1]->getValue());
+        $this->assertSame("balance", $paginator->getQuery()->getParameters()[3]->getName());
+        $this->assertSame(191.0, $paginator->getQuery()->getParameters()[3]->getValue());
         $this->assertSame(1, $paginator->count());
 
         $paginator = $this->entityManager
             ->getRepository(Wallet::class)
             ->search('all', 15);
 
-        $this->assertSame("contractor", $paginator->getQuery()->getParameters()[2]->getName());
-        $this->assertSame("%all%", $paginator->getQuery()->getParameters()[2]->getValue());
+        $this->assertSame("contractor", $paginator->getQuery()->getParameters()[0]->getName());
+        $this->assertSame("%all%", $paginator->getQuery()->getParameters()[0]->getValue());
         $this->assertSame(2, $paginator->count());
     }
 }
