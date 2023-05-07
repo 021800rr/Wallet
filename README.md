@@ -69,3 +69,9 @@ php bin/console --env=test doctrine:schema:create
 php bin/console --env=test doctrine:fixtures:load
 php bin/phpunit
 ```
+
+```
+php bin/console lexik:jwt:generate-keypair
+setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
+setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
+```
