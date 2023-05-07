@@ -72,3 +72,9 @@ php bin/phpunit
 
 - `create user ... with encrypted password '...';`
 - `grant all privileges on database account to ...;`
+
+```
+php bin/console lexik:jwt:generate-keypair
+setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
+setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
+```
