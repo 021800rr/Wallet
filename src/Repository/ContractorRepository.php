@@ -14,7 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ContractorRepository extends ServiceEntityRepository implements ContractorRepositoryInterface
 {
-    public const INTERNAL_TRANSFER = 'przelew własny';
+    public const INTERNAL_TRANSFER = 'Przelew własny';
 
     public function __construct(ManagerRegistry $registry)
     {
