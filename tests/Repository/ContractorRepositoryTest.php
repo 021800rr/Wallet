@@ -24,6 +24,6 @@ class ContractorRepositoryTest extends KernelTestCase
             ->getInternalTransferOwner();
 
         $this->assertSame(5, $contractor->getId());
-        $this->assertSame("przelew własny", $contractor->getDescription());
+        $this->assertSame("Przelew własny", $contractor->getDescription());
     }
 }
