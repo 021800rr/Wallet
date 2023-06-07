@@ -1,8 +1,0 @@
-composer require symfony/webpack-encore-bundle
-yarn install
-    -> node_modules (it means encore is installed)
-
-yarn add @symfony/webpack-encore --dev
-
-yarn dev
-    -> public/build/

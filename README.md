@@ -31,8 +31,9 @@ Pojawił się także moduł do kontroli odkładanych kwot do backupu.
 O ile wprowadzimy przychody do Portfela i rzetelnie wpiszemy wydatki (planując 
 opłaty stałe) możemy cieszyć się wzrastającymi zasobami na wakacje...
 
----
-- `git clone git@github.com:021800rr/Wallet.git`
+---  
+
+- `git clone ...021800rr/Wallet.git`
 - `cd Wallet/`
 - `composer install`
 
@@ -41,8 +42,8 @@ opłaty stałe) możemy cieszyć się wzrastającymi zasobami na wakacje...
 - `symfony run npm run dev`
 
 - `create database account;`
-- `create database account_dev`
-- `create database account_dev_test`
+- `create database account_dev;`
+- `create database account_dev_test;`
 - `create user rr with encrypted password 'rr';`
 
 - `grant all privileges on database account_dev to rr;`
@@ -61,10 +62,7 @@ setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
 ## test
 
 ```
-php bin/console --env=test doctrine:database:create
-php bin/console --env=test doctrine:schema:create
-php bin/console --env=test doctrine:fixtures:load
-php bin/phpunit
+make tests
 ```
 
 ## prod
