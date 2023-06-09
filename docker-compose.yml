@@ -44,7 +44,3 @@ networks:
   app-net:
     driver: bridge
 
-# docker compose --env-file .env.dev.local down
-# docker compose --env-file .env.dev.local up -d
-# docker compose --env-file .env.prod.local down
-# docker compose --env-file .env.prod.local up -d
