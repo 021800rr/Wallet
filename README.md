@@ -32,31 +32,57 @@ O ile wprowadzimy przychody do Portfela i rzetelnie wpiszemy wydatki (planując
 opłaty stałe) możemy cieszyć się wzrastającymi zasobami na wakacje...
 
 ---  
-
-- `git clone ...021800rr/Wallet.git`
-- `cd Wallet/`
-- `composer install`
-
-- `npm install node-sass sass-loader --save-dev`
-- `npm install bootstrap @popperjs/core bs-custom-file-input --save-dev`
-- `symfony run npm run dev`
-
-- `create database account;`
-- `create database account_dev;`
-- `create database account_dev_test;`
-- `create user rr with encrypted password 'rr';`
-
-- `grant all privileges on database account_dev to rr;`
-- `grant all privileges on database account_dev_test to rr;`
-- `alter user rr createdb;`
-
-- `symfony console doctrine:migrations:migrate`
-- `symfony console doctrine:fixtures:load`
-
+ 
 ```
+git clone https://github.com/021800rr/Wallet.git
+
+cd Wallet/
+vi .env.dev.local
+
+    e.g.:
+        DATABASE_URL="postgresql://user:pass@postgres-service:5432/database?serverVersion=14&charset=utf8"
+
+        NGPORTS=123:80
+        POSTGRES_DB=database
+        POSTGRES_USER=user
+        POSTGRES_PASSWORD=pass
+        POSTGRES_PORTS=456:5432
+        
+vi .env.prod.local
+
+docker compose --env-file .env.prod.local up -d
+docker exec -it  php-container bash
+    cd /var/www/
+    composer install
+
+docker exec -it  postgres-container bash 
+    // login as SUPERUSER defined in docker-compose.yml and .env.prod.local
+    psql -U ... -d ...
+        create database account_dev;
+        create database account_dev_test;
+        create user rr with encrypted password 'rr';
+        ALTER USER rr WITH SUPERUSER;
+
+docker compose --env-file .env.prod.local down
+
+git co -b develop
+
+// set APP_ENV=env
+vi .env
+
+docker compose --env-file .env.dev.local up -d
+docker exec -it  php-container bash
+    cd /var/www/
+    ./reset_dev.sh
+
 php bin/console lexik:jwt:generate-keypair
 setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
 setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
+
+npm install node-sass sass-loader --save-dev
+npm install bootstrap @popperjs/core bs-custom-file-input --save-dev
+symfony run npm run dev
+
 ```
 
 ## test
@@ -65,7 +91,17 @@ setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
 make tests
 ```
 
+## dev
+
+http://localhost:8000/  
+http://localhost:8000/api
+
 ## prod
 
-- `create user ... with encrypted password '...';`
-- `grant all privileges on database account to ...;`
+```shell
+docker exec -it  postgres-container bash 
+    // login as SUPERUSER defined in docker-compose.yml and .env.prod.local
+    psql -U ... -d ... < database_account_YYYY-MM-DD.sql
+```
+
+http://localhost
