@@ -3,7 +3,7 @@ FROM php:8.2-fpm
 RUN ln -s /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
 RUN apt-get update && apt install -y \
-    libzip-dev zip libicu-dev libpq-dev wget vim acl git
+    libzip-dev zip libicu-dev libpq-dev wget vim acl git mc nmap
 
 RUN wget https://get.symfony.com/cli/installer -O - | bash \
     && mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
