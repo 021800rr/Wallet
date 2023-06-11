@@ -1,0 +1,33 @@
+docker compose --env-file .env.prod.local down
+sudo rm -rf docker/postgres/data*
+docker system prune --all --volumes
+docker compose --env-file .env.prod.local build --no-cache
+docker compose --env-file .env.prod.local up -d
+docker ps
+docker exec -it  postgres-container bash
+
+psql -U elf -d account
+
+create database account_dev;
+create database account_dev_test;
+create user rr with encrypted password 'rr';
+ALTER USER rr WITH SUPERUSER;
+
+psql -U elf -d account < /tmp/database_account_2023-06-11.sql
+
+docker exec -it  php-container bash
+
+cd /var/www/var/cache
+
+rm -rf prod/*
+chmod 777 prod/
+
+cd /var/www/var/
+
+chmod 777 log/
+
+git config --global user.email "ryszard.ratajczak@protonmail.com"
+git config --global user.name "Ryszard Ratajczak"
+
+git config --global --add safe.directory /var/www
+
