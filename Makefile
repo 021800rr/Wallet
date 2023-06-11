@@ -7,5 +7,5 @@ tests:
 	symfony console doctrine:migrations:migrate -n --env=test
 	symfony console doctrine:fixtures:load -n --env=test
 	symfony console cache:clear -n --env=test
-	symfony php bin/phpunit $@
+	SYMFONY_DEPRECATIONS_HELPER='disabled=1' ./vendor/bin/simple-phpunit
 .PHONY: tests

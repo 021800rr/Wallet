@@ -67,7 +67,7 @@ docker compose --env-file .env.prod.local down
 
 git co -b develop
 
-// set APP_ENV=env
+// set APP_ENV=dev
 vi .env
 
 docker compose --env-file .env.dev.local up -d

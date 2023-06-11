@@ -13,7 +13,7 @@ services:
       - app-net
 
   nginx-service:
-    image: nginx:1.22.0-alpine
+    image: nginx:1.25-alpine
     container_name: nginx-container
     restart: always
     ports:
@@ -25,7 +25,7 @@ services:
       - app-net
 
   postgres-service:
-    image: postgres:14.5-alpine
+    image: postgres:15-alpine
     container_name: postgres-container
     restart: always
     environment:
