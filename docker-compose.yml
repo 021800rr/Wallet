@@ -13,7 +13,7 @@ services:
       - app-net
 
   nginx-service:
-    image: nginx:1.22.0-alpine
+    image: nginx:1.25-alpine
     container_name: nginx-container
     restart: always
     ports:
