@@ -33,7 +33,7 @@ opłaty stałe) możemy cieszyć się wzrastającymi zasobami na wakacje...
 
 ---  
  
-```
+```shell
 git clone https://github.com/021800rr/Wallet.git
 
 cd Wallet/
@@ -57,8 +57,9 @@ docker exec -it  php-container bash
     composer install
 
 docker exec -it  postgres-container bash 
-    // login as SUPERUSER defined in docker-compose.yml and .env.prod.local
-    psql -U ... -d ...
+    // login as SUPERUSER defined in docker-compose.yml and .env.prod.local ^^^
+    // e.g.:
+    psql -U your_production_postgres_user -d your_production_postgres_database
         create database account_dev;
         create database account_dev_test;
         create user rr with encrypted password 'rr';
@@ -69,7 +70,6 @@ docker compose --env-file .env.prod.local down
 git co -b develop
 
 // set APP_ENV=dev
-
 vi .env
 
 docker compose --env-file .env.dev.local up -d
@@ -89,7 +89,7 @@ symfony run npm run dev
 
 ## test
 
-```
+```shell
 make tests
 ```
 
@@ -103,7 +103,7 @@ http://localhost:8000/api
 ```shell
 docker exec -it  postgres-container bash 
     // login as SUPERUSER defined in docker-compose.yml and .env.prod.local
-    psql -U ... -d ... < database_account_YYYY-MM-DD.sql
+    psql -U your_production_postgres_user -d your_production_postgres_database < database_backup_YYYY-MM-DD.sql
 ```
 
 http://localhost
