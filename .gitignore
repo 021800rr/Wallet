@@ -27,4 +27,5 @@ tools/
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
 
+/docker/postgres/data/
 /docker/postgres/tmp/
