@@ -48,6 +48,7 @@ vi .env.dev.local
         POSTGRES_PASSWORD=pass
         POSTGRES_PORTS=456:5432
         
+vi .env.test.local
 vi .env.prod.local
 
 docker compose --env-file .env.prod.local up -d
