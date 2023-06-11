@@ -40,13 +40,13 @@ cd Wallet/
 vi .env.dev.local
 
     e.g.:
-        DATABASE_URL="postgresql://user:pass@postgres-service:5432/database?serverVersion=15&charset=utf8"
+        DATABASE_URL="postgresql://rr:rr@postgres-service:5432/account_dev?serverVersion=15&charset=utf8"
 
-        NGPORTS=123:80
-        POSTGRES_DB=database
-        POSTGRES_USER=user
-        POSTGRES_PASSWORD=pass
-        POSTGRES_PORTS=456:5432
+        NGPORTS=8000:80
+        POSTGRES_DB=account_dev
+        POSTGRES_USER=rr
+        POSTGRES_PASSWORD=rr
+        POSTGRES_PORTS=54321:5432
         
 vi .env.test.local
 vi .env.prod.local
