@@ -1,9 +1,9 @@
-FROM php:8.1.7-fpm
+FROM php:8.2-fpm
 
 RUN ln -s /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
 RUN apt-get update && apt install -y \
-    libzip-dev zip libicu-dev libpq-dev wget vim acl
+    libzip-dev zip libicu-dev libpq-dev wget vim acl git
 
 RUN wget https://get.symfony.com/cli/installer -O - | bash \
     && mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
