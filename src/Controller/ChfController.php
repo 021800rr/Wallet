@@ -80,7 +80,6 @@ class ChfController extends AbstractController
     #[Route('/edit/{id}', name: 'chf_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Chf $chf, string $route = ''): RedirectResponse|Response
     {
-        $route = (!empty($route)) ? $route : 'chf_index';
         $form = $this->createForm(ChfType::class, $chf);
         $form->handleRequest($request);
 
@@ -89,7 +88,7 @@ class ChfController extends AbstractController
             $this->entityManager->flush();
             $this->walletUpdater->compute($this->chfRepository, $chf->getId());
 
-            return $this->redirectToRoute($route);
+            return $this->redirectToRoute('chf_index');
         }
 
         return $this->render('chf/form.html.twig', [
@@ -100,7 +99,6 @@ class ChfController extends AbstractController
     #[Route('/isconsistent/{id}/{bool}', name: 'chf_is_consistent', methods: ['POST'])]
     public function isConsistent(Request $request, Chf $chf, string $bool = '', string $route = ''): RedirectResponse
     {
-        $route = (!empty($route)) ? $route : 'chf_index';
         if ($this->isCsrfTokenValid('is_consistent' . $chf->getId(), $request->request->get('_token'))) {
             switch ($bool) {
                 case "true":
@@ -116,7 +114,7 @@ class ChfController extends AbstractController
             $this->entityManager->flush();
         }
 
-        return $this->redirectToRoute($route);
+        return $this->redirectToRoute('chf_index');
     }
 
     /**
@@ -125,7 +123,6 @@ class ChfController extends AbstractController
     #[Route('/delete/{id}', name: 'chf_delete', methods: ['POST'])]
     public function delete(Request $request, Chf $chf, string $route = ''): RedirectResponse
     {
-        $route = (!empty($route)) ? $route : 'chf_index';
         if ($this->isCsrfTokenValid('delete' . $chf->getId(), $request->request->get('_token'))) {
             $chf->setAmount(0);
             $this->walletUpdater->compute($this->chfRepository, $chf->getId());
@@ -133,7 +130,7 @@ class ChfController extends AbstractController
             $this->entityManager->flush();
         }
 
-        return $this->redirectToRoute($route);
+        return $this->redirectToRoute('chf_index');
     }
 
     #[Route('/check', name: 'chf_check', methods: ['GET'])]
