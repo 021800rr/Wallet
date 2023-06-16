@@ -90,7 +90,9 @@ symfony run npm run dev
 ## test
 
 ```shell
-make tests
+docker exec -it  php-container bash
+    cd /var/www
+    make tests
 ```
 
 ## dev
