@@ -13,13 +13,28 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class FeeRepository extends ServiceEntityRepository implements FeeRepositoryInterface
 {
+    use AppTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Fee::class);
     }
 
-    public function findAll(): array
+    public function save(Fee $entity, bool $flush = false): void
     {
-        return $this->findBy([], ['date' => 'DESC']);
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(Fee $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
     }
 }

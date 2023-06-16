@@ -4,12 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Chf;
 use App\Form\ChfType;
-use App\Repository\AccountRepositoryInterface;
+use App\Repository\ChfRepositoryInterface;
 use App\Repository\ContractorRepositoryInterface;
 use App\Repository\PaginatorEnum;
 use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,8 +31,7 @@ class ChfController extends AbstractController
 {
     public function __construct(
         private readonly BalanceUpdaterInterface $walletUpdater,
-        private readonly AccountRepositoryInterface $chfRepository,
-        private readonly EntityManagerInterface $entityManager
+        private readonly ChfRepositoryInterface $chfRepository,
     ) {
     }
 
@@ -62,8 +60,7 @@ class ChfController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $contractor = $contractorRepository->getInternalTransferOwner();
             $chf->setContractor($contractor);
-            $this->entityManager->persist($chf);
-            $this->entityManager->flush();
+            $this->chfRepository->save($chf, true);
             $this->walletUpdater->compute($this->chfRepository, $chf->getId());
 
             return $this->redirectToRoute('chf_index');
@@ -78,14 +75,13 @@ class ChfController extends AbstractController
      * @throws Exception
      */
     #[Route('/edit/{id}', name: 'chf_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Chf $chf, string $route = ''): RedirectResponse|Response
+    public function edit(Request $request, Chf $chf): RedirectResponse|Response
     {
         $form = $this->createForm(ChfType::class, $chf);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($chf);
-            $this->entityManager->flush();
+            $this->chfRepository->save($chf, true);
             $this->walletUpdater->compute($this->chfRepository, $chf->getId());
 
             return $this->redirectToRoute('chf_index');
@@ -96,11 +92,11 @@ class ChfController extends AbstractController
         ]);
     }
 
-    #[Route('/isconsistent/{id}/{bool}', name: 'chf_is_consistent', methods: ['POST'])]
-    public function isConsistent(Request $request, Chf $chf, string $bool = '', string $route = ''): RedirectResponse
+    #[Route('/isconsistent/{id}/{boolAsString}', name: 'chf_is_consistent', methods: ['POST'])]
+    public function isConsistent(Request $request, Chf $chf, string $boolAsString = ''): RedirectResponse
     {
         if ($this->isCsrfTokenValid('is_consistent' . $chf->getId(), $request->request->get('_token'))) {
-            switch ($bool) {
+            switch ($boolAsString) {
                 case "true":
                     $chf->setIsConsistent(true);
                     break;
@@ -110,8 +106,7 @@ class ChfController extends AbstractController
                 default:
                     return $this->redirectToRoute('chf_index');
             }
-            $this->entityManager->persist($chf);
-            $this->entityManager->flush();
+            $this->chfRepository->save($chf, true);
         }
 
         return $this->redirectToRoute('chf_index');
@@ -121,13 +116,12 @@ class ChfController extends AbstractController
      * @throws Exception
      */
     #[Route('/delete/{id}', name: 'chf_delete', methods: ['POST'])]
-    public function delete(Request $request, Chf $chf, string $route = ''): RedirectResponse
+    public function delete(Request $request, Chf $chf): RedirectResponse
     {
         if ($this->isCsrfTokenValid('delete' . $chf->getId(), $request->request->get('_token'))) {
             $chf->setAmount(0);
             $this->walletUpdater->compute($this->chfRepository, $chf->getId());
-            $this->entityManager->remove($chf);
-            $this->entityManager->flush();
+            $this->chfRepository->remove($chf, true);
         }
 
         return $this->redirectToRoute('chf_index');

@@ -21,6 +21,24 @@ class ContractorRepository extends ServiceEntityRepository implements Contractor
         parent::__construct($registry, Contractor::class);
     }
 
+    public function save(Contractor $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(Contractor $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
     public function findAll(): array
     {
         return $this->findBy([], ['description' => 'ASC']);

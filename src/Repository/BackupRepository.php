@@ -14,6 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
 class BackupRepository extends ServiceEntityRepository implements BackupRepositoryInterface
 {
     use AccountTrait;
+    use AppTrait;
 
     private const PAYMENTS_BY_MONTH_YEARS = 12;
 
@@ -22,11 +23,29 @@ class BackupRepository extends ServiceEntityRepository implements BackupReposito
         parent::__construct($registry, Backup::class);
     }
 
-    public function paymentsByMonth()
+    public function save(Backup $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(Backup $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+
+    public function paymentsByMonth(): array
     {
         return $this->createQueryBuilder('p')
             ->select('p.yearMonth', 'SUM(p.amount) as sum_of_amount')
-//            ->where('p.amount > 99')
             ->groupBy('p.yearMonth')
             ->orderBy('p.yearMonth', 'DESC')
             ->setMaxResults(self::PAYMENTS_BY_MONTH_YEARS)
