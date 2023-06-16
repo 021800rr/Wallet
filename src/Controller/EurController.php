@@ -77,7 +77,6 @@ class EurController extends AbstractController
     #[Route('/edit/{id}', name: 'eur_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Eur $eur, string $route = ''): RedirectResponse|Response
     {
-        $route = (!empty($route)) ? $route : 'eur_index';
         $form = $this->createForm(EurType::class, $eur);
         $form->handleRequest($request);
 
@@ -86,7 +85,7 @@ class EurController extends AbstractController
             $this->entityManager->flush();
             $this->walletUpdater->compute($this->eurRepository, $eur->getId());
 
-            return $this->redirectToRoute($route);
+            return $this->redirectToRoute('eur_index');
         }
 
         return $this->render('eur/form.html.twig', [
@@ -97,7 +96,6 @@ class EurController extends AbstractController
     #[Route('/isconsistent/{id}/{bool}', name: 'eur_is_consistent', methods: ['POST'])]
     public function isConsistent(Request $request, Eur $eur, string $bool = '', string $route = ''): RedirectResponse
     {
-        $route = (!empty($route)) ? $route : 'eur_index';
         if ($this->isCsrfTokenValid('is_consistent' . $eur->getId(), $request->request->get('_token'))) {
             switch ($bool) {
                 case "true":
@@ -113,7 +111,7 @@ class EurController extends AbstractController
             $this->entityManager->flush();
         }
 
-        return $this->redirectToRoute($route);
+        return $this->redirectToRoute('eur_index');
     }
 
     /**
@@ -122,7 +120,6 @@ class EurController extends AbstractController
     #[Route('/delete/{id}', name: 'eur_delete', methods: ['POST'])]
     public function delete(Request $request, Eur $eur, string $route = ''): RedirectResponse
     {
-        $route = (!empty($route)) ? $route : 'eur_index';
         if ($this->isCsrfTokenValid('delete' . $eur->getId(), $request->request->get('_token'))) {
             $eur->setAmount(0);
             $this->walletUpdater->compute($this->eurRepository, $eur->getId());
@@ -130,6 +127,6 @@ class EurController extends AbstractController
             $this->entityManager->flush();
         }
 
-        return $this->redirectToRoute($route);
+        return $this->redirectToRoute('eur_index');
     }
 }
