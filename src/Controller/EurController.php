@@ -4,11 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Eur;
 use App\Form\EurType;
-use App\Repository\AccountRepositoryInterface;
 use App\Repository\ContractorRepositoryInterface;
+use App\Repository\EurRepositoryInterface;
 use App\Repository\PaginatorEnum;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,8 +28,7 @@ class EurController extends AbstractController
 {
     public function __construct(
         private readonly BalanceUpdaterInterface $walletUpdater,
-        private readonly AccountRepositoryInterface $eurRepository,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EurRepositoryInterface $eurRepository,
     ) {
     }
 
@@ -59,8 +57,7 @@ class EurController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $contractor = $contractorRepository->getInternalTransferOwner();
             $eur->setContractor($contractor);
-            $this->entityManager->persist($eur);
-            $this->entityManager->flush();
+            $this->eurRepository->save($eur, true);
             $this->walletUpdater->compute($this->eurRepository, $eur->getId());
 
             return $this->redirectToRoute('eur_index');
@@ -75,14 +72,13 @@ class EurController extends AbstractController
      * @throws Exception
      */
     #[Route('/edit/{id}', name: 'eur_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Eur $eur, string $route = ''): RedirectResponse|Response
+    public function edit(Request $request, Eur $eur): RedirectResponse|Response
     {
         $form = $this->createForm(EurType::class, $eur);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($eur);
-            $this->entityManager->flush();
+            $this->eurRepository->save($eur, true);
             $this->walletUpdater->compute($this->eurRepository, $eur->getId());
 
             return $this->redirectToRoute('eur_index');
@@ -93,11 +89,11 @@ class EurController extends AbstractController
         ]);
     }
 
-    #[Route('/isconsistent/{id}/{bool}', name: 'eur_is_consistent', methods: ['POST'])]
-    public function isConsistent(Request $request, Eur $eur, string $bool = '', string $route = ''): RedirectResponse
+    #[Route('/isconsistent/{id}/{boolAsString}', name: 'eur_is_consistent', methods: ['POST'])]
+    public function isConsistent(Request $request, Eur $eur, string $boolAsString = ''): RedirectResponse
     {
         if ($this->isCsrfTokenValid('is_consistent' . $eur->getId(), $request->request->get('_token'))) {
-            switch ($bool) {
+            switch ($boolAsString) {
                 case "true":
                     $eur->setIsConsistent(true);
                     break;
@@ -107,8 +103,7 @@ class EurController extends AbstractController
                 default:
                     return $this->redirectToRoute('eur_index');
             }
-            $this->entityManager->persist($eur);
-            $this->entityManager->flush();
+            $this->eurRepository->save($eur, true);
         }
 
         return $this->redirectToRoute('eur_index');
@@ -118,13 +113,12 @@ class EurController extends AbstractController
      * @throws Exception
      */
     #[Route('/delete/{id}', name: 'eur_delete', methods: ['POST'])]
-    public function delete(Request $request, Eur $eur, string $route = ''): RedirectResponse
+    public function delete(Request $request, Eur $eur): RedirectResponse
     {
         if ($this->isCsrfTokenValid('delete' . $eur->getId(), $request->request->get('_token'))) {
             $eur->setAmount(0);
             $this->walletUpdater->compute($this->eurRepository, $eur->getId());
-            $this->entityManager->remove($eur);
-            $this->entityManager->flush();
+            $this->eurRepository->remove($eur, true);
         }
 
         return $this->redirectToRoute('eur_index');

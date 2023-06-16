@@ -17,10 +17,29 @@ use Doctrine\Persistence\ManagerRegistry;
 class WalletRepository extends ServiceEntityRepository implements WalletRepositoryInterface
 {
     use AccountTrait;
+    use AppTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Wallet::class);
+    }
+
+    public function save(Wallet $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(Wallet $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
     }
 
     public function search(string $data, int $offset): Paginator

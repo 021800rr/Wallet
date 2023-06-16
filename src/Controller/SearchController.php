@@ -76,14 +76,14 @@ class SearchController extends AbstractController
         return $walletController->edit($request, $wallet, 'search_result');
     }
 
-    #[Route('/isconsistent/{id}/{bool}', name: 'search_is_consistent', methods: ['POST'])]
+    #[Route('/isconsistent/{id}/{boolAsString}', name: 'search_is_consistent', methods: ['POST'])]
     public function isConsistent(
         Request          $request,
         Wallet           $wallet,
         WalletController $walletController,
-        string           $bool = ''
+        string           $boolAsString = ''
     ): Response {
-        return $walletController->isConsistent($request, $wallet, $bool, 'search_result');
+        return $walletController->isConsistent($request, $wallet, $boolAsString, 'search_result');
     }
 
     /**
@@ -98,14 +98,17 @@ class SearchController extends AbstractController
     private function getForm(string $query = ''): FormInterface
     {
         return $this->createFormBuilder([
-            'query' => $query
-        ], [
-            'action' => $this->generateUrl('search_result'),
-        ])
+                    'query' => $query
+                ], [
+                    'action' => $this->generateUrl('search_result'),
+                ]
+            )
             ->add('query', SearchType::class, [
-                'constraints' => new NotBlank(),
-            ])
+                    'constraints' => new NotBlank(),
+                ]
+            )
             ->add('search', SubmitType::class)
-            ->getForm();
+            ->getForm()
+        ;
     }
 }
