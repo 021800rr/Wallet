@@ -33,20 +33,20 @@ opłaty stałe) możemy cieszyć się wzrastającymi zasobami na wakacje...
 
 ---  
  
-```
+```shell
 git clone https://github.com/021800rr/Wallet.git
 
 cd Wallet/
 vi .env.dev.local
 
     e.g.:
-        DATABASE_URL="postgresql://user:pass@postgres-service:5432/database?serverVersion=15&charset=utf8"
+        DATABASE_URL="postgresql://rr:rr@postgres-service:5432/account_dev?serverVersion=15&charset=utf8"
 
-        NGPORTS=123:80
-        POSTGRES_DB=database
-        POSTGRES_USER=user
-        POSTGRES_PASSWORD=pass
-        POSTGRES_PORTS=456:5432
+        NGPORTS=8000:80
+        POSTGRES_DB=account_dev
+        POSTGRES_USER=rr
+        POSTGRES_PASSWORD=rr
+        POSTGRES_PORTS=54321:5432
         
 vi .env.test.local
 vi .env.prod.local
@@ -57,8 +57,9 @@ docker exec -it  php-container bash
     composer install
 
 docker exec -it  postgres-container bash 
-    // login as SUPERUSER defined in docker-compose.yml and .env.prod.local
-    psql -U ... -d ...
+    // login as SUPERUSER defined in docker-compose.yml and .env.prod.local ^^^
+    // e.g.:
+    psql -U your_production_postgres_user -d your_production_postgres_database
         create database account_dev;
         create database account_dev_test;
         create user rr with encrypted password 'rr';
@@ -88,8 +89,10 @@ symfony run npm run dev
 
 ## test
 
-```
-make tests
+```shell
+docker exec -it  php-container bash
+    cd /var/www
+    make tests
 ```
 
 ## dev
@@ -102,7 +105,7 @@ http://localhost:8000/api
 ```shell
 docker exec -it  postgres-container bash 
     // login as SUPERUSER defined in docker-compose.yml and .env.prod.local
-    psql -U ... -d ... < database_account_YYYY-MM-DD.sql
+    psql -U your_production_postgres_user -d your_production_postgres_database < database_backup_YYYY-MM-DD.sql
 ```
 
 http://localhost
