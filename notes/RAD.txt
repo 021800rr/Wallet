@@ -31,3 +31,15 @@ git config --global user.name "Ryszard Ratajczak"
 
 git config --global --add safe.directory /var/www
 
+docker compose --env-file .env.dev.local down --remove-orphans && \
+    docker compose --env-file .env.dev.local build --no-cache --pull && \
+    docker compose --env-file .env.dev.local up -d
+
+docker compose --env-file .env.prod.local down --remove-orphans && \
+    docker compose --env-file .env.prod.local build --no-cache --pull && \
+    docker compose --env-file .env.prod.local up -d
+
+docker compose --env-file .env.prod.local down --remove-orphans && \
+    docker compose --env-file .env.prod.local build && \
+    docker compose --env-file .env.prod.local up -d
+
