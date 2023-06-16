@@ -6,7 +6,6 @@ use App\Entity\Contractor;
 use App\Form\ContractorType;
 use App\Repository\ContractorRepositoryInterface;
 use App\Repository\PaginatorEnum;
-use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -24,15 +23,15 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_ADMIN')]
 class ContractorController extends AbstractController
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager)
+    public function __construct(private readonly ContractorRepositoryInterface $contractorRepository)
     {
     }
 
     #[Route('/', name: 'contractor_index', methods: ['GET'])]
-    public function index(ContractorRepositoryInterface $contractorRepository, Request $request): Response
+    public function index(Request $request): Response
     {
         $offset = max(0, $request->query->getInt('offset', 0));
-        $paginator = $contractorRepository->getPaginator($offset);
+        $paginator = $this->contractorRepository->getPaginator($offset);
 
         return $this->render('contractor/index.html.twig', [
             'paginator' => $paginator,
@@ -49,8 +48,7 @@ class ContractorController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($contractor);
-            $this->entityManager->flush();
+            $this->contractorRepository->save($contractor, true);
 
             return $this->redirectToRoute('contractor_index');
         }
@@ -67,7 +65,7 @@ class ContractorController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->flush();
+            $this->contractorRepository->save($contractor, true);
 
             return $this->redirectToRoute('contractor_index');
         }
@@ -81,8 +79,7 @@ class ContractorController extends AbstractController
     public function delete(Request $request, Contractor $contractor): RedirectResponse
     {
         if ($this->isCsrfTokenValid('delete' . $contractor->getId(), $request->request->get('_token'))) {
-            $this->entityManager->remove($contractor);
-            $this->entityManager->flush();
+            $this->contractorRepository->remove($contractor, true);
         }
 
         return $this->redirectToRoute('contractor_index');

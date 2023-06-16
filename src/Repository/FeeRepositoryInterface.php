@@ -2,7 +2,11 @@
 
 namespace App\Repository;
 
-interface FeeRepositoryInterface
+use App\Entity\Fee;
+
+interface FeeRepositoryInterface extends AppRepositoryInterface
 {
-    public function findAll(): array;
+    public function save(Fee $entity, bool $flush = false): void;
+
+    public function remove(Fee $entity, bool $flush = false): void;
 }

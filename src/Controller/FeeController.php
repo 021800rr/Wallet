@@ -6,8 +6,8 @@ use App\Entity\Fee;
 use App\Form\FeeType;
 use App\Handler\FeeHandler;
 use App\Repository\FeeRepositoryInterface;
+use App\Repository\PaginatorEnum;
 use App\Service\FixedFees\FixedFeesInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -25,15 +25,20 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_ADMIN')]
 class FeeController extends AbstractController
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager)
+    public function __construct(private readonly FeeRepositoryInterface $feeRepository)
     {
     }
 
     #[Route('/', name: 'fee_index', methods: ['GET'])]
-    public function index(FeeRepositoryInterface $feeRepository): Response
+    public function index(Request $request): Response
     {
+        $offset = max(0, $request->query->getInt('offset', 0));
+        $paginator = $this->feeRepository->getPaginator($offset);
+
         return $this->render('fee/index.html.twig', [
-            'fees' => $feeRepository->findAll(),
+            'paginator' => $paginator,
+            'previous' => $offset - PaginatorEnum::PerPage->value,
+            'next' => min(count($paginator), $offset + PaginatorEnum::PerPage->value),
         ]);
     }
 
@@ -45,8 +50,7 @@ class FeeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($fee);
-            $this->entityManager->flush();
+            $this->feeRepository->save($fee, true);
 
             return $this->redirectToRoute('fee_index');
         }
@@ -57,13 +61,13 @@ class FeeController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'fee_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Fee $fee, EntityManagerInterface $entityManager): RedirectResponse|Response
+    public function edit(Request $request, Fee $fee): RedirectResponse|Response
     {
         $form = $this->createForm(FeeType::class, $fee);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            $this->feeRepository->save($fee, true);
 
             return $this->redirectToRoute('fee_index');
         }
@@ -77,8 +81,7 @@ class FeeController extends AbstractController
     public function delete(Request $request, Fee $fee): RedirectResponse
     {
         if ($this->isCsrfTokenValid('delete' . $fee->getId(), $request->request->get('_token'))) {
-            $this->entityManager->remove($fee);
-            $this->entityManager->flush();
+            $this->feeRepository->remove($fee, true);
         }
 
         return $this->redirectToRoute('fee_index');
@@ -86,7 +89,6 @@ class FeeController extends AbstractController
 
     #[Route('/insert', name: 'fee_insert_to_wallet', methods: ['POST'])]
     public function insert(
-        FeeRepositoryInterface $feeRepository,
         Request                $request,
         FixedFeesInterface     $fixedFees,
         FeeHandler             $feeHandler,
@@ -97,8 +99,6 @@ class FeeController extends AbstractController
             return $this->redirectToRoute('wallet_index');
         }
 
-        return $this->render('fee/index.html.twig', [
-            'fees' => $feeRepository->findAll(),
-        ]);
+        return $this->redirectToRoute('fee_index');
     }
 }

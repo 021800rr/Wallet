@@ -105,8 +105,10 @@
                 </li>
             {% endif %}
         </ul>
-        {{ render(controller(
-            'App\\Controller\\SearchController::index', {'query':  query|default('') }
-        )) }}
+        {% if app.request.attributes.get('_route') in ['search_result', 'wallet_index'] %}
+            {{ render(controller(
+                'App\\Controller\\SearchController::index', {'query':  query|default('') }
+            )) }}
+        {% endif %}
     </div>
 </nav>

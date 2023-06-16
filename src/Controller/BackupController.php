@@ -12,7 +12,6 @@ use App\Repository\WalletRepositoryInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
 use App\Service\ExpectedBackup\CalculatorInterface;
 use App\Service\Interest\InterestInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Exception;
@@ -36,7 +35,6 @@ class BackupController extends AbstractController
     public function __construct(
         private readonly BalanceUpdaterInterface   $backupUpdater,
         private readonly BackupRepositoryInterface $backupRepository,
-        private readonly EntityManagerInterface    $entityManager
     ) {
     }
 
@@ -63,8 +61,7 @@ class BackupController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($backup);
-            $this->entityManager->flush();
+            $this->backupRepository->save($backup, true);
             $this->backupUpdater->compute($this->backupRepository, $backup->getId());
 
             return $this->redirectToRoute('backup_index');
@@ -85,8 +82,7 @@ class BackupController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$backup->getId(), $request->request->get('_token'))) {
             $backup->setAmount(0);
             $this->backupUpdater->compute($this->backupRepository, $backup->getId());
-            $this->entityManager->remove($backup);
-            $this->entityManager->flush();
+            $this->backupRepository->save($backup, true);
         }
 
         return $this->redirectToRoute('backup_index');
@@ -104,7 +100,6 @@ class BackupController extends AbstractController
         AccountRepositoryInterface $chfRepository,
         AccountRepositoryInterface $eurRepository
     ): Response {
-        /** @var array $backups */
         // [[yearMonth => 2021-06, sum_of_amount => 300],[yearMonth => 2021-05, sum_of_amount => 100]]
         $backups = $this->backupRepository->paymentsByMonth();
         $walletBalance = $walletRepository->getCurrentBalance();
@@ -132,8 +127,7 @@ class BackupController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $backup = $interest->form2Backup($form);
-            $this->entityManager->persist($backup);
-            $this->entityManager->flush();
+            $this->backupRepository->save($backup, true);
             $this->backupUpdater->compute($this->backupRepository, $backup->getId());
 
             return $this->redirectToRoute('backup_index');

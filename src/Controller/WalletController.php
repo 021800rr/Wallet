@@ -9,7 +9,6 @@ use App\Repository\WalletRepositoryInterface;
 use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
 use App\Service\RequestParser\RequestParserInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,7 +32,6 @@ class WalletController extends AbstractController
     public function __construct(
         private readonly BalanceUpdaterInterface   $walletUpdater,
         private readonly WalletRepositoryInterface $walletRepository,
-        private readonly EntityManagerInterface    $entityManager
     ) {
     }
 
@@ -41,7 +39,6 @@ class WalletController extends AbstractController
     public function index(Request $request, RequestParserInterface $requestParser): Response
     {
         $offset = $requestParser->strategy(WalletController::class, $request);
-
         $paginator = $this->walletRepository->getPaginator($offset);
 
         return $this->render('wallet/index.html.twig', [
@@ -61,8 +58,7 @@ class WalletController extends AbstractController
         $form = $this->createForm(WalletType::class, $wallet);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($wallet);
-            $this->entityManager->flush();
+            $this->walletRepository->save($wallet, true);
             $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
 
             return $this->redirectToRoute('wallet_index');
@@ -84,8 +80,7 @@ class WalletController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($wallet);
-            $this->entityManager->flush();
+            $this->walletRepository->save($wallet, true);
             $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
 
             return $this->redirectToRoute($route);
@@ -96,16 +91,16 @@ class WalletController extends AbstractController
         ]);
     }
 
-    #[Route('/isconsistent/{id}/{bool}', name: 'wallet_is_consistent', methods: ['POST'])]
+    #[Route('/isconsistent/{id}/{boolAsString}', name: 'wallet_is_consistent', methods: ['POST'])]
     public function isConsistent(
         Request $request,
         Wallet $wallet,
-        string $bool = '',
+        string $boolAsString = '',
         string $route = ''
     ): RedirectResponse {
         $route = (!empty($route)) ? $route : 'wallet_index';
         if ($this->isCsrfTokenValid('is_consistent' . $wallet->getId(), $request->request->get('_token'))) {
-            switch ($bool) {
+            switch ($boolAsString) {
                 case "true":
                     $wallet->setIsConsistent(true);
                     break;
@@ -115,8 +110,7 @@ class WalletController extends AbstractController
                 default:
                     return $this->redirectToRoute('wallet_index');
             }
-            $this->entityManager->persist($wallet);
-            $this->entityManager->flush();
+            $this->walletRepository->save($wallet, true);
         }
 
         return $this->redirectToRoute($route);
@@ -132,8 +126,7 @@ class WalletController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $wallet->getId(), $request->request->get('_token'))) {
             $wallet->setAmount(0);
             $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
-            $this->entityManager->remove($wallet);
-            $this->entityManager->flush();
+            $this->walletRepository->remove($wallet, true);
         }
 
         return $this->redirectToRoute($route);
