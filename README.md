@@ -90,7 +90,11 @@ symfony run npm run dev
 ## test
 
 ```shell
-./run_tests.sh
+docker compose --env-file .env.dev.local up -d
+./xdebug-disable-enable.sh disable
+docker exec -it  php-container bash
+    cd /var/www/
+    make tests
 ```
 
 ## dev
