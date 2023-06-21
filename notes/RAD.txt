@@ -32,14 +32,30 @@ git config --global user.name "Ryszard Ratajczak"
 git config --global --add safe.directory /var/www
 
 docker compose --env-file .env.dev.local down --remove-orphans && \
-    docker compose --env-file .env.dev.local build --no-cache --pull && \
+    docker compose --env-file .env.dev.local build && \
     docker compose --env-file .env.dev.local up -d
 
-docker compose --env-file .env.prod.local down --remove-orphans && \
-    docker compose --env-file .env.prod.local build --no-cache --pull && \
-    docker compose --env-file .env.prod.local up -d
-
+docker compose --env-file .env.dev.local down --remove-orphans && \
+    docker compose --env-file .env.dev.local build --no-cache --pull && \
+    docker compose --env-file .env.dev.local up -d
+---------------------------------------------------------------------------------
 docker compose --env-file .env.prod.local down --remove-orphans && \
     docker compose --env-file .env.prod.local build && \
     docker compose --env-file .env.prod.local up -d
 
+docker compose --env-file .env.prod.local down --remove-orphans && \
+    docker compose --env-file .env.prod.local build  --no-cache --pull && \
+    docker compose --env-file .env.prod.local up -d
+--------------------------------------------------------------------------------
+
+docker compose  down --remove-orphans && \
+    docker compose build --no-cache --pull && \
+    docker compose up -d
+
+docker compose  down --remove-orphans && \
+    docker compose build && \
+    docker compose up -d
+-------------------------------------------------------------------------------
+docker compose  down --remove-orphans && docker system prune -a --volumes -f && docker compose build --no-cache --pull && docker compose up -d
+mkdir -p ./src
+docker cp shopware:/var/www/html/. ./src
