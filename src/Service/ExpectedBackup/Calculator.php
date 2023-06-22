@@ -7,18 +7,20 @@ use Exception;
 
 class Calculator implements CalculatorInterface
 {
+    // array $backups
+    // [
+    //      [
+    //          'yearMonth' => string 2021-06,
+    //          'sum_of_amount' => float 300,
+    //      ],
+    //      [
+    //          'yearMonth' => string 2021-05,
+    //          'sum_of_amount' => float 300,
+    //      ],
+    // ]
     /**
-     * @var array $backups
-     * [
-     *      [
-     *          'yearMonth' => string 2021-06,
-     *          'sum_of_amount' => float 300,
-     *      ],
-     *      [
-     *          'yearMonth' => string 2021-05,
-     *          'sum_of_amount' => float 300,
-     *      ],
-     * ]
+     * @param array<int, array<string, string|float>> $backups
+     * @return float
      * @throws Exception
      */
     public function compute(array $backups): float
@@ -54,14 +56,15 @@ class Calculator implements CalculatorInterface
     private function computeNumberOfMonth(DateTime $firstDate, DateTime $lastDate): int
     {
         /** @var int $firstYear */
-        /** @var int $lastYear */
-        /** @var int $firstMonth */
-        /** @var int $lastMonth */
-
         $firstYear = $firstDate->format('Y');
+
+        /** @var int $lastYear */
         $lastYear = $lastDate->format('Y');
 
+        /** @var int $firstMonth */
         $firstMonth = $firstDate->format('m');
+
+        /** @var int $lastMonth */
         $lastMonth = $lastDate->format('m');
 
         return (($lastYear - $firstYear) * 12) + ($lastMonth - $firstMonth) + 1;

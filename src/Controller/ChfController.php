@@ -15,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -95,7 +94,7 @@ class ChfController extends AbstractController
     #[Route('/isconsistent/{id}/{boolAsString}', name: 'chf_is_consistent', methods: ['POST'])]
     public function isConsistent(Request $request, Chf $chf, string $boolAsString = ''): RedirectResponse
     {
-        if ($this->isCsrfTokenValid('is_consistent' . $chf->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('is_consistent' . $chf->getId(), (string) $request->request->get('_token'))) {
             switch ($boolAsString) {
                 case "true":
                     $chf->setIsConsistent(true);
@@ -118,7 +117,7 @@ class ChfController extends AbstractController
     #[Route('/delete/{id}', name: 'chf_delete', methods: ['POST'])]
     public function delete(Request $request, Chf $chf): RedirectResponse
     {
-        if ($this->isCsrfTokenValid('delete' . $chf->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $chf->getId(), (string) $request->request->get('_token'))) {
             $chf->setAmount(0);
             $this->walletUpdater->compute($this->chfRepository, $chf->getId());
             $this->chfRepository->remove($chf, true);
@@ -130,18 +129,17 @@ class ChfController extends AbstractController
     #[Route('/check', name: 'chf_check', methods: ['GET'])]
     public function check(
         BalanceSupervisorInterface $supervisor,
-        SessionInterface $session,
         TranslatorInterface $translator
     ): RedirectResponse {
         $supervisor->setWallets($this->chfRepository->getAllRecords());
         $generator = $supervisor->crawl($this->chfRepository);
         $caught = false;
         foreach ($generator as $wallet) {
-            $session->getFlashBag()->add('error', $wallet->__toString());
+            $this->addFlash('error', $wallet->__toString());
             $caught = true;
         }
         if (false === $caught) {
-            $session->getFlashBag()->add('success', $translator->trans('Passed'));
+            $this->addFlash('success', $translator->trans('Passed'));
         }
 
         return $this->redirectToRoute('chf_index');

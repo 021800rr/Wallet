@@ -16,7 +16,7 @@ class WalletBalanceUpdaterTest extends KernelTestCase
      */
     public function testCompute(): void
     {
-        $walletBalanceUpdater = new WalletBalanceUpdater($this->entityManager);
+        $walletBalanceUpdater = new WalletBalanceUpdater();
 
         $transactions = $this->walletRepository->findAll();
         $this->assertSame(170.00, $transactions[0]->getBalance());

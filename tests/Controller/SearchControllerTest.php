@@ -18,26 +18,14 @@ class SearchControllerTest extends WebTestCase
         $form['form[query]']->setValue('191');
         $this->client->submit($form);
 
-        $i = 1;
-        do {
-            $this->assertSelectorTextContains('td#search_balance' . $i, '191');
-            $lastFoundIndex = $i;
-            $i++;
-        } while ($i < 2);
-        $this->assertSame(1, $lastFoundIndex);
+        $this->assertSelectorTextContains('td#search_balance1', '191');
 
         $crawler = $this->client->request('GET', '/en/wallet');
         $form = $crawler->selectButton('form_search')->form();
         $form['form[query]']->setValue('-10');
         $this->client->submit($form);
 
-        $i = 1;
-        do {
-            $this->assertSelectorTextContains('td#search_amount' . $i, '-10');
-            $lastFoundIndex = $i;
-            $i++;
-        } while ($i < 2);
-        $this->assertSame(1, $lastFoundIndex);
+        $this->assertSelectorTextContains('td#search_amount1', '-10');
 
         $crawler = $this->client->request('GET', '/en/wallet');
         $form = $crawler->selectButton('form_search')->form();
@@ -91,7 +79,7 @@ class SearchControllerTest extends WebTestCase
         $form = $crawler->selectButton('wallet_save')->form();
         $values = $form->getValues();
         $this->assertSame('-20.00', $values["wallet[amount]"]);
-        $form['wallet[amount]']->setValue(-40);
+        $form['wallet[amount]']->setValue('-40');
         $this->client->submit($form);
         $this->assertSelectorTextContains('td#search_balance1', '151');
     }

@@ -2,10 +2,7 @@
 
 namespace App\Tests\Service;
 
-use App\Entity\Backup;
 use App\Entity\Chf;
-use App\Entity\Contractor;
-use App\Entity\Fee;
 use App\Entity\Wallet;
 use App\Repository\BackupRepository;
 use App\Repository\ChfRepository;
@@ -17,8 +14,6 @@ use App\Service\BalanceUpdater\WalletBalanceUpdater;
 
 trait SetUp
 {
-    private $entityManager;
-
     private BackupRepository $backupRepository;
     private ChfRepository $chfRepository;
     private ContractorRepository $contractorRepository;
@@ -36,27 +31,16 @@ trait SetUp
 
     protected function setUp(): void
     {
-        $kernel = self::bootKernel();
-        $this->entityManager = $kernel->getContainer()->get('doctrine')->getManager();
+        $this->backupRepository = static::getContainer()->get(BackupRepository::class);
+        $this->chfRepository = static::getContainer()->get(ChfRepository::class);
+        $this->contractorRepository = static::getContainer()->get(ContractorRepository::class);
+        $this->feeRepository = static::getContainer()->get(FeeRepository::class);
+        $this->walletRepository = static::getContainer()->get(WalletRepository::class);
 
-        $this->backupRepository = $this->entityManager->getRepository(Backup::class);
-        $this->chfRepository = $this->entityManager->getRepository(Chf::class);
-        $this->contractorRepository = $this->entityManager->getRepository(Contractor::class);
-        $this->feeRepository = $this->entityManager->getRepository(Fee::class);
-        $this->walletRepository = $this->entityManager->getRepository(Wallet::class);
-
-        $this->backupBalanceUpdater = new BackupBalanceUpdater($this->entityManager);
-        $this->walletBalanceUpdater = new WalletBalanceUpdater($this->entityManager);
+        $this->backupBalanceUpdater = new BackupBalanceUpdater();
+        $this->walletBalanceUpdater = new WalletBalanceUpdater();
 
         $this->wallets = $this->walletRepository->getAllRecords();
         $this->chfs = $this->chfRepository->getAllRecords();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        $this->entityManager->close();
-        $this->entityManager = null;
     }
 }

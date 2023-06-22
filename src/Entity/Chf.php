@@ -27,8 +27,8 @@ use Doctrine\ORM\Mapping as ORM;
     denormalizationContext: ['groups' => ['account:update']],
     processor: ChfProcessor::class,
 )]
-#[Patch(denormalizationContext: ['groups' => ['account:patch']],)]
-#[Delete(processor: ChfProcessor::class,)]
+#[Patch(denormalizationContext: ['groups' => ['account:patch']], )]
+#[Delete(processor: ChfProcessor::class, )]
 class Chf extends AbstractWallet
 {
 }

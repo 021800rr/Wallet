@@ -14,7 +14,7 @@ abstract class AbstractAccount
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    protected $id;
+    protected ?int $id = null;
 
     #[Groups(['account:read', 'backup:read', 'payments:read', 'account:create' , 'account:update', 'backup:patch'])]
     #[ORM\Column(type: 'date')]

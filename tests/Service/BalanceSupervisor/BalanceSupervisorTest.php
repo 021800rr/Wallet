@@ -12,7 +12,7 @@ class BalanceSupervisorTest extends KernelTestCase
 
     public function testWalletCrawl(): void
     {
-        $balanceSupervisor = new BalanceSupervisor($this->entityManager);
+        $balanceSupervisor = new BalanceSupervisor();
         $balanceSupervisor->setWallets($this->wallets);
 
         $generator = $balanceSupervisor->crawl($this->walletRepository);
@@ -29,7 +29,7 @@ class BalanceSupervisorTest extends KernelTestCase
 
     public function testChfCrawl(): void
     {
-        $balanceSupervisor = new BalanceSupervisor($this->entityManager);
+        $balanceSupervisor = new BalanceSupervisor();
         $balanceSupervisor->setWallets($this->chfs);
 
         $generator = $balanceSupervisor->crawl($this->chfRepository);

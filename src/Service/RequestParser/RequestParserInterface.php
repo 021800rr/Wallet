@@ -7,9 +7,9 @@ use Symfony\Component\HttpFoundation\Request  as SymfonyRequest;
 interface RequestParserInterface
 {
     /**
-     * @param string $controller
+     * @param string $fullyQualifiedControllerName
      * @param SymfonyRequest $request
-     * @return int|array
+     * @return int|array<int, int|string>
      */
-    public function strategy(string $controller, SymfonyRequest $request): int|array;
+    public function strategy(string $fullyQualifiedControllerName, SymfonyRequest $request): int|array;
 }

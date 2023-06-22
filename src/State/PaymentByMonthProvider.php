@@ -11,38 +11,36 @@ use App\Repository\BackupRepositoryInterface;
 use App\Repository\WalletRepositoryInterface;
 use App\Service\ExpectedBackup\CalculatorInterface;
 
-class PaymentByMonthProvider implements ProviderInterface
+readonly class PaymentByMonthProvider implements ProviderInterface
 {
     public function __construct(
-        private readonly BackupRepositoryInterface    $backupRepository,
-        private readonly CalculatorInterface          $calculator,
-        private readonly WalletRepositoryInterface    $walletRepository,
-        private readonly AccountRepositoryInterface   $chfRepository,
+        private BackupRepositoryInterface  $backupRepository,
+        private CalculatorInterface        $calculator,
+        private WalletRepositoryInterface  $walletRepository,
+        private AccountRepositoryInterface $chfRepository,
     ) {
     }
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
-        /**
-         * @var array $backups
-         * [
-         *      [
-         *          yearMonth => 2021-06,
-         *          sum_of_amount => 300
-         *      ],
-         *      [
-         *          yearMonth => 2021-05,
-         *          sum_of_amount => 100
-         *      ]
-         * ]
-         */
+        // array $backups
+        // [
+        //      [
+        //          yearMonth => 2021-06,
+        //          sum_of_amount => 300
+        //      ],
+        //      [
+        //          yearMonth => 2021-05,
+        //          sum_of_amount => 100
+        //      ]
+        // ]
         $backups = $this->backupRepository->paymentsByMonth();
 
-        /** @var Backup[] $backupLastRecords */
+        /** @var Backup $backupLastRecord */
         $backupLastRecord = $this->backupRepository->getLastRecord();
 
         $walletBalance = $this->walletRepository->getCurrentBalance();
-        
+
         $paymentByMonth = new PaymentsByMonth();
 
         $paymentByMonth->setBackups($backups);

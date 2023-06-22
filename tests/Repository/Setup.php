@@ -2,9 +2,11 @@
 
 namespace App\Tests\Repository;
 
+use Doctrine\ORM\EntityManagerInterface;
+
 trait Setup
 {
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     protected function setUp(): void
     {
@@ -20,6 +22,6 @@ trait Setup
         parent::tearDown();
 
         $this->entityManager->close();
-        $this->entityManager = null;
+        unset($this->entityManager);
     }
 }

@@ -22,7 +22,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     denormalizationContext: ['groups' => 'backup:patch'],
     processor: BackupProcessor::class,
 )]
-#[Delete(processor: BackupProcessor::class,)]
+#[Delete(processor: BackupProcessor::class, )]
 class Backup extends AbstractAccount
 {
     // boolean interest as const:

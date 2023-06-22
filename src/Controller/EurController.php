@@ -92,7 +92,7 @@ class EurController extends AbstractController
     #[Route('/isconsistent/{id}/{boolAsString}', name: 'eur_is_consistent', methods: ['POST'])]
     public function isConsistent(Request $request, Eur $eur, string $boolAsString = ''): RedirectResponse
     {
-        if ($this->isCsrfTokenValid('is_consistent' . $eur->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('is_consistent' . $eur->getId(), (string) $request->request->get('_token'))) {
             switch ($boolAsString) {
                 case "true":
                     $eur->setIsConsistent(true);
@@ -115,7 +115,7 @@ class EurController extends AbstractController
     #[Route('/delete/{id}', name: 'eur_delete', methods: ['POST'])]
     public function delete(Request $request, Eur $eur): RedirectResponse
     {
-        if ($this->isCsrfTokenValid('delete' . $eur->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $eur->getId(), (string) $request->request->get('_token'))) {
             $eur->setAmount(0);
             $this->walletUpdater->compute($this->eurRepository, $eur->getId());
             $this->eurRepository->remove($eur, true);

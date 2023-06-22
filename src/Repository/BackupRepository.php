@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\AbstractAccount;
 use App\Entity\Backup;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -23,7 +24,7 @@ class BackupRepository extends ServiceEntityRepository implements BackupReposito
         parent::__construct($registry, Backup::class);
     }
 
-    public function save(Backup $entity, bool $flush = false): void
+    public function save(AbstractAccount $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -42,6 +43,9 @@ class BackupRepository extends ServiceEntityRepository implements BackupReposito
     }
 
 
+    /**
+     * @return array<int, array<string, string>>
+     */
     public function paymentsByMonth(): array
     {
         return $this->createQueryBuilder('p')

@@ -9,13 +9,11 @@ use App\Repository\WalletRepositoryInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterInterface;
 use DateInterval;
 use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
 class FixedFees implements FixedFeesInterface
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
         private readonly FeeRepositoryInterface $feeRepository,
         private readonly BalanceUpdaterInterface $walletUpdater,
         private readonly WalletRepositoryInterface $walletRepository
@@ -32,8 +30,7 @@ class FixedFees implements FixedFeesInterface
             $wallet->setAmount($fee->getAmount());
             $wallet->setContractor($fee->getContractor());
 
-            $this->entityManager->persist($wallet);
-            $this->entityManager->flush();
+            $this->walletRepository->save($wallet, true);
             $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
         }
     }

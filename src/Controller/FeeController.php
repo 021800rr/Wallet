@@ -80,7 +80,7 @@ class FeeController extends AbstractController
     #[Route('/delete/{id}', name: 'fee_delete', methods: ['POST'])]
     public function delete(Request $request, Fee $fee): RedirectResponse
     {
-        if ($this->isCsrfTokenValid('delete' . $fee->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $fee->getId(), (string) $request->request->get('_token'))) {
             $this->feeRepository->remove($fee, true);
         }
 
@@ -93,7 +93,7 @@ class FeeController extends AbstractController
         FixedFeesInterface     $fixedFees,
         FeeHandler             $feeHandler,
     ): RedirectResponse|Response {
-        if ($this->isCsrfTokenValid('fixedfees', $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('fixedfees', (string) $request->request->get('_token'))) {
             $feeHandler->handle($fixedFees);
 
             return $this->redirectToRoute('wallet_index');

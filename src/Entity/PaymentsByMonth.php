@@ -16,6 +16,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class PaymentsByMonth
 {
+    /** @var array<int, array<string, string>>|null */
     #[Groups(['payments:read'])]
     private ?array $backups;
 
@@ -34,11 +35,16 @@ class PaymentsByMonth
     #[Groups(['payments:read'])]
     private ?float $total;
 
+    /** @return array<int, array<string, string>>|null */
     public function getBackups(): ?array
     {
         return $this->backups;
     }
 
+    /**
+     * @param array<int, array<string, string>> $backups
+     * @return void
+     */
     public function setBackups(array $backups): void
     {
         $this->backups = $backups;
