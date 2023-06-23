@@ -40,7 +40,7 @@ class EuroWalletControllerTest extends WebTestCase
         $form = $crawler->selectButton('eur_save')->form();
         $values = $form->getValues();
         $this->assertSame('40.04', $values["eur[amount]"]);
-        $form['eur[amount]']->setValue(20);
+        $form['eur[amount]']->setValue('20');
         $this->client->submit($form);
         $this->assertSelectorTextContains('td#eur_balance1', '50.03');
     }

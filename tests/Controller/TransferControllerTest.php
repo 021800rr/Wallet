@@ -61,7 +61,7 @@ class TransferControllerTest extends WebTestCase
         $crawler = $this->client->clickLink('Transfer');
         $form = $crawler->filter('button#transfer_to_backup_save')->form();
         $form['transfer_to_backup[amount]'] = '100';
-        $form['transfer_to_backup[currency]'] = 1;
+        $form['transfer_to_backup[currency]'] = '1';
         $crawler = $this->client->submit($form);
 
         $this->assertSame("http://localhost/en/backup/", $crawler->getUri());

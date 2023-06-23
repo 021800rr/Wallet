@@ -3,11 +3,25 @@
 namespace App\Service\BalanceUpdater;
 
 use App\Entity\Backup;
+use App\Repository\AccountRepositoryInterface;
 
 class BackupBalanceUpdater extends AbstractBalanceUpdater implements BalanceUpdaterInterface
 {
-    protected function walk(Backup $predecessor, Backup $transaction, ?array $successors): void
-    {
+    use BalanceUpdaterTrait;
+
+    /**
+     * @param AccountRepositoryInterface $accountRepository
+     * @param Backup $predecessor
+     * @param Backup $transaction
+     * @param Backup[]|null $successors
+     * @return void
+     */
+    protected function walk(
+        AccountRepositoryInterface $accountRepository,
+        Backup $predecessor,
+        Backup $transaction,
+        ?array $successors,
+    ): void {
         if (Backup::INAPPLICABLE === $transaction->getInterest()) {
             $transaction->setBalance($predecessor->getBalance() + $transaction->getAmount());
             $transaction = $this->setSubWallets($predecessor, $transaction);
@@ -19,13 +33,12 @@ class BackupBalanceUpdater extends AbstractBalanceUpdater implements BalanceUpda
         } elseif (Backup::DONE === $transaction->getInterest()) {
             $transaction->setBalance($predecessor->getBalance() + $transaction->getAmount());
         }
-        $this->entityManager->persist($transaction);
-        $this->entityManager->flush();
+        $accountRepository->save($transaction, true);
 
         if (count($successors)) {
             $predecessor = $transaction;
             $transaction = array_shift($successors);
-            $this->walk($predecessor, $transaction, $successors);
+            $this->walk($accountRepository, $predecessor, $transaction, $successors);
         }
     }
 

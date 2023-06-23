@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\AbstractAccount;
 use App\Entity\Chf;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,7 +22,7 @@ class ChfRepository extends ServiceEntityRepository implements ChfRepositoryInte
         parent::__construct($registry, Chf::class);
     }
 
-    public function save(Chf $entity, bool $flush = false): void
+    public function save(AbstractAccount $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 

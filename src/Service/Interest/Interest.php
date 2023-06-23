@@ -3,7 +3,9 @@
 namespace App\Service\Interest;
 
 use App\Entity\Backup;
+use App\Entity\Contractor;
 use App\Repository\ContractorRepositoryInterface;
+use DateTimeInterface;
 use Symfony\Component\Form\FormInterface;
 
 class Interest implements InterestInterface
@@ -28,6 +30,10 @@ class Interest implements InterestInterface
         return $backup;
     }
 
+    /**
+     * @param FormInterface $form
+     * @return array<string, DateTimeInterface|float|Contractor|bool|null>
+     */
     private function simplifyFormArray(FormInterface $form): array
     {
         $formArray = $form->getData();

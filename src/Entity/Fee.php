@@ -37,7 +37,7 @@ class Fee
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: "integer")]
-    private int $id;
+    private ?int $id = null;
 
     #[Groups(['fee:read', 'fee:create', 'fee:patch'])]
     #[ORM\Column(type: "integer")]

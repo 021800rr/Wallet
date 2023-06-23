@@ -79,7 +79,7 @@ class BackupController extends AbstractController
     #[Route('/delete/{id}', name: 'backup_delete', methods: ['POST'])]
     public function delete(Request $request, Backup $backup): RedirectResponse
     {
-        if ($this->isCsrfTokenValid('delete'.$backup->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$backup->getId(), (string) $request->request->get('_token'))) {
             $backup->setAmount(0);
             $this->backupUpdater->compute($this->backupRepository, $backup->getId());
             $this->backupRepository->save($backup, true);
@@ -100,10 +100,14 @@ class BackupController extends AbstractController
         AccountRepositoryInterface $chfRepository,
         AccountRepositoryInterface $eurRepository
     ): Response {
-        // [[yearMonth => 2021-06, sum_of_amount => 300],[yearMonth => 2021-05, sum_of_amount => 100]]
+        // $backups:
+        // [
+        //     [yearMonth => 2021-06, sum_of_amount => 300],
+        //     [yearMonth => 2021-05, sum_of_amount => 100]
+        // ]
         $backups = $this->backupRepository->paymentsByMonth();
         $walletBalance = $walletRepository->getCurrentBalance();
-        /** @var Backup[] $backupLastRecord */
+        /** @var Backup $backupLastRecord */
         $backupLastRecord = $this->backupRepository->getLastRecord();
 
         return $this->render('backup/payments_by_month.html.twig', [

@@ -23,6 +23,7 @@ abstract class AbstractAccountChecker
         $this->result = $result;
     }
 
+    /** @return AbstractWallet[] */
     public function getAccounts(): array
     {
         return $this->accounts;

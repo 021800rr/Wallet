@@ -2,36 +2,24 @@
 
 namespace App\Service\BalanceUpdater;
 
+use App\Entity\AbstractWallet;
+use App\Entity\Backup;
 use App\Repository\AccountRepositoryInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
 abstract class AbstractBalanceUpdater implements BalanceUpdaterInterface
 {
-    public function __construct(protected readonly EntityManagerInterface $entityManager)
-    {
-    }
-
     /**
      * @param AccountRepositoryInterface $accountRepository
      * @param int $id
      * @throws Exception
      */
-    public function compute(AccountRepositoryInterface $accountRepository, int $id): void
-    {
-        list($predecessor, $transaction, $successors) = $this->setUp($accountRepository, $id);
-        $this->walk($predecessor, $transaction, $successors);
-    }
+    abstract public function compute(AccountRepositoryInterface $accountRepository, int $id): void;
 
     /**
      * @param AccountRepositoryInterface $accountRepository
      * @param int $id
-     * @return array
-     *      [
-     *          ?AbstractWallet|?Backup,
-     *          ?AbstractWallet|?Backup,
-     *          ?AbstractWallet[]|?Backup[]
-     *      ]
+     * @return array<int, AbstractWallet|Backup|AbstractWallet[]|Backup[]|null>
      * @throws Exception
      */
     protected function setUp(AccountRepositoryInterface $accountRepository, int $id): array
@@ -43,11 +31,7 @@ abstract class AbstractBalanceUpdater implements BalanceUpdaterInterface
         $successors = [];
         foreach ($transactions as $key => $transaction) {
             if ($id === $transaction->getId()) {
-                try {
-                    $predecessor = $transactions[$key + 1];
-                } catch (Exception $exception) {
-                    throw new Exception("must not modify the first record");
-                }
+                $predecessor = $transactions[$key + 1];
 
                 return [$predecessor, $transaction, $successors];
             }

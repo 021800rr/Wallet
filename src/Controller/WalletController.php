@@ -15,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -99,7 +98,7 @@ class WalletController extends AbstractController
         string $route = ''
     ): RedirectResponse {
         $route = (!empty($route)) ? $route : 'wallet_index';
-        if ($this->isCsrfTokenValid('is_consistent' . $wallet->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('is_consistent' . $wallet->getId(), (string) $request->request->get('_token'))) {
             switch ($boolAsString) {
                 case "true":
                     $wallet->setIsConsistent(true);
@@ -123,7 +122,7 @@ class WalletController extends AbstractController
     public function delete(Request $request, Wallet $wallet, string $route = ''): RedirectResponse
     {
         $route = (!empty($route)) ? $route : 'wallet_index';
-        if ($this->isCsrfTokenValid('delete' . $wallet->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $wallet->getId(), (string) $request->request->get('_token'))) {
             $wallet->setAmount(0);
             $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
             $this->walletRepository->remove($wallet, true);
@@ -135,18 +134,17 @@ class WalletController extends AbstractController
     #[Route('/check', name: 'wallet_check', methods: ['GET'])]
     public function check(
         BalanceSupervisorInterface $supervisor,
-        SessionInterface $session,
         TranslatorInterface $translator
     ): RedirectResponse {
         $supervisor->setWallets($this->walletRepository->getAllRecords());
         $generator = $supervisor->crawl($this->walletRepository);
         $caught = false;
         foreach ($generator as $wallet) {
-            $session->getFlashBag()->add('error', $wallet->__toString());
+            $this->addFlash('error', $wallet->__toString());
             $caught = true;
         }
         if (false === $caught) {
-            $session->getFlashBag()->add('success', $translator->trans('Passed'));
+            $this->addFlash('success', $translator->trans('Passed'));
         }
 
         return $this->redirectToRoute('wallet_index');

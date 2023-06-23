@@ -34,7 +34,7 @@ class WalletControllerTest extends WebTestCase
         $form = $crawler->selectButton('wallet_save')->form();
         $values = $form->getValues();
         $this->assertSame('-20.00', $values["wallet[amount]"]);
-        $form['wallet[amount]']->setValue(-40);
+        $form['wallet[amount]']->setValue('-40');
         $this->client->submit($form);
         $this->assertSelectorTextContains('td#wallet_balance1', '151');
     }
@@ -101,7 +101,7 @@ class WalletControllerTest extends WebTestCase
         $form = $crawler->selectButton('wallet_save')->form();
         $values = $form->getValues();
         $this->assertSame('-10.00', $values["wallet[amount]"]);
-        $form['wallet[amount]']->setValue(-11);
+        $form['wallet[amount]']->setValue('-11');
         $this->client->submit($form);
         $this->assertSelectorTextContains('td#wallet_balance2', '189');
 
@@ -116,7 +116,7 @@ class WalletControllerTest extends WebTestCase
         $form = $crawler->selectButton('wallet_save')->form();
         $values = $form->getValues();
         $this->assertSame('-11.00', $values["wallet[amount]"]);
-        $form['wallet[amount]']->setValue(-10);
+        $form['wallet[amount]']->setValue('-10');
         $this->client->submit($form);
         $this->assertSelectorTextContains('td#wallet_balance2', '190');
 

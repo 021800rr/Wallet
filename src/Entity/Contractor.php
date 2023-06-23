@@ -11,7 +11,6 @@ use App\Repository\ContractorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -35,7 +34,7 @@ class Contractor
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: "integer")]
-    private int $id;
+    private ?int $id = null;
 
     #[Groups(['contractor:read', 'contractor:create', 'contractor:patch', 'account:read', 'fee:read'])]
     #[ORM\Column(type: "string", length: 255)]
@@ -51,7 +50,7 @@ class Contractor
     #[ORM\OneToMany(mappedBy: "contractor", targetEntity: Fee::class)]
     private Collection $fees;
 
-    #[Pure] public function __construct()
+    public function __construct()
     {
         $this->wallets = new ArrayCollection();
         $this->fees = new ArrayCollection();
