@@ -4,24 +4,23 @@ namespace App\Service\RequestParser;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
-class RequestParser implements RequestParserInterface
+readonly class RequestParser implements RequestParserInterface
 {
     public function __construct(
-        private readonly ControllerHelperInterface $searchHelper,
-        private readonly ControllerHelperInterface $walletHelper
+        private ControllerHelperInterface $searchHelper,
+        private ControllerHelperInterface $walletHelper
     ) {
     }
 
     /**
-     * @param string $controller
+     * @param string $fullyQualifiedControllerName
      * @param SymfonyRequest $request
-     * @return int|array
+     * @return int|array<int, int|string>
      */
-    public function strategy(string $controller, SymfonyRequest $request): int|array
+    public function strategy(string $fullyQualifiedControllerName, SymfonyRequest $request): int|array
     {
-        return match ($controller) {
-            "App\\Controller\\SearchController" => $this->searchHelper->process($request),
-            "App\\Controller\\WalletController" => $this->walletHelper->process($request),
-        };
+        return "App\\Controller\\SearchController" === $fullyQualifiedControllerName
+            ? $this->searchHelper->process($request)
+            : $this->walletHelper->process($request);
     }
 }

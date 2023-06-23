@@ -97,15 +97,14 @@ class SearchController extends AbstractController
 
     private function getForm(string $query = ''): FormInterface
     {
-        return $this->createFormBuilder([
-                    'query' => $query
-                ], [
-                    'action' => $this->generateUrl('search_result'),
-                ]
-            )
-            ->add('query', SearchType::class, [
-                    'constraints' => new NotBlank(),
-                ]
+        return $this->createFormBuilder(
+            ['query' => $query],
+            ['action' => $this->generateUrl('search_result')]
+        )
+            ->add(
+                'query',
+                SearchType::class,
+                ['constraints' => new NotBlank()]
             )
             ->add('search', SubmitType::class)
             ->getForm()

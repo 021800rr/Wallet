@@ -50,6 +50,6 @@ abstract class AbstractWallet extends AbstractAccount
             $this->getBalanceSupervisor() . ' : ' .
             $this->getContractor()->getDescription() .
             ($this->getDescription() ? ' : ' . $this->getDescription() : '')
-            ;
+        ;
     }
 }

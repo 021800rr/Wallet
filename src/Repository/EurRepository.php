@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\AbstractAccount;
 use App\Entity\Eur;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,7 +22,7 @@ class EurRepository extends ServiceEntityRepository implements EurRepositoryInte
         parent::__construct($registry, Eur::class);
     }
 
-    public function save(Eur $entity, bool $flush = false): void
+    public function save(AbstractAccount $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 

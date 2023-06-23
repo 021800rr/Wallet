@@ -5,7 +5,6 @@ namespace App\Service\BalanceSupervisor;
 use App\Entity\Chf;
 use App\Entity\Wallet;
 use App\Repository\AccountRepositoryInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Generator;
 
 class BalanceSupervisor implements BalanceSupervisorInterface
@@ -13,10 +12,6 @@ class BalanceSupervisor implements BalanceSupervisorInterface
     /** @var Wallet[]|Chf[] */
     private array $supervisors;
     private float $initialBalance;
-
-    public function __construct(private readonly EntityManagerInterface $entityManager)
-    {
-    }
 
     /**
      * @param Wallet[]|Chf[] $wallets
@@ -30,6 +25,7 @@ class BalanceSupervisor implements BalanceSupervisorInterface
 
     public function crawl(AccountRepositoryInterface $accountRepository): Generator
     {
+        $account = null;
         for ($step = 1; $step < count($this->supervisors); $step++) {
             /** @var Wallet|Chf $account */
             $account = $accountRepository->find($this->supervisors[$step]->getId());
@@ -38,16 +34,18 @@ class BalanceSupervisor implements BalanceSupervisorInterface
             if ($account->getBalance() !== $checker) {
                 $account->setBalanceSupervisor($checker);
                 yield($account);
-                $this->entityManager->persist($account);
+                $accountRepository->save($account);
             } else {
                 $account->setBalanceSupervisor(null);
             }
             $balanceSupervisorAfter = $account->getBalanceSupervisor();
             if ($balanceSupervisorBefore !== $balanceSupervisorAfter) {
-                $this->entityManager->persist($account);
+                $accountRepository->save($account);
             }
             $this->initialBalance = $account->getBalance();
         }
-        $this->entityManager->flush();
+        if ($account) {
+            $accountRepository->save($account, true);
+        }
     }
 }

@@ -40,7 +40,7 @@ class ChfWalletControllerTest extends WebTestCase
         $form = $crawler->selectButton('chf_save')->form();
         $values = $form->getValues();
         $this->assertSame('40.04', $values["chf[amount]"]);
-        $form['chf[amount]']->setValue(20);
+        $form['chf[amount]']->setValue('20');
         $this->client->submit($form);
         $this->assertSelectorTextContains('td#chf_balance1', '50.03');
     }

@@ -6,6 +6,10 @@ use App\Entity\Backup;
 use App\Entity\Chf;
 use App\Entity\Eur;
 use App\Entity\Wallet;
+use App\Repository\BackupRepository;
+use App\Repository\ChfRepository;
+use App\Repository\EurRepository;
+use App\Repository\WalletRepository;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class AccountTraitTest extends KernelTestCase
@@ -14,69 +18,85 @@ class AccountTraitTest extends KernelTestCase
 
     public function testBackupGetCurrentBalance(): void
     {
-        $balance = $this->entityManager
-            ->getRepository(Backup::class)
-            ->getCurrentBalance();
+        $repository = $this->getBackupRepository();
+        $balance = $repository->getCurrentBalance();
         $this->assertSame(600.0, $balance);
     }
 
     public function testBackupGetLastRecord(): void
     {
-        $last = $this->entityManager
-            ->getRepository(Backup::class)
-            ->getLastRecord();
+        $repository = $this->getBackupRepository();
+        $last = $repository->getLastRecord();
         $this->assertSame(3, $last->getId());
         $this->assertSame(600.0, $last->getBalance());
     }
 
     public function testChfGetCurrentBalance(): void
     {
-        $balance = $this->entityManager
-            ->getRepository(Chf::class)
-            ->getCurrentBalance();
+        $repository = $this->getChfRepository();
+        $balance = $repository->getCurrentBalance();
         $this->assertSame(70.07, $balance);
     }
 
     public function testChfGetLastRecord(): void
     {
-        $last = $this->entityManager
-            ->getRepository(Chf::class)
-            ->getLastRecord();
+        $repository = $this->getChfRepository();
+        $last = $repository->getLastRecord();
         $this->assertSame(3, $last->getId());
         $this->assertSame(70.07, $last->getBalance());
     }
 
     public function testEurGetCurrentBalance(): void
     {
-        $balance = $this->entityManager
-            ->getRepository(Eur::class)
-            ->getCurrentBalance();
+        $repository = $this->getEurRepository();
+        $balance = $repository->getCurrentBalance();
         $this->assertSame(70.07, $balance);
     }
 
     public function testEurGetLastRecord(): void
     {
-        $last = $this->entityManager
-            ->getRepository(Eur::class)
-            ->getLastRecord();
+        $repository = $this->getEurRepository();
+        $last = $repository->getLastRecord();
         $this->assertSame(3, $last->getId());
         $this->assertSame(70.07, $last->getBalance());
     }
 
     public function testWalletGetCurrentBalance(): void
     {
-        $balance = $this->entityManager
-            ->getRepository(Wallet::class)
-            ->getCurrentBalance();
+        $repository = $this->getWalletRepository();
+        $balance = $repository->getCurrentBalance();
         $this->assertSame(170.0, $balance);
     }
 
     public function testWalletGetLastRecord(): void
     {
-        $last = $this->entityManager
-            ->getRepository(Wallet::class)
-            ->getLastRecord();
+        $repository = $this->getWalletRepository();
+        $last = $repository->getLastRecord();
         $this->assertSame(3, $last->getId());
         $this->assertSame(170.0, $last->getBalance());
+    }
+
+    private function getBackupRepository(): BackupRepository
+    {
+        /** @var BackupRepository */
+        return $this->entityManager->getRepository(Backup::class);
+    }
+
+    private function getChfRepository(): ChfRepository
+    {
+        /** @var ChfRepository */
+        return $this->entityManager->getRepository(Chf::class);
+    }
+
+    private function getEurRepository(): EurRepository
+    {
+        /** @var EurRepository */
+        return $this->entityManager->getRepository(Eur::class);
+    }
+
+    private function getWalletRepository(): WalletRepository
+    {
+        /** @var WalletRepository */
+        return $this->entityManager->getRepository(Wallet::class);
     }
 }

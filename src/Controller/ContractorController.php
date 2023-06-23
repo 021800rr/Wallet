@@ -78,7 +78,7 @@ class ContractorController extends AbstractController
     #[Route('/delete/{id}', name: 'contractor_delete', methods: ['POST'])]
     public function delete(Request $request, Contractor $contractor): RedirectResponse
     {
-        if ($this->isCsrfTokenValid('delete' . $contractor->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $contractor->getId(), (string) $request->request->get('_token'))) {
             $this->contractorRepository->remove($contractor, true);
         }
 

@@ -62,9 +62,9 @@ class FeeControllerTest extends WebTestCase
         $values = $form->getValues();
 
         $this->assertSame('-19.99', $values["fee[amount]"]);
-        $form['fee[amount]']->setValue(-19.9);
+        $form['fee[amount]']->setValue('-19.9');
         $this->assertSame('4', $values["fee[date]"]);
-        $form['fee[date]']->setValue(14);
+        $form['fee[date]']->setValue('14');
 
         $this->client->submit($form);
 

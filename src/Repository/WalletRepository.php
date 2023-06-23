@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\AbstractAccount;
 use App\Entity\Wallet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -24,7 +25,7 @@ class WalletRepository extends ServiceEntityRepository implements WalletReposito
         parent::__construct($registry, Wallet::class);
     }
 
-    public function save(Wallet $entity, bool $flush = false): void
+    public function save(AbstractAccount $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 

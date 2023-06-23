@@ -29,8 +29,8 @@ use Doctrine\ORM\Mapping as ORM;
     denormalizationContext: ['groups' => ['account:update']],
     processor: WalletProcessor::class,
 )]
-#[Patch(denormalizationContext: ['groups' => ['account:patch']],)]
-#[Delete(processor: WalletProcessor::class,)]
+#[Patch(denormalizationContext: ['groups' => ['account:patch']], )]
+#[Delete(processor: WalletProcessor::class, )]
 #[ApiFilter(
     SearchFilter::class,
     properties: [

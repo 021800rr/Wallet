@@ -15,7 +15,6 @@ class TransferTest extends KernelTestCase
     public function testMoveAssets(): void
     {
         $transfer = new Transfer(
-            $this->entityManager,
             $this->contractorRepository,
             $this->backupBalanceUpdater,
             $this->backupRepository,
