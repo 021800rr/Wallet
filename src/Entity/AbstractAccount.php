@@ -16,23 +16,27 @@ abstract class AbstractAccount
     #[ORM\Column(type: 'integer')]
     protected ?int $id = null;
 
-    #[Groups(['account:read', 'backup:read', 'payments:read', 'account:create' , 'account:update', 'backup:patch'])]
+    #[Groups(['account:read', 'backup:read', 'payments:read', 'account:create' , 'account:update'])]
     #[ORM\Column(type: 'date')]
     #[Assert\Type('DateTimeInterface')]
+    #[Assert\NotBlank]
     protected DateTimeInterface $date;
 
     #[Groups(['account:read', 'backup:read', 'payments:read', 'account:create' , 'account:update', 'backup:patch'])]
     #[ORM\Column(type: 'float')]
+    #[Assert\NotBlank]
     protected float $amount;
 
     #[Groups(['account:read', 'backup:read', 'payments:read'])]
     #[ORM\Column(type: 'float')]
     #[Assert\Type('float')]
+    #[Assert\NotBlank]
     protected float $balance = 0.00;
 
     #[Groups(['account:read', 'account:create' , 'account:update'])]
     #[ORM\ManyToOne(targetEntity: Contractor::class, inversedBy: 'wallets')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank]
     protected Contractor $contractor;
 
     #[Groups(['account:read', 'backup:read', 'payments:read', 'account:create' , 'account:update', 'backup:patch'])]
