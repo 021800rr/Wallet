@@ -82,7 +82,7 @@ class BackupController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$backup->getId(), (string) $request->request->get('_token'))) {
             $backup->setAmount(0);
             $this->backupUpdater->compute($this->backupRepository, $backup->getId());
-            $this->backupRepository->save($backup, true);
+            $this->backupRepository->remove($backup, true);
         }
 
         return $this->redirectToRoute('backup_index');
