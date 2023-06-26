@@ -46,35 +46,14 @@ class FeeController extends AbstractController
     public function new(Request $request): RedirectResponse|Response
     {
         $fee = new Fee();
-        $form = $this->createForm(FeeType::class, $fee);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->feeRepository->save($fee, true);
-
-            return $this->redirectToRoute('fee_index');
-        }
-
-        return $this->render('fee/form.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->upsert($fee, $request);
     }
 
     #[Route('/edit/{id}', name: 'fee_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Fee $fee): RedirectResponse|Response
     {
-        $form = $this->createForm(FeeType::class, $fee);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->feeRepository->save($fee, true);
-
-            return $this->redirectToRoute('fee_index');
-        }
-
-        return $this->render('fee/form.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->upsert($fee, $request);
     }
 
     #[Route('/delete/{id}', name: 'fee_delete', methods: ['POST'])]
@@ -100,5 +79,26 @@ class FeeController extends AbstractController
         }
 
         return $this->redirectToRoute('fee_index');
+    }
+
+    /**
+     * @param Fee $fee
+     * @param Request $request
+     * @return RedirectResponse|Response
+     */
+    private function upsert(Fee $fee, Request $request): Response|RedirectResponse
+    {
+        $form = $this->createForm(FeeType::class, $fee);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->feeRepository->save($fee, true);
+
+            return $this->redirectToRoute('fee_index');
+        }
+
+        return $this->render('fee/form.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }
