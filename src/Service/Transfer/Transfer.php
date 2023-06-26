@@ -28,8 +28,8 @@ class Transfer implements TransferInterface
      */
     public function moveToBackup(Backup $backup, int $currency = 0): void
     {
-        $backup = $this->persistExport($this->backupRepository, $backup);
-        $wallet = $this->persistImport($this->walletRepository, new Wallet(), $backup);
+        $this->backupRepository->save($backup, true);
+        $wallet = $this->persistDebit($this->walletRepository, new Wallet(), $backup);
         if (0 === $currency) {
             $this->backupUpdater->compute($this->backupRepository, $backup->getId());
         }
@@ -41,14 +41,14 @@ class Transfer implements TransferInterface
      */
     public function moveToWallet(Wallet $wallet): void
     {
-        $wallet = $this->persistExport($this->walletRepository, $wallet);
-        $backup = $this->persistImport($this->backupRepository, new Backup(), $wallet);
+        $this->walletRepository->save($wallet, true);
+        $backup = $this->persistDebit($this->backupRepository, new Backup(), $wallet);
 
         $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
         $this->backupUpdater->compute($this->backupRepository, $backup->getId());
     }
 
-    private function persistImport(
+    private function persistDebit(
         AccountRepositoryInterface $repository,
         AbstractAccount $fromAccount,
         AbstractAccount $toAccount
@@ -59,14 +59,5 @@ class Transfer implements TransferInterface
         $repository->save($fromAccount, true);
 
         return $fromAccount;
-    }
-
-    private function persistExport(AccountRepositoryInterface $repository, AbstractAccount $toAccount): AbstractAccount
-    {
-        $contractor = $this->contractorRepository->getInternalTransferOwner();
-        $toAccount->setContractor($contractor);
-        $repository->save($toAccount, true);
-
-        return $toAccount;
     }
 }
