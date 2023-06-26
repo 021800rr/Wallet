@@ -6,6 +6,7 @@ use App\Entity\Backup;
 use App\Entity\Wallet;
 use App\Form\TransferToBackupType;
 use App\Form\TransferToWalletType;
+use App\Repository\ContractorRepository;
 use App\Service\Transfer\TransferInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,6 +25,10 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_ADMIN')]
 class TransferController extends AbstractController
 {
+    public function __construct(private readonly ContractorRepository $contractorRepository)
+    {
+    }
+
     #[Route('/', name: 'transfer_index', methods: ['GET'])]
     public function index(): Response
     {
@@ -47,6 +52,7 @@ class TransferController extends AbstractController
     public function backup(Request $request, TransferInterface $agent): RedirectResponse
     {
         $backup = new Backup();
+        $backup->setContractor($this->contractorRepository->getInternalTransferOwner());
         $backupForm = $this->createForm(TransferToBackupType::class, $backup);
         $backupForm->handleRequest($request);
         if ($backupForm->isSubmitted() && $backupForm->isValid()) {
@@ -67,6 +73,7 @@ class TransferController extends AbstractController
     public function wallet(Request $request, TransferInterface $agent): RedirectResponse
     {
         $wallet = new Wallet();
+        $wallet->setContractor($this->contractorRepository->getInternalTransferOwner());
         $walletForm = $this->createForm(TransferToWalletType::class, $wallet);
         $walletForm->handleRequest($request);
         if ($walletForm->isSubmitted() && $walletForm->isValid()) {
