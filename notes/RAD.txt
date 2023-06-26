@@ -1,6 +1,6 @@
 docker compose --env-file .env.prod.local down
 sudo rm -rf docker/postgres/data*
-docker system prune --all --volumes
+docker system prune --all --volumes -f
 docker compose --env-file .env.prod.local build --no-cache
 docker compose --env-file .env.prod.local up -d
 docker ps
@@ -58,6 +58,9 @@ docker compose  down --remove-orphans && \
 
 make tests
 vendor/bin/phpstan analyse -l 6 src tests
+vendor/bin/phpstan analyse -l 9 src tests
     mkdir --parents tools/php-cs-fixer
     composer require --working-dir=tools/php-cs-fixer friendsofphp/php-cs-fixer
 tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src
+
+make tests && vendor/bin/phpstan analyse -l 6 src tests && tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src
