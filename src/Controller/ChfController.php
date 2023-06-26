@@ -54,20 +54,10 @@ class ChfController extends AbstractController
     public function new(Request $request, ContractorRepositoryInterface $contractorRepository): RedirectResponse|Response
     {
         $chf = new Chf();
-        $form = $this->createForm(ChfType::class, $chf);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $contractor = $contractorRepository->getInternalTransferOwner();
-            $chf->setContractor($contractor);
-            $this->chfRepository->save($chf, true);
-            $this->walletUpdater->compute($this->chfRepository, $chf->getId());
+        $contractor = $contractorRepository->getInternalTransferOwner();
+        $chf->setContractor($contractor);
 
-            return $this->redirectToRoute('chf_index');
-        }
-
-        return $this->render('chf/form.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->upsert($chf, $request);
     }
 
     /**
@@ -76,19 +66,7 @@ class ChfController extends AbstractController
     #[Route('/edit/{id}', name: 'chf_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Chf $chf): RedirectResponse|Response
     {
-        $form = $this->createForm(ChfType::class, $chf);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->chfRepository->save($chf, true);
-            $this->walletUpdater->compute($this->chfRepository, $chf->getId());
-
-            return $this->redirectToRoute('chf_index');
-        }
-
-        return $this->render('chf/form.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->upsert($chf, $request);
     }
 
     #[Route('/isconsistent/{id}/{boolAsString}', name: 'chf_is_consistent', methods: ['POST'])]
@@ -143,5 +121,28 @@ class ChfController extends AbstractController
         }
 
         return $this->redirectToRoute('chf_index');
+    }
+
+    /**
+     * @param Chf $chf
+     * @param Request $request
+     * @return RedirectResponse|Response
+     * @throws Exception
+     */
+    private function upsert(Chf $chf, Request $request): Response|RedirectResponse
+    {
+        $form = $this->createForm(ChfType::class, $chf);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $this->chfRepository->save($chf, true);
+            $this->walletUpdater->compute($this->chfRepository, $chf->getId());
+
+            return $this->redirectToRoute('chf_index');
+        }
+
+        return $this->render('chf/form.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }

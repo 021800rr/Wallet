@@ -30,6 +30,7 @@ class TransferTest extends KernelTestCase
         $this->assertSame(600.00, $transactions[0]->getBalance());
 
         $backup = new Backup();
+        $backup->setContractor($this->contractorRepository->getInternalTransferOwner());
         $backup->setAmount(100);
 
         $transfer->moveToBackup($backup);
@@ -42,6 +43,7 @@ class TransferTest extends KernelTestCase
         $this->assertSame(700.00, $transactions[0]->getBalance());
 
         $wallet = new Wallet();
+        $wallet->setContractor($this->contractorRepository->getInternalTransferOwner());
         $wallet->setAmount(100);
 
         $transfer->moveToWallet($wallet);
@@ -52,5 +54,16 @@ class TransferTest extends KernelTestCase
         $this->assertSame(350.00, $transactions[0]->getRetiring());
         $this->assertSame(250.00, $transactions[0]->getHoliday());
         $this->assertSame(600.00, $transactions[0]->getBalance());
+
+        $backup = new Backup();
+        $backup->setContractor($this->contractorRepository->getInternalTransferOwner());
+        $backup->setAmount(100);
+
+        $transfer->moveToBackup($backup, 1);
+        $this->assertSame(70.00, $this->walletRepository->getCurrentBalance());
+        $transactions = $this->backupRepository->findAll();
+        $this->assertSame(0.00, $transactions[0]->getRetiring());
+        $this->assertSame(0.00, $transactions[0]->getHoliday());
+        $this->assertSame(0.00, $transactions[0]->getBalance());
     }
 }

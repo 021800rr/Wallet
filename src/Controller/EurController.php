@@ -52,20 +52,10 @@ class EurController extends AbstractController
     public function new(Request $request, ContractorRepositoryInterface $contractorRepository): RedirectResponse|Response
     {
         $eur = new Eur();
-        $form = $this->createForm(EurType::class, $eur);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $contractor = $contractorRepository->getInternalTransferOwner();
-            $eur->setContractor($contractor);
-            $this->eurRepository->save($eur, true);
-            $this->walletUpdater->compute($this->eurRepository, $eur->getId());
+        $contractor = $contractorRepository->getInternalTransferOwner();
+        $eur->setContractor($contractor);
 
-            return $this->redirectToRoute('eur_index');
-        }
-
-        return $this->render('eur/form.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->upsert($eur, $request);
     }
 
     /**
@@ -74,19 +64,7 @@ class EurController extends AbstractController
     #[Route('/edit/{id}', name: 'eur_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Eur $eur): RedirectResponse|Response
     {
-        $form = $this->createForm(EurType::class, $eur);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->eurRepository->save($eur, true);
-            $this->walletUpdater->compute($this->eurRepository, $eur->getId());
-
-            return $this->redirectToRoute('eur_index');
-        }
-
-        return $this->render('eur/form.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->upsert($eur, $request);
     }
 
     #[Route('/isconsistent/{id}/{boolAsString}', name: 'eur_is_consistent', methods: ['POST'])]
@@ -122,5 +100,29 @@ class EurController extends AbstractController
         }
 
         return $this->redirectToRoute('eur_index');
+    }
+
+    /**
+     * @param Eur $eur
+     * @param Request $request
+     * @return RedirectResponse|Response
+     * @throws Exception
+     */
+    private function upsert(Eur $eur, Request $request): Response|RedirectResponse
+    {
+        $form = $this->createForm(EurType::class, $eur);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $this->eurRepository->save($eur, true);
+            $this->walletUpdater->compute($this->eurRepository, $eur->getId());
+
+            return $this->redirectToRoute('eur_index');
+        }
+
+        return $this->render('eur/form.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }
