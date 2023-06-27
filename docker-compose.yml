@@ -3,7 +3,6 @@ version: '3.5'
 services:
 
   php-service:
-    image: wallet-php-image
     build:
       dockerfile: docker/php/Dockerfile
     container_name: wallet-php-container
