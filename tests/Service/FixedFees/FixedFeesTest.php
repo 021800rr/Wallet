@@ -14,7 +14,7 @@ class FixedFeesTest extends KernelTestCase
     {
         $fixedFees = new FixedFees(
             $this->feeRepository,
-            $this->walletBalanceUpdater,
+            $this->walletFactory,
             $this->walletRepository,
         );
 

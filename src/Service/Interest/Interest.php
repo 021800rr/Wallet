@@ -8,9 +8,9 @@ use App\Repository\ContractorRepositoryInterface;
 use DateTimeInterface;
 use Symfony\Component\Form\FormInterface;
 
-class Interest implements InterestInterface
+readonly class Interest implements InterestInterface
 {
-    public function __construct(private readonly ContractorRepositoryInterface $contractorRepository)
+    public function __construct(private ContractorRepositoryInterface $contractorRepository)
     {
     }
 

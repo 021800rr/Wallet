@@ -5,7 +5,7 @@ namespace App\Service\BalanceUpdater;
 use App\Repository\AccountRepositoryInterface;
 use Exception;
 
-interface BalanceUpdaterInterface
+interface BalanceUpdaterAccountInterface
 {
     /**
      * @param AccountRepositoryInterface $accountRepository

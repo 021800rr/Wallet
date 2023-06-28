@@ -6,7 +6,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Entity\WalletChecker;
 
-class WalletCheckerProvider extends AbstractAccountCheckerProvider implements ProviderInterface
+readonly class WalletCheckerProvider extends AbstractAccountCheckerProvider implements ProviderInterface
 {
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
