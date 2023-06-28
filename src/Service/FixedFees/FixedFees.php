@@ -16,7 +16,7 @@ readonly class FixedFees implements FixedFeesInterface
     public function __construct(
         private FeeRepositoryInterface         $feeRepository,
         private BalanceUpdaterFactoryInterface $walletFactory,
-        private WalletRepositoryInterface      $walletRepository
+        private WalletRepositoryInterface      $walletRepository,
     ) {
     }
 

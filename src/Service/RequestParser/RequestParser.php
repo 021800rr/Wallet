@@ -8,7 +8,7 @@ readonly class RequestParser implements RequestParserInterface
 {
     public function __construct(
         private ControllerHelperInterface $searchHelper,
-        private ControllerHelperInterface $walletHelper
+        private ControllerHelperInterface $walletHelper,
     ) {
     }
 

@@ -95,7 +95,7 @@ class WalletController extends AbstractController
         Request $request,
         Wallet $wallet,
         string $boolAsString = '',
-        string $route = ''
+        string $route = '',
     ): RedirectResponse {
         $route = (!empty($route)) ? $route : 'wallet_index';
         if ($this->isCsrfTokenValid('is_consistent' . $wallet->getId(), (string) $request->request->get('_token'))) {
@@ -134,7 +134,7 @@ class WalletController extends AbstractController
     #[Route('/check', name: 'wallet_check', methods: ['GET'])]
     public function check(
         BalanceSupervisorInterface $supervisor,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
     ): RedirectResponse {
         $supervisor->setWallets($this->walletRepository->getAllRecords());
         $generator = $supervisor->crawl($this->walletRepository);

@@ -51,7 +51,7 @@ readonly class Transfer implements TransferInterface
     private function persistDebit(
         AccountRepositoryInterface $repository,
         AbstractAccount $fromAccount,
-        AbstractAccount $toAccount
+        AbstractAccount $toAccount,
     ): AbstractAccount {
         $contractor = $this->contractorRepository->getInternalTransferOwner();
         $fromAccount->setContractor($contractor);

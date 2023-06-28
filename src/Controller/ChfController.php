@@ -107,7 +107,7 @@ class ChfController extends AbstractController
     #[Route('/check', name: 'chf_check', methods: ['GET'])]
     public function check(
         BalanceSupervisorInterface $supervisor,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
     ): RedirectResponse {
         $supervisor->setWallets($this->chfRepository->getAllRecords());
         $generator = $supervisor->crawl($this->chfRepository);

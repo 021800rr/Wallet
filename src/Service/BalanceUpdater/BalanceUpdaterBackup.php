@@ -54,6 +54,7 @@ class BalanceUpdaterBackup extends BalanceUpdaterAbstractAccount implements Bala
                 $predecessor->getHoliday() + $transaction->getAmount()
             );
         }
+
         return $transaction;
     }
 }
