@@ -16,10 +16,10 @@ class TransferTest extends KernelTestCase
     {
         $transfer = new Transfer(
             $this->contractorRepository,
-            $this->backupBalanceUpdater,
+            $this->backupFactory,
             $this->backupRepository,
-            $this->walletBalanceUpdater,
-            $this->walletRepository
+            $this->walletFactory,
+            $this->walletRepository,
         );
 
         $this->assertSame(170.00, $this->walletRepository->getCurrentBalance());

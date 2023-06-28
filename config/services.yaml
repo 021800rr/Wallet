@@ -16,11 +16,17 @@ services:
         arguments:
             - '%env(DATABASE_URL)%'
 
-    App\Service\BalanceUpdater\BackupBalanceUpdater: ~
-    App\Service\BalanceUpdater\BalanceUpdaterInterface $backupUpdater: '@App\Service\BalanceUpdater\BackupBalanceUpdater'
+    App\Service\BalanceUpdater\BalanceUpdaterBackup: ~
+    App\Service\BalanceUpdater\BalanceUpdaterAccountInterface $backup: '@App\Service\BalanceUpdater\BalanceUpdaterBackup'
 
-    App\Service\BalanceUpdater\WalletBalanceUpdater: ~
-    App\Service\BalanceUpdater\BalanceUpdaterInterface: '@App\Service\BalanceUpdater\WalletBalanceUpdater'
+    App\Service\BalanceUpdater\BalanceUpdaterWallet: ~
+    App\Service\BalanceUpdater\BalanceUpdaterAccountInterface $wallet: '@App\Service\BalanceUpdater\BalanceUpdaterWallet'
+
+    App\Service\BalanceUpdater\BalanceUpdaterBackupFactory: ~
+    App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface $backupFactory: '@App\Service\BalanceUpdater\BalanceUpdaterBackupFactory'
+
+    App\Service\BalanceUpdater\BalanceUpdaterWalletFactory: ~
+    App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface $walletFactory: '@App\Service\BalanceUpdater\BalanceUpdaterWalletFactory'
 
     App\Repository\ChfRepository: ~
     App\Repository\AccountRepositoryInterface $chfRepository: '@App\Repository\ChfRepository'

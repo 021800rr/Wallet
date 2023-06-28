@@ -2,10 +2,11 @@
 
 namespace App\Service\BalanceUpdater;
 
+use App\Entity\AbstractAccount;
 use App\Entity\Backup;
 use App\Repository\AccountRepositoryInterface;
 
-class BackupBalanceUpdater extends AbstractBalanceUpdater implements BalanceUpdaterInterface
+class BalanceUpdaterBackup extends BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInterface
 {
     use BalanceUpdaterTrait;
 
@@ -18,9 +19,9 @@ class BackupBalanceUpdater extends AbstractBalanceUpdater implements BalanceUpda
      */
     protected function walk(
         AccountRepositoryInterface $accountRepository,
-        Backup $predecessor,
-        Backup $transaction,
-        ?array $successors,
+        AbstractAccount                     $predecessor,
+        AbstractAccount                     $transaction,
+        ?array                     $successors,
     ): void {
         if (Backup::INAPPLICABLE === $transaction->getInterest()) {
             $transaction->setBalance($predecessor->getBalance() + $transaction->getAmount());

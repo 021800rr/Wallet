@@ -7,7 +7,7 @@ use App\Form\WalletType;
 use App\Repository\PaginatorEnum;
 use App\Repository\WalletRepositoryInterface;
 use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
-use App\Service\BalanceUpdater\BalanceUpdaterInterface;
+use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use App\Service\RequestParser\RequestParserInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -29,7 +29,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class WalletController extends AbstractController
 {
     public function __construct(
-        private readonly BalanceUpdaterInterface   $walletUpdater,
+        private readonly BalanceUpdaterFactoryInterface $walletFactory,
         private readonly WalletRepositoryInterface $walletRepository,
     ) {
     }
@@ -58,7 +58,7 @@ class WalletController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->walletRepository->save($wallet, true);
-            $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
+            $this->walletFactory->create()->compute($this->walletRepository, $wallet->getId());
 
             return $this->redirectToRoute('wallet_index');
         }
@@ -80,7 +80,7 @@ class WalletController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->walletRepository->save($wallet, true);
-            $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
+            $this->walletFactory->create()->compute($this->walletRepository, $wallet->getId());
 
             return $this->redirectToRoute($route);
         }
@@ -124,7 +124,7 @@ class WalletController extends AbstractController
         $route = (!empty($route)) ? $route : 'wallet_index';
         if ($this->isCsrfTokenValid('delete' . $wallet->getId(), (string) $request->request->get('_token'))) {
             $wallet->setAmount(0);
-            $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
+            $this->walletFactory->create()->compute($this->walletRepository, $wallet->getId());
             $this->walletRepository->remove($wallet, true);
         }
 

@@ -9,17 +9,17 @@ use App\Repository\AccountRepositoryInterface;
 use App\Repository\BackupRepositoryInterface;
 use App\Repository\ContractorRepositoryInterface;
 use App\Repository\WalletRepositoryInterface;
-use App\Service\BalanceUpdater\BalanceUpdaterInterface;
+use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use Exception;
 
-class Transfer implements TransferInterface
+readonly class Transfer implements TransferInterface
 {
     public function __construct(
-        private readonly ContractorRepositoryInterface $contractorRepository,
-        private readonly BalanceUpdaterInterface $backupUpdater,
-        private readonly BackupRepositoryInterface $backupRepository,
-        private readonly BalanceUpdaterInterface $walletUpdater,
-        private readonly WalletRepositoryInterface $walletRepository
+        private ContractorRepositoryInterface  $contractorRepository,
+        private BalanceUpdaterFactoryInterface $backupFactory,
+        private BackupRepositoryInterface      $backupRepository,
+        private BalanceUpdaterFactoryInterface $walletFactory,
+        private WalletRepositoryInterface      $walletRepository,
     ) {
     }
 
@@ -31,9 +31,9 @@ class Transfer implements TransferInterface
         $this->backupRepository->save($backup, true);
         $wallet = $this->persistDebit($this->walletRepository, new Wallet(), $backup);
         if (0 === $currency) {
-            $this->backupUpdater->compute($this->backupRepository, $backup->getId());
+            $this->backupFactory->create()->compute($this->backupRepository, $backup->getId());
         }
-        $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
+        $this->walletFactory->create()->compute($this->walletRepository, $wallet->getId());
     }
 
     /**
@@ -44,8 +44,8 @@ class Transfer implements TransferInterface
         $this->walletRepository->save($wallet, true);
         $backup = $this->persistDebit($this->backupRepository, new Backup(), $wallet);
 
-        $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
-        $this->backupUpdater->compute($this->backupRepository, $backup->getId());
+        $this->walletFactory->create()->compute($this->walletRepository, $wallet->getId());
+        $this->backupFactory->create()->compute($this->backupRepository, $backup->getId());
     }
 
     private function persistDebit(

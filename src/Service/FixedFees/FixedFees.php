@@ -6,17 +6,17 @@ use App\Entity\Fee;
 use App\Entity\Wallet;
 use App\Repository\FeeRepositoryInterface;
 use App\Repository\WalletRepositoryInterface;
-use App\Service\BalanceUpdater\BalanceUpdaterInterface;
+use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use DateInterval;
 use DateTime;
 use Exception;
 
-class FixedFees implements FixedFeesInterface
+readonly class FixedFees implements FixedFeesInterface
 {
     public function __construct(
-        private readonly FeeRepositoryInterface $feeRepository,
-        private readonly BalanceUpdaterInterface $walletUpdater,
-        private readonly WalletRepositoryInterface $walletRepository
+        private FeeRepositoryInterface         $feeRepository,
+        private BalanceUpdaterFactoryInterface $walletFactory,
+        private WalletRepositoryInterface      $walletRepository
     ) {
     }
 
@@ -31,7 +31,7 @@ class FixedFees implements FixedFeesInterface
             $wallet->setContractor($fee->getContractor());
 
             $this->walletRepository->save($wallet, true);
-            $this->walletUpdater->compute($this->walletRepository, $wallet->getId());
+            $this->walletFactory->create()->compute($this->walletRepository, $wallet->getId());
         }
     }
 

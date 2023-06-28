@@ -2,24 +2,24 @@
 
 namespace App\Service\BalanceUpdater;
 
-use App\Entity\AbstractWallet;
+use App\Entity\AbstractAccount;
 use App\Repository\AccountRepositoryInterface;
 
-class WalletBalanceUpdater extends AbstractBalanceUpdater implements BalanceUpdaterInterface
+class BalanceUpdaterWallet extends BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInterface
 {
     use BalanceUpdaterTrait;
 
     /**
      * @param AccountRepositoryInterface $accountRepository
-     * @param AbstractWallet $predecessor
-     * @param AbstractWallet $transaction
-     * @param AbstractWallet[]|null $successors
+     * @param AbstractAccount $predecessor
+     * @param AbstractAccount $transaction
+     * @param AbstractAccount[]|null $successors
      * @return void
      */
     protected function walk(
         AccountRepositoryInterface $accountRepository,
-        AbstractWallet $predecessor,
-        AbstractWallet $transaction,
+        AbstractAccount $predecessor,
+        AbstractAccount $transaction,
         ?array $successors
     ): void {
         $transaction->setBalance($predecessor->getBalance() + $transaction->getAmount());
