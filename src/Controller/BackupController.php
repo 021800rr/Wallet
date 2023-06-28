@@ -91,7 +91,7 @@ class BackupController extends AbstractController
         CalculatorInterface $calculator,
         WalletRepositoryInterface $walletRepository,
         AccountRepositoryInterface $chfRepository,
-        AccountRepositoryInterface $eurRepository
+        AccountRepositoryInterface $eurRepository,
     ): Response {
         // $backups:
         // [

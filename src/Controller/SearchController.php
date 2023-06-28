@@ -43,7 +43,7 @@ class SearchController extends AbstractController
         WalletRepositoryInterface $walletRepository,
         QueryHelperInterface      $queryHelper,
         OffsetHelperInterface     $offsetHelper,
-        RequestParserInterface    $requestParser
+        RequestParserInterface    $requestParser,
     ): Response {
         $form = $this->getForm();
         $form->handleRequest($request);
@@ -81,7 +81,7 @@ class SearchController extends AbstractController
         Request          $request,
         Wallet           $wallet,
         WalletController $walletController,
-        string           $boolAsString = ''
+        string           $boolAsString = '',
     ): Response {
         return $walletController->isConsistent($request, $wallet, $boolAsString, 'search_result');
     }

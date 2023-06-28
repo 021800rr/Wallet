@@ -6,7 +6,7 @@ use ApiPlatform\OpenApi\Factory\OpenApiFactoryInterface;
 use ApiPlatform\OpenApi\OpenApi;
 use ApiPlatform\OpenApi\Model;
 
-final class JwtDecorator implements OpenApiFactoryInterface
+final readonly class JwtDecorator implements OpenApiFactoryInterface
 {
     public function __construct(private OpenApiFactoryInterface $decorated)
     {
