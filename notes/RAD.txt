@@ -64,3 +64,12 @@ vendor/bin/phpstan analyse -l 9 src tests
 tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src
 
 make tests && vendor/bin/phpstan analyse -l 6 src tests && tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src
+
+==============================================================================
+
+docker compose --env-file .env.prod.local down --remove-orphans && \
+    docker system prune --all --volumes -f && \
+    docker compose --env-file .env.prod.local build  --no-cache --pull && \
+    docker compose --env-file .env.prod.local up -d
+
+==============================================================================
