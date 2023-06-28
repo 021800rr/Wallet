@@ -9,8 +9,11 @@ use App\Repository\ChfRepository;
 use App\Repository\ContractorRepository;
 use App\Repository\FeeRepository;
 use App\Repository\WalletRepository;
-use App\Service\BalanceUpdater\BackupBalanceUpdater;
-use App\Service\BalanceUpdater\WalletBalanceUpdater;
+use App\Service\BalanceUpdater\BalanceUpdaterBackup;
+use App\Service\BalanceUpdater\BalanceUpdaterBackupFactory;
+use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
+use App\Service\BalanceUpdater\BalanceUpdaterWallet;
+use App\Service\BalanceUpdater\BalanceUpdaterWalletFactory;
 
 trait SetUp
 {
@@ -19,9 +22,8 @@ trait SetUp
     private ContractorRepository $contractorRepository;
     private FeeRepository $feeRepository;
     private WalletRepository $walletRepository;
-
-    private BackupBalanceUpdater $backupBalanceUpdater;
-    private WalletBalanceUpdater $walletBalanceUpdater;
+    private BalanceUpdaterFactoryInterface $backupFactory;
+    private BalanceUpdaterFactoryInterface $walletFactory;
 
     /** @var Wallet[] $wallets */
     private array $wallets;
@@ -37,10 +39,10 @@ trait SetUp
         $this->feeRepository = static::getContainer()->get(FeeRepository::class);
         $this->walletRepository = static::getContainer()->get(WalletRepository::class);
 
-        $this->backupBalanceUpdater = new BackupBalanceUpdater();
-        $this->walletBalanceUpdater = new WalletBalanceUpdater();
-
         $this->wallets = $this->walletRepository->getAllRecords();
         $this->chfs = $this->chfRepository->getAllRecords();
+
+        $this->backupFactory = new BalanceUpdaterBackupFactory(new BalanceUpdaterBackup());
+        $this->walletFactory = new BalanceUpdaterWalletFactory(new BalanceUpdaterWallet());
     }
 }

@@ -7,15 +7,8 @@ use App\Entity\Backup;
 use App\Repository\AccountRepositoryInterface;
 use Exception;
 
-abstract class AbstractBalanceUpdater implements BalanceUpdaterInterface
+abstract class BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInterface
 {
-    /**
-     * @param AccountRepositoryInterface $accountRepository
-     * @param int $id
-     * @throws Exception
-     */
-    abstract public function compute(AccountRepositoryInterface $accountRepository, int $id): void;
-
     /**
      * @param AccountRepositoryInterface $accountRepository
      * @param int $id

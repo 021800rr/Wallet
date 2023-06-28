@@ -8,7 +8,7 @@ use App\Repository\ChfRepositoryInterface;
 use App\Repository\ContractorRepositoryInterface;
 use App\Repository\PaginatorEnum;
 use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
-use App\Service\BalanceUpdater\BalanceUpdaterInterface;
+use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,7 +29,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ChfController extends AbstractController
 {
     public function __construct(
-        private readonly BalanceUpdaterInterface $walletUpdater,
+        private readonly BalanceUpdaterFactoryInterface $walletFactory,
         private readonly ChfRepositoryInterface $chfRepository,
     ) {
     }
@@ -97,7 +97,7 @@ class ChfController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $chf->getId(), (string) $request->request->get('_token'))) {
             $chf->setAmount(0);
-            $this->walletUpdater->compute($this->chfRepository, $chf->getId());
+            $this->walletFactory->create()->compute($this->chfRepository, $chf->getId());
             $this->chfRepository->remove($chf, true);
         }
 
@@ -136,7 +136,7 @@ class ChfController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $this->chfRepository->save($chf, true);
-            $this->walletUpdater->compute($this->chfRepository, $chf->getId());
+            $this->walletFactory->create()->compute($this->chfRepository, $chf->getId());
 
             return $this->redirectToRoute('chf_index');
         }

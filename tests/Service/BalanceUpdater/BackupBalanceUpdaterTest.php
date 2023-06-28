@@ -2,7 +2,6 @@
 
 namespace App\Tests\Service\BalanceUpdater;
 
-use App\Service\BalanceUpdater\BackupBalanceUpdater;
 use App\Tests\Service\SetUp;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -26,7 +25,7 @@ class BackupBalanceUpdaterTest extends KernelTestCase
         $transaction->setAmount($transaction->getAmount() - 10);
         $this->assertSame(190.00, $transaction->getAmount());
 
-        $this->backupBalanceUpdater->compute($this->backupRepository, $transaction->getId());
+        $this->backupFactory->create()->compute($this->backupRepository, $transaction->getId());
 
         $transactions = $this->backupRepository->findAll();
         $this->assertSame(295.00, $transactions[0]->getRetiring());

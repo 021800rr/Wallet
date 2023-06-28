@@ -7,7 +7,7 @@ use App\Form\EurType;
 use App\Repository\ContractorRepositoryInterface;
 use App\Repository\EurRepositoryInterface;
 use App\Repository\PaginatorEnum;
-use App\Service\BalanceUpdater\BalanceUpdaterInterface;
+use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class EurController extends AbstractController
 {
     public function __construct(
-        private readonly BalanceUpdaterInterface $walletUpdater,
+        private readonly BalanceUpdaterFactoryInterface $walletFactory,
         private readonly EurRepositoryInterface $eurRepository,
     ) {
     }
@@ -95,7 +95,7 @@ class EurController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $eur->getId(), (string) $request->request->get('_token'))) {
             $eur->setAmount(0);
-            $this->walletUpdater->compute($this->eurRepository, $eur->getId());
+            $this->walletFactory->create()->compute($this->eurRepository, $eur->getId());
             $this->eurRepository->remove($eur, true);
         }
 
@@ -116,7 +116,7 @@ class EurController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $this->eurRepository->save($eur, true);
-            $this->walletUpdater->compute($this->eurRepository, $eur->getId());
+            $this->walletFactory->create()->compute($this->eurRepository, $eur->getId());
 
             return $this->redirectToRoute('eur_index');
         }

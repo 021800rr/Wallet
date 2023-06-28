@@ -9,11 +9,9 @@ use App\Repository\AccountRepositoryInterface;
 use App\Repository\PaginatorEnum;
 use App\Repository\BackupRepositoryInterface;
 use App\Repository\WalletRepositoryInterface;
-use App\Service\BalanceUpdater\BalanceUpdaterInterface;
+use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use App\Service\ExpectedBackup\CalculatorInterface;
 use App\Service\Interest\InterestInterface;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,8 +31,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class BackupController extends AbstractController
 {
     public function __construct(
-        private readonly BalanceUpdaterInterface   $backupUpdater,
-        private readonly BackupRepositoryInterface $backupRepository,
+        private readonly BalanceUpdaterFactoryInterface $backupFactory,
+        private readonly BackupRepositoryInterface      $backupRepository,
     ) {
     }
 
@@ -62,7 +60,7 @@ class BackupController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->backupRepository->save($backup, true);
-            $this->backupUpdater->compute($this->backupRepository, $backup->getId());
+            $this->backupFactory->create()->compute($this->backupRepository, $backup->getId());
 
             return $this->redirectToRoute('backup_index');
         }
@@ -81,18 +79,13 @@ class BackupController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$backup->getId(), (string) $request->request->get('_token'))) {
             $backup->setAmount(0);
-            $this->backupUpdater->compute($this->backupRepository, $backup->getId());
+            $this->backupFactory->create()->compute($this->backupRepository, $backup->getId());
             $this->backupRepository->remove($backup, true);
         }
 
         return $this->redirectToRoute('backup_index');
     }
 
-    /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
-     * @throws Exception
-     */
     #[Route('/paymentsByMonth', name: 'backup_payments_by_month', methods: ['GET'])]
     public function paymentsByMonth(
         CalculatorInterface $calculator,
@@ -132,7 +125,7 @@ class BackupController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $backup = $interest->form2Backup($form);
             $this->backupRepository->save($backup, true);
-            $this->backupUpdater->compute($this->backupRepository, $backup->getId());
+            $this->backupFactory->create()->compute($this->backupRepository, $backup->getId());
 
             return $this->redirectToRoute('backup_index');
         }
