@@ -5,6 +5,7 @@ namespace App\Tests;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Contractor;
 use App\Entity\Fee;
+use Exception;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -104,10 +105,18 @@ class FeeTest extends ApiTestCase
 
     /**
      * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws Exception
      */
     public function testDelete(): void
     {
-        $netflix = static::getContainer()->get('doctrine')->getRepository(Contractor::class)->findOneBy(['description' => 'Netflix']);
+        $netflix = static::getContainer()
+            ->get('doctrine')
+            ->getRepository(Contractor::class)
+            ->findOneBy(['description' => 'Netflix']);
 
         $iri = $this->findIriBy(Fee::class, ['contractor' => $netflix]);
         $this->client->request('DELETE', $iri, ['auth_bearer' => $this->token]);
@@ -129,10 +138,14 @@ class FeeTest extends ApiTestCase
      * @throws RedirectionExceptionInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
+     * @throws Exception
      */
     public function testPatch(): void
     {
-        $netflix = static::getContainer()->get('doctrine')->getRepository(Contractor::class)->findOneBy(['description' => 'Netflix']);
+        $netflix = static::getContainer()
+            ->get('doctrine')
+            ->getRepository(Contractor::class)
+            ->findOneBy(['description' => 'Netflix']);
         $iri = $this->findIriBy(Fee::class, ['contractor' => $netflix]);
         $this->client->request('PATCH', $iri, [
             'auth_bearer' => $this->token,

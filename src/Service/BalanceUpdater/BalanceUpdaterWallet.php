@@ -20,7 +20,7 @@ class BalanceUpdaterWallet extends BalanceUpdaterAbstractAccount implements Bala
         AccountRepositoryInterface $accountRepository,
         AbstractAccount $predecessor,
         AbstractAccount $transaction,
-        ?array $successors
+        ?array $successors,
     ): void {
         $transaction->setBalance($predecessor->getBalance() + $transaction->getAmount());
         $accountRepository->save($transaction, true);

@@ -44,35 +44,13 @@ class ContractorController extends AbstractController
     public function new(Request $request): Response
     {
         $contractor = new Contractor();
-        $form = $this->createForm(ContractorType::class, $contractor);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->contractorRepository->save($contractor, true);
-
-            return $this->redirectToRoute('contractor_index');
-        }
-
-        return $this->render('contractor/form.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->upsert($contractor, $request);
     }
 
     #[Route('/edit/{id}', name: 'contractor_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Contractor $contractor): RedirectResponse|Response
     {
-        $form = $this->createForm(ContractorType::class, $contractor);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->contractorRepository->save($contractor, true);
-
-            return $this->redirectToRoute('contractor_index');
-        }
-
-        return $this->render('contractor/form.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->upsert($contractor, $request);
     }
 
     #[Route('/delete/{id}', name: 'contractor_delete', methods: ['POST'])]
@@ -83,5 +61,26 @@ class ContractorController extends AbstractController
         }
 
         return $this->redirectToRoute('contractor_index');
+    }
+
+    /**
+     * @param Contractor $contractor
+     * @param Request $request
+     * @return RedirectResponse|Response
+     */
+    private function upsert(Contractor $contractor, Request $request): Response|RedirectResponse
+    {
+        $form = $this->createForm(ContractorType::class, $contractor);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->contractorRepository->save($contractor, true);
+
+            return $this->redirectToRoute('contractor_index');
+        }
+
+        return $this->render('contractor/form.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }
