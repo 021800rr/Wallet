@@ -2,7 +2,7 @@
 
 namespace App\Service\OffsetQuery;
 
-class QueryHelper extends AbstractSession implements QueryHelperInterface
+readonly class QueryHelper extends AbstractSession implements QueryHelperInterface
 {
     public function setQuery(string $query): void
     {

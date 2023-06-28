@@ -6,7 +6,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Entity\ChfChecker;
 
-class ChfCheckerProvider extends AbstractAccountCheckerProvider implements ProviderInterface
+readonly class ChfCheckerProvider extends AbstractAccountCheckerProvider implements ProviderInterface
 {
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {

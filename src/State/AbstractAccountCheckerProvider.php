@@ -10,12 +10,12 @@ use App\Repository\AccountRepositoryInterface;
 use App\Repository\WalletRepositoryInterface;
 use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
 
-abstract class AbstractAccountCheckerProvider implements ProviderInterface
+abstract readonly class AbstractAccountCheckerProvider implements ProviderInterface
 {
     public function __construct(
-        protected readonly BalanceSupervisorInterface $supervisor,
-        protected readonly WalletRepositoryInterface  $walletRepository,
-        protected readonly AccountRepositoryInterface $chfRepository,
+        protected BalanceSupervisorInterface $supervisor,
+        protected WalletRepositoryInterface  $walletRepository,
+        protected AccountRepositoryInterface $chfRepository,
     ) {
     }
 

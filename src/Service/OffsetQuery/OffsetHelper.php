@@ -4,7 +4,7 @@ namespace App\Service\OffsetQuery;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class OffsetHelper extends AbstractSession implements OffsetHelperInterface
+readonly class OffsetHelper extends AbstractSession implements OffsetHelperInterface
 {
     public function setOffset(Request $request): void
     {
