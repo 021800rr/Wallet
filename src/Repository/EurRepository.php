@@ -12,7 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Eur|null findOneBy(array $criteria, array $orderBy = null)
  * @method Eur[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class EurRepository extends ServiceEntityRepository implements EurRepositoryInterface
+class EurRepository extends ServiceEntityRepository implements AccountRepositoryInterface
 {
     use AccountTrait;
     use AppTrait;
@@ -31,7 +31,7 @@ class EurRepository extends ServiceEntityRepository implements EurRepositoryInte
         }
     }
 
-    public function remove(Eur $entity, bool $flush = false): void
+    public function remove(AbstractAccount $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 

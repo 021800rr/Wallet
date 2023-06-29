@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Chf;
 use App\Form\ChfType;
-use App\Repository\ChfRepositoryInterface;
+use App\Repository\AccountRepositoryInterface;
 use App\Repository\ContractorRepositoryInterface;
 use App\Repository\PaginatorEnum;
 use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
@@ -30,7 +30,7 @@ class ChfController extends AbstractController
 {
     public function __construct(
         private readonly BalanceUpdaterFactoryInterface $walletFactory,
-        private readonly ChfRepositoryInterface $chfRepository,
+        private readonly AccountRepositoryInterface $chfRepository,
     ) {
     }
 
