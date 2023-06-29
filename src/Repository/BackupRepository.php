@@ -33,7 +33,7 @@ class BackupRepository extends ServiceEntityRepository implements BackupReposito
         }
     }
 
-    public function remove(Backup $entity, bool $flush = false): void
+    public function remove(AbstractAccount $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 

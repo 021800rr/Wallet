@@ -4,8 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Eur;
 use App\Form\EurType;
+use App\Repository\AccountRepositoryInterface;
 use App\Repository\ContractorRepositoryInterface;
-use App\Repository\EurRepositoryInterface;
 use App\Repository\PaginatorEnum;
 use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use Exception;
@@ -28,7 +28,7 @@ class EurController extends AbstractController
 {
     public function __construct(
         private readonly BalanceUpdaterFactoryInterface $walletFactory,
-        private readonly EurRepositoryInterface $eurRepository,
+        private readonly AccountRepositoryInterface $eurRepository,
     ) {
     }
 

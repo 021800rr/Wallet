@@ -12,10 +12,10 @@ use Exception;
 readonly class BackupProcessor implements ProcessorInterface
 {
     public function __construct(
-        private ProcessorInterface        $persistProcessor,
-        private ProcessorInterface        $removeProcessor,
+        private ProcessorInterface             $persistProcessor,
+        private ProcessorInterface             $removeProcessor,
         private BalanceUpdaterFactoryInterface $backupFactory,
-        private BackupRepositoryInterface $backupRepository,
+        private BackupRepositoryInterface      $backupRepository,
     ) {
     }
 

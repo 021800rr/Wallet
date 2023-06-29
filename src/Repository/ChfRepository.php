@@ -12,7 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Chf|null findOneBy(array $criteria, array $orderBy = null)
  * @method Chf[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ChfRepository extends ServiceEntityRepository implements ChfRepositoryInterface
+class ChfRepository extends ServiceEntityRepository implements AccountRepositoryInterface
 {
     use AccountTrait;
     use AppTrait;
@@ -31,7 +31,7 @@ class ChfRepository extends ServiceEntityRepository implements ChfRepositoryInte
         }
     }
 
-    public function remove(Chf $entity, bool $flush = false): void
+    public function remove(AbstractAccount $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 

@@ -22,4 +22,6 @@ interface AccountRepositoryInterface extends AppRepositoryInterface
     public function find($id, $lockMode = null, $lockVersion = null);
 
     public function save(AbstractAccount $entity, bool $flush = false): void;
+
+    public function remove(AbstractAccount $entity, bool $flush = false): void;
 }
