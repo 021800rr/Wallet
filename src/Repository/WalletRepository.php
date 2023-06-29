@@ -34,7 +34,7 @@ class WalletRepository extends ServiceEntityRepository implements WalletReposito
         }
     }
 
-    public function remove(Wallet $entity, bool $flush = false): void
+    public function remove(AbstractAccount $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
