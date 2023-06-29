@@ -19,8 +19,8 @@ class BalanceUpdaterBackup extends BalanceUpdaterAbstractAccount implements Bala
      */
     protected function walk(
         AccountRepositoryInterface $accountRepository,
-        AbstractAccount                     $predecessor,
-        AbstractAccount                     $transaction,
+        AbstractAccount            $predecessor,
+        AbstractAccount            $transaction,
         ?array                     $successors,
     ): void {
         if (Backup::INAPPLICABLE === $transaction->getInterest()) {
