@@ -47,7 +47,7 @@ class WalletRepositoryTest extends KernelTestCase
         $this->assertSame(2, $paginator->count());
     }
 
-    public function getRepository(): WalletRepository
+    private function getRepository(): WalletRepository
     {
         /** @var WalletRepository */
         return $this->entityManager->getRepository(Wallet::class);

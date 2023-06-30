@@ -14,40 +14,59 @@ class BackupControllerTest extends WebTestCase
     public function testIndex(): void
     {
         $this->client->request('GET', '/en/backup');
+
         $this->assertSelectorTextContains('td#backup_amount1', '300');
-        $this->assertSelectorTextContains('td#backup_amount2', '200');
-        $this->assertSelectorTextContains('td#backup_balance1', '600');
-        $this->assertSelectorTextContains('td#backup_balance2', '300');
-        $this->assertSelectorTextContains('td#backup_retiring1', '300');
-        $this->assertSelectorTextContains('td#backup_retiring2', '150');
         $this->assertSelectorTextContains('td#backup_holiday1', '300');
+        $this->assertSelectorTextContains('td#backup_retiring1', '300');
+        $this->assertSelectorTextContains('td#backup_balance1', '600');
+
+        $this->assertSelectorTextContains('td#backup_amount2', '200');
         $this->assertSelectorTextContains('td#backup_holiday2', '150');
+        $this->assertSelectorTextContains('td#backup_retiring2', '150');
+        $this->assertSelectorTextContains('td#backup_balance2', '300');
+
+        $this->assertSelectorTextContains('td#backup_amount3', '100');
+        $this->assertSelectorTextContains('td#backup_holiday3', '50');
+        $this->assertSelectorTextContains('td#backup_retiring3', '50');
+        $this->assertSelectorTextContains('td#backup_balance3', '100');
     }
+
 
     public function testEdit(): void
     {
         $crawler = $this->client->request('GET', '/en/backup');
-        $this->assertSelectorTextContains('td#backup_balance1', '600');
-
         $this->client->click(
             $crawler->filter('#backup_edit1')
                 ->link()
         );
         $this->client->submitForm('Save', [
-            'backup[amount]' => '-60',
+            'backup[amount]' => '400',
         ]);
-        $this->assertSelectorTextContains('td#backup_balance1', '240');  // 300 (backup_balance2) - 60
-        $this->assertSelectorTextContains('td#backup_retiring1', '150'); // === backup_retiring2
-        $this->assertSelectorTextContains('td#backup_holiday1', '90');   // 150 (backup_holiday2) - 60
+        $this->assertSelectorTextContains('td#backup_holiday1', '350');
+        $this->assertSelectorTextContains('td#backup_retiring1', '350');
+        $this->assertSelectorTextContains('td#backup_balance1', '700');
+    }
+
+    public function testEditInMinus(): void
+    {
+        $crawler = $this->client->request('GET', '/en/backup');
+        $this->client->click(
+            $crawler->filter('#backup_edit1')
+                ->link()
+        );
+        $this->client->submitForm('Save', [
+            'backup[amount]' => '-100',
+        ]);
+        $this->assertSelectorTextContains('td#backup_holiday1', '50');
+        $this->assertSelectorTextContains('td#backup_retiring1', '150');
+        $this->assertSelectorTextContains('td#backup_balance1', '200');
     }
 
     public function testDelete(): void
     {
         $crawler = $this->client->request('GET', '/en/backup');
-        $this->assertSelectorTextContains('td#backup_balance1', '600');
-
         $this->client->submit(
-            $crawler->filter('form#backup_delete2')->form() // - 200
+            $crawler->filter('form#backup_delete2')->form()
         );
         $this->assertSelectorTextContains('td#backup_balance1', '400');
     }
