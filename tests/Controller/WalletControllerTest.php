@@ -11,22 +11,30 @@ class WalletControllerTest extends WebTestCase
 
     private KernelBrowser $client;
 
+    public function testIndex(): void
+    {
+        $this->client->request('GET', '/en/wallet');
+
+        $this->assertSelectorTextContains('td#wallet_amount1', '-20');
+        $this->assertSelectorTextContains('td#wallet_balance1', '170');
+
+        $this->assertSelectorTextContains('td#wallet_amount2', '-10');
+        $this->assertSelectorTextContains('td#wallet_balance2', '191');
+    }
+
     public function testNew(): void
     {
         $this->client->request('GET', '/en/wallet');
-        $this->assertSelectorTextContains('td#wallet_balance1', '170');
-
         $this->client->clickLink('New Receipt');
         $this->client->submitForm('Save', [
-            'wallet[amount]' => '-60',
+            'wallet[amount]' => '-70',
         ]);
-        $this->assertSelectorTextContains('td#wallet_balance1', '110');
+        $this->assertSelectorTextContains('td#wallet_balance1', '100');
     }
 
     public function testEdit(): void
     {
         $crawler = $this->client->request('GET', '/en/wallet');
-        $this->assertSelectorTextContains('td#wallet_balance1', '170');
 
         $crawler = $this->client->click(
             $crawler->filter('a#wallet_edit1')->link()
@@ -42,10 +50,6 @@ class WalletControllerTest extends WebTestCase
     public function testDelete(): void
     {
         $crawler = $this->client->request('GET', '/en/wallet');
-        $this->assertSelectorTextContains('td#wallet_balance1', '170');
-        $this->assertSelectorTextContains('td#wallet_amount1', '-20');
-        $this->assertSelectorTextContains('td#wallet_balance2', '191');
-        $this->assertSelectorTextContains('td#wallet_amount2', '-10');
 
         $this->client->submit(
             $crawler->filter('form#wallet_delete2')->form()

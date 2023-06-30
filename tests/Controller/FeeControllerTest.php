@@ -27,12 +27,6 @@ class FeeControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/en/fee');
 
-        $this->assertSelectorTextContains('td#fee_contractor1', 'Spotify');
-        $this->assertSelectorTextContains('td#fee_amount1', '-19.99');
-
-        $this->assertSelectorTextContains('td#fee_contractor2', 'Netflix');
-        $this->assertSelectorTextContains('td#fee_amount2', '-52');
-
         $this->client->request('GET', '/en/fee/new');
         $this->client->submitForm('Save', [
             'fee[date]' => '20',
@@ -42,17 +36,11 @@ class FeeControllerTest extends WebTestCase
 
         $this->assertSelectorTextContains('td#fee_contractor1', ContractorRepository::INTERNAL_TRANSFER);
         $this->assertSelectorTextContains('td#fee_amount1', '-21');
-
-        $this->assertSelectorTextContains('td#fee_contractor2', 'Spotify');
-        $this->assertSelectorTextContains('td#fee_amount2', '-19.99');
     }
 
     public function testEdit(): void
     {
         $crawler = $this->client->request('GET', '/en/fee');
-
-        $this->assertSelectorTextContains('td#fee_contractor1', 'Spotify');
-        $this->assertSelectorTextContains('td#fee_amount1', '-19.99');
 
         $crawler = $this->client->click(
             $crawler->filter('a#fee_edit1')->link()
@@ -61,51 +49,32 @@ class FeeControllerTest extends WebTestCase
         $form = $crawler->selectButton('fee_save')->form();
         $values = $form->getValues();
 
-        $this->assertSame('-19.99', $values["fee[amount]"]);
-        $form['fee[amount]']->setValue('-19.9');
         $this->assertSame('4', $values["fee[date]"]);
-        $form['fee[date]']->setValue('14');
+        $this->assertSame('-19.99', $values["fee[amount]"]);
+
+        $form['fee[date]']->setValue('10');
+        $form['fee[amount]']->setValue('-20');
 
         $this->client->submit($form);
 
-        $this->assertSelectorTextContains('td#fee_contractor1', 'Spotify');
-        $this->assertSelectorTextContains('td#fee_amount1', '-19.9');
-        $this->assertSelectorTextContains('td#fee_date1', '14');
+        $this->assertSelectorTextContains('td#fee_date1', '10');
+        $this->assertSelectorTextContains('td#fee_amount1', '-20');
     }
 
     public function testDelete(): void
     {
         $crawler = $this->client->request('GET', '/en/fee');
-
         $this->assertSelectorTextContains('td#fee_contractor1', 'Spotify');
-        $this->assertSelectorTextContains('td#fee_amount1', '-19.99');
-
         $this->assertSelectorTextContains('td#fee_contractor2', 'Netflix');
-        $this->assertSelectorTextContains('td#fee_amount2', '-52');
-
         $this->client->submit(
             $crawler->filter('form#fee_delete1')->form()
         );
-
         $this->assertSelectorTextContains('td#fee_contractor1', 'Netflix');
-        $this->assertSelectorTextContains('td#fee_amount1', '-52');
     }
 
     public function testInsert(): void
     {
-        $this->client->request('GET', '/en/wallet');
-
-        $this->assertSelectorTextContains('td#wallet_contractor1', 'Allegro');
-        $this->assertSelectorTextContains('td#wallet_balance1', '170');
-        $this->assertSelectorTextContains('td#wallet_amount1', '-20');
-
         $crawler = $this->client->request('GET', '/en/fee');
-
-        $this->assertSelectorTextContains('td#fee_contractor1', 'Spotify');
-        $this->assertSelectorTextContains('td#fee_amount1', '-19.99');
-
-        $this->assertSelectorTextContains('td#fee_contractor2', 'Netflix');
-        $this->assertSelectorTextContains('td#fee_amount2', '-52');
 
         $crawler = $this->client->submit(
             $crawler->selectButton('Save')->form()
