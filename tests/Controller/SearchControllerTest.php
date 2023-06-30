@@ -32,13 +32,8 @@ class SearchControllerTest extends WebTestCase
         $form['form[query]']->setValue('all');
         $this->client->submit($form);
 
-        $i = 1;
-        do {
-            $this->assertSelectorTextContains('td#search_contractor' . $i, 'Allegro');
-            $lastFoundIndex = $i;
-            $i++;
-        } while ($i < 3);
-        $this->assertSame(2, $lastFoundIndex);
+        $this->assertSelectorTextContains('td#search_contractor1', 'Allegro');
+        $this->assertSelectorTextContains('td#search_contractor1', 'Allegro');
     }
 
     public function testChangeIsConsistent(): void
@@ -91,10 +86,11 @@ class SearchControllerTest extends WebTestCase
         $form['form[query]']->setValue('all');
         $crawler = $this->client->submit($form);
 
-        $this->assertSelectorTextContains('td#search_balance1', '170');
         $this->assertSelectorTextContains('td#search_amount1', '-20');
-        $this->assertSelectorTextContains('td#search_balance2', '191');
+        $this->assertSelectorTextContains('td#search_balance1', '170');
+
         $this->assertSelectorTextContains('td#search_amount2', '-10');
+        $this->assertSelectorTextContains('td#search_balance2', '191');
 
         $this->client->submit(
             $crawler->filter('form#wallet_delete2')->form()

@@ -12,10 +12,10 @@ use Exception;
 readonly class ChfProcessor implements ProcessorInterface
 {
     public function __construct(
-        private ProcessorInterface         $persistProcessor,
-        private ProcessorInterface         $removeProcessor,
+        private ProcessorInterface             $persistProcessor,
+        private ProcessorInterface             $removeProcessor,
         private BalanceUpdaterFactoryInterface $walletFactory,
-        private AccountRepositoryInterface $chfRepository,
+        private AccountRepositoryInterface     $chfRepository,
     ) {
     }
 
