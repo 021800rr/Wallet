@@ -4,6 +4,7 @@ namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
+use App\Entity\AbstractWallet;
 use App\Entity\ChfChecker;
 use App\Entity\WalletChecker;
 use App\Repository\AccountRepositoryInterface;
@@ -19,6 +20,10 @@ abstract readonly class AbstractAccountCheckerProvider implements ProviderInterf
     ) {
     }
 
+    /**
+     * @param array<mixed, mixed> $uriVariables
+     * @param array<mixed, mixed> $context
+     */
     abstract public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null;
 
     protected function accountChecker(
@@ -29,6 +34,7 @@ abstract readonly class AbstractAccountCheckerProvider implements ProviderInterf
         $supervisor->setWallets($accountRepository->getAllRecords());
         $generator = $supervisor->crawl($accountRepository);
         foreach ($generator as $account) {
+            /** @var AbstractWallet $account */
             $data->addAccount($account);
         }
         if (empty($data->getAccounts())) {

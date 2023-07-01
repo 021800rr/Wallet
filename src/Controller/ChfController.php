@@ -54,7 +54,7 @@ class ChfController extends AbstractController
     public function new(Request $request, ContractorRepositoryInterface $contractorRepository): RedirectResponse|Response
     {
         $chf = new Chf();
-        $contractor = $contractorRepository->getInternalTransferOwner();
+        $contractor = $contractorRepository->getInternalTransferOwner() ?? throw new Exception('no internal transfer owner');
         $chf->setContractor($contractor);
 
         return $this->upsert($chf, $request);
@@ -113,6 +113,7 @@ class ChfController extends AbstractController
         $generator = $supervisor->crawl($this->chfRepository);
         $caught = false;
         foreach ($generator as $wallet) {
+            /** @var Chf $wallet */
             $this->addFlash('error', $wallet->__toString());
             $caught = true;
         }

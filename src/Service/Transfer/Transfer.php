@@ -48,12 +48,15 @@ readonly class Transfer implements TransferInterface
         $this->backupFactory->create()->compute($this->backupRepository, $backup->getId());
     }
 
+    /**
+     * @throws Exception
+     */
     private function persistDebit(
         AccountRepositoryInterface $repository,
         AbstractAccount $fromAccount,
         AbstractAccount $toAccount,
     ): AbstractAccount {
-        $contractor = $this->contractorRepository->getInternalTransferOwner();
+        $contractor = $this->contractorRepository->getInternalTransferOwner() ?? throw new Exception('no internal transfer owner');
         $fromAccount->setContractor($contractor);
         $fromAccount->setAmount(-1 * $toAccount->getAmount());
         $repository->save($fromAccount, true);

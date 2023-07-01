@@ -3,7 +3,6 @@
 namespace App\Tests;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
-use App\Repository\WalletRepository;
 use Exception;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
@@ -13,7 +12,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class TransferToBackupCurrencyTest extends ApiTestCase
 {
-    use Setup;
+    use SetupApi;
 
     /**
      * @throws TransportExceptionInterface
@@ -26,8 +25,7 @@ class TransferToBackupCurrencyTest extends ApiTestCase
      */
     public function testPost(): void
     {
-        $walletRepository = static::getContainer()->get(WalletRepository::class);
-        $this->assertSame(170.00, $walletRepository->getCurrentBalance());
+        $this->assertSame(170.00, $this->walletRepository->getCurrentBalance());
 
         $this->client->request('POST', '/api/transfer/to/backup', [
             'auth_bearer' => $this->token,
@@ -39,8 +37,7 @@ class TransferToBackupCurrencyTest extends ApiTestCase
         ]);
         $this->assertResponseStatusCodeSame(201);
 
-        $walletRepository = static::getContainer()->get(WalletRepository::class);
-        $this->assertSame(70.00, $walletRepository->getCurrentBalance());
+        $this->assertSame(70.00, $this->walletRepository->getCurrentBalance());
 
         $this->client->request('GET', '/api/backups', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([

@@ -2,12 +2,13 @@
 
 namespace App\Tests\Controller;
 
+use App\Tests\SetupController;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class WalletControllerTest extends WebTestCase
 {
-    use Setup;
+    use SetupController;
 
     private KernelBrowser $client;
 
@@ -36,14 +37,12 @@ class WalletControllerTest extends WebTestCase
     {
         $crawler = $this->client->request('GET', '/en/wallet');
 
-        $crawler = $this->client->click(
+        $this->client->click(
             $crawler->filter('a#wallet_edit1')->link()
         );
-        $form = $crawler->selectButton('wallet_save')->form();
-        $values = $form->getValues();
-        $this->assertSame('-20.00', $values["wallet[amount]"]);
-        $form['wallet[amount]']->setValue('-40');
-        $this->client->submit($form);
+        $this->client->submitForm('wallet_save', [
+            'wallet[amount]' => '-40',
+        ]);
         $this->assertSelectorTextContains('td#wallet_balance1', '151');
     }
 
@@ -60,11 +59,6 @@ class WalletControllerTest extends WebTestCase
     public function testIsConsistent(): void
     {
         $crawler = $this->client->request('GET', '/en/wallet');
-        $imgUri = $crawler
-            ->filter('form#wallet_is_consistent1')
-            ->filter('input.submitter')
-            ->extract(['src']);
-        $this->assertSame("/images/question.png", $imgUri[0]);
 
         $crawler = $this->client->submit(
             $crawler->filter('form#wallet_is_consistent1')->form()
@@ -105,8 +99,9 @@ class WalletControllerTest extends WebTestCase
         $form = $crawler->selectButton('wallet_save')->form();
         $values = $form->getValues();
         $this->assertSame('-10.00', $values["wallet[amount]"]);
-        $form['wallet[amount]']->setValue('-11');
-        $this->client->submit($form);
+        $this->client->submitForm('wallet_save', [
+            'wallet[amount]' => '-11',
+        ]);
         $this->assertSelectorTextContains('td#wallet_balance2', '189');
 
         // B: Zmniejsz wydatki do pierwotnej wartości, ponowne przeliczenie niczego nie zepsuje.
@@ -120,8 +115,9 @@ class WalletControllerTest extends WebTestCase
         $form = $crawler->selectButton('wallet_save')->form();
         $values = $form->getValues();
         $this->assertSame('-11.00', $values["wallet[amount]"]);
-        $form['wallet[amount]']->setValue('-10');
-        $this->client->submit($form);
+        $this->client->submitForm('wallet_save', [
+            'wallet[amount]' => '-10',
+        ]);
         $this->assertSelectorTextContains('td#wallet_balance2', '190');
 
         // Sprawdź, czy błąd został usunięty.

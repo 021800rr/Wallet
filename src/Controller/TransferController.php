@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Backup;
+use App\Entity\Contractor;
 use App\Entity\Wallet;
 use App\Form\TransferToBackupType;
 use App\Form\TransferToWalletType;
 use App\Repository\ContractorRepository;
 use App\Service\Transfer\TransferInterface;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -25,8 +27,14 @@ use Symfony\Component\Routing\Annotation\Route;
 #[IsGranted('ROLE_ADMIN')]
 class TransferController extends AbstractController
 {
-    public function __construct(private readonly ContractorRepository $contractorRepository)
+    private readonly Contractor $contractor;
+
+    /**
+     * @throws Exception
+     */
+    public function __construct(ContractorRepository $contractorRepository)
     {
+        $this->contractor = $contractorRepository->getInternalTransferOwner() ?? throw new Exception('no internal transfer owner');
     }
 
     #[Route('/', name: 'transfer_index', methods: ['GET'])]
@@ -52,7 +60,7 @@ class TransferController extends AbstractController
     public function backup(Request $request, TransferInterface $agent): RedirectResponse
     {
         $backup = new Backup();
-        $backup->setContractor($this->contractorRepository->getInternalTransferOwner());
+        $backup->setContractor($this->contractor);
         $backupForm = $this->createForm(TransferToBackupType::class, $backup);
         $backupForm->handleRequest($request);
         if ($backupForm->isSubmitted() && $backupForm->isValid()) {
@@ -73,7 +81,7 @@ class TransferController extends AbstractController
     public function wallet(Request $request, TransferInterface $agent): RedirectResponse
     {
         $wallet = new Wallet();
-        $wallet->setContractor($this->contractorRepository->getInternalTransferOwner());
+        $wallet->setContractor($this->contractor);
         $walletForm = $this->createForm(TransferToWalletType::class, $wallet);
         $walletForm->handleRequest($request);
         if ($walletForm->isSubmitted() && $walletForm->isValid()) {

@@ -25,10 +25,11 @@ class UnchangeableValidator extends ConstraintValidator
                 $value = $value->format('Y-m-d H:i:s');
             } elseif ($value instanceof Contractor) {
                 $value = $value->getDescription();
-            } else {
+            } elseif (is_int($value) || is_float($value)) {
                 $value = (string) $value;
             }
 
+            /** @var string $value */
             $this->context->buildViolation($constraint->message)
                 ->setParameter('{{ string }}', $value)
                 ->addViolation();

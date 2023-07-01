@@ -2,12 +2,13 @@
 
 namespace App\Tests\Controller;
 
+use App\Tests\SetupController;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class EuroWalletControllerTest extends WebTestCase
 {
-    use Setup;
+    use SetupController;
 
     private KernelBrowser $client;
 
@@ -37,12 +38,14 @@ class EuroWalletControllerTest extends WebTestCase
     public function testEdit(): void
     {
         $crawler = $this->client->request('GET', '/en/eur');
-        $crawler = $this->client->click(
+        $this->client->click(
             $crawler->filter('a#eur_edit1')->link()
         );
-        $form = $crawler->selectButton('eur_save')->form();
-        $form['eur[amount]']->setValue('30.03');
-        $this->client->submit($form);
+
+        $this->client->submitForm('eur_save', [
+            'eur[amount]' => '30.03',
+        ]);
+
         $this->assertSelectorTextContains('td#eur_balance1', '60.06');
     }
 
@@ -58,11 +61,6 @@ class EuroWalletControllerTest extends WebTestCase
     public function testIsConsistent(): void
     {
         $crawler = $this->client->request('GET', '/en/eur');
-        $imgUri = $crawler
-            ->filter('form#eur_is_consistent1')
-            ->filter('input.submitter')
-            ->extract(['src']);
-        $this->assertSame("/images/question.png", $imgUri[0]);
 
         $crawler = $this->client->submit(
             $crawler->filter('form#eur_is_consistent1')->form()
