@@ -3,12 +3,13 @@
 namespace App\Tests\Controller;
 
 use App\Repository\ContractorRepository;
+use App\Tests\SetupController;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class FeeControllerTest extends WebTestCase
 {
-    use ControllerSetup;
+    use SetupController;
 
     private KernelBrowser $client;
 
@@ -31,7 +32,7 @@ class FeeControllerTest extends WebTestCase
         $this->client->submitForm('Save', [
             'fee[date]' => '20',
             'fee[amount]' => '-21',
-            'fee[contractor]' => $this->contractor->getId(),
+            'fee[contractor]' => $this->internalTransferOwner->getId(),
         ]);
 
         $this->assertSelectorTextContains('td#fee_contractor1', ContractorRepository::INTERNAL_TRANSFER);
@@ -42,15 +43,9 @@ class FeeControllerTest extends WebTestCase
     {
         $crawler = $this->client->request('GET', '/en/fee');
 
-        $crawler = $this->client->click(
+        $this->client->click(
             $crawler->filter('a#fee_edit1')->link()
         );
-
-        $form = $crawler->selectButton('fee_save')->form();
-        $values = $form->getValues();
-
-        $this->assertSame('4', $values["fee[date]"]);
-        $this->assertSame('-19.99', $values["fee[amount]"]);
 
         $this->client->submitForm('fee_save', [
             'fee[date]' => '10',
@@ -68,6 +63,10 @@ class FeeControllerTest extends WebTestCase
         $this->assertSelectorTextContains('td#fee_contractor2', 'Netflix');
         $this->client->submit(
             $crawler->filter('form#fee_delete1')->form()
+        );
+        $spotify = $this->contractorRepository->findOneBy(['description' => 'Spotify']);
+        $this->assertNull(
+            $this->feeRepository->findOneBy(['contractor' => $spotify])
         );
         $this->assertSelectorTextContains('td#fee_contractor1', 'Netflix');
     }

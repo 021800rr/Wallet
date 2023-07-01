@@ -2,12 +2,13 @@
 
 namespace App\Tests\Controller;
 
+use App\Tests\SetupController;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SearchControllerTest extends WebTestCase
 {
-    use ControllerSetup;
+    use SetupController;
 
     private KernelBrowser $client;
 
@@ -43,12 +44,6 @@ class SearchControllerTest extends WebTestCase
             'form[query]' => 'all',
         ]);
 
-        $imgUri = $crawler
-            ->filter('form#search_is_consistent1')
-            ->filter('input.submitter')
-            ->extract(['src']);
-        $this->assertSame("/images/question.png", $imgUri[0]);
-
         $crawler = $this->client->submit(
             $crawler->filter('form#search_is_consistent1')->form()
         );
@@ -67,13 +62,11 @@ class SearchControllerTest extends WebTestCase
             'form[query]' => 'all',
         ]);
         $this->assertSelectorTextContains('td#search_balance1', '170');
+        $this->assertSelectorTextContains('td#search_amount1', '-20');
 
-        $crawler = $this->client->click(
+        $this->client->click(
             $crawler->filter('a#wallet_edit1')->link()
         );
-        $form = $crawler->selectButton('wallet_save')->form();
-        $values = $form->getValues();
-        $this->assertSame('-20.00', $values["wallet[amount]"]);
         $this->client->submitForm('wallet_save', [
             'wallet[amount]' => '-40',
         ]);

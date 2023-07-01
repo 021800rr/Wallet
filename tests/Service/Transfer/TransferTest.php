@@ -22,7 +22,6 @@ class TransferTest extends KernelTestCase
      */
     public function testMoveAssets(): void
     {
-        $contractor = $this->contractorRepository->getInternalTransferOwner() ?? throw new Exception('no internal transfer owner');
         $transfer = new Transfer(
             $this->contractorRepository,
             $this->backupFactory,
@@ -40,7 +39,7 @@ class TransferTest extends KernelTestCase
         $this->assertSame(600.00, $transactions[0]->getBalance());
 
         $backup = new Backup();
-        $backup->setContractor($contractor);
+        $backup->setContractor($this->internalTransferOwner);
         $backup->setAmount(100);
 
         $transfer->moveToBackup($backup);
@@ -54,7 +53,7 @@ class TransferTest extends KernelTestCase
         $this->assertSame(700.00, $transactions[0]->getBalance());
 
         $wallet = new Wallet();
-        $wallet->setContractor($contractor);
+        $wallet->setContractor($this->internalTransferOwner);
         $wallet->setAmount(100);
 
         $transfer->moveToWallet($wallet);
@@ -68,7 +67,7 @@ class TransferTest extends KernelTestCase
         $this->assertSame(600.00, $transactions[0]->getBalance());
 
         $backup = new Backup();
-        $backup->setContractor($contractor);
+        $backup->setContractor($this->internalTransferOwner);
         $backup->setAmount(100);
 
         $transfer->moveToBackup($backup, 1);

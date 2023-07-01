@@ -21,7 +21,7 @@ class ContractorRepositoryTest extends KernelTestCase
      */
     public function testGetInternalTransferOwner(): void
     {
-        $contractor = $this->contractorRepository->getInternalTransferOwner() ?? throw new Exception('no internal transfer owner');
+        $contractor = $this->internalTransferOwner;
 
         $this->assertSame(5, $contractor->getId());
         $this->assertSame("Przelew własny", $contractor->getDescription());

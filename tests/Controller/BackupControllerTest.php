@@ -2,12 +2,13 @@
 
 namespace App\Tests\Controller;
 
+use App\Tests\SetupController;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class BackupControllerTest extends WebTestCase
 {
-    use ControllerSetup;
+    use SetupController;
 
     private KernelBrowser $client;
 
@@ -30,7 +31,6 @@ class BackupControllerTest extends WebTestCase
         $this->assertSelectorTextContains('td#backup_retiring3', '50');
         $this->assertSelectorTextContains('td#backup_balance3', '100');
     }
-
 
     public function testEdit(): void
     {

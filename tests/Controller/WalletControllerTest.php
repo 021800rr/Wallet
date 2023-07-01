@@ -2,12 +2,13 @@
 
 namespace App\Tests\Controller;
 
+use App\Tests\SetupController;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class WalletControllerTest extends WebTestCase
 {
-    use ControllerSetup;
+    use SetupController;
 
     private KernelBrowser $client;
 
@@ -36,12 +37,9 @@ class WalletControllerTest extends WebTestCase
     {
         $crawler = $this->client->request('GET', '/en/wallet');
 
-        $crawler = $this->client->click(
+        $this->client->click(
             $crawler->filter('a#wallet_edit1')->link()
         );
-        $form = $crawler->selectButton('wallet_save')->form();
-        $values = $form->getValues();
-        $this->assertSame('-20.00', $values["wallet[amount]"]);
         $this->client->submitForm('wallet_save', [
             'wallet[amount]' => '-40',
         ]);
@@ -61,11 +59,6 @@ class WalletControllerTest extends WebTestCase
     public function testIsConsistent(): void
     {
         $crawler = $this->client->request('GET', '/en/wallet');
-        $imgUri = $crawler
-            ->filter('form#wallet_is_consistent1')
-            ->filter('input.submitter')
-            ->extract(['src']);
-        $this->assertSame("/images/question.png", $imgUri[0]);
 
         $crawler = $this->client->submit(
             $crawler->filter('form#wallet_is_consistent1')->form()

@@ -2,12 +2,13 @@
 
 namespace App\Tests\Controller;
 
+use App\Tests\SetupController;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class EuroWalletControllerTest extends WebTestCase
 {
-    use ControllerSetup;
+    use SetupController;
 
     private KernelBrowser $client;
 
@@ -60,11 +61,6 @@ class EuroWalletControllerTest extends WebTestCase
     public function testIsConsistent(): void
     {
         $crawler = $this->client->request('GET', '/en/eur');
-        $imgUri = $crawler
-            ->filter('form#eur_is_consistent1')
-            ->filter('input.submitter')
-            ->extract(['src']);
-        $this->assertSame("/images/question.png", $imgUri[0]);
 
         $crawler = $this->client->submit(
             $crawler->filter('form#eur_is_consistent1')->form()

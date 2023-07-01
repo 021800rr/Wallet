@@ -2,12 +2,13 @@
 
 namespace App\Tests\Controller;
 
+use App\Tests\SetupController;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ContractorControllerTest extends WebTestCase
 {
-    use ControllerSetup;
+    use SetupController;
 
     private KernelBrowser $client;
 
@@ -58,6 +59,7 @@ class ContractorControllerTest extends WebTestCase
         $this->client->submit(
             $crawler->filter('form#contractor_delete2')->form()
         );
+        $this->assertNull($this->contractorRepository->findOneBy(['description' => 'CCC']));
         $this->assertSelectorTextContains('td#description2', 'Media Expert');
     }
 }

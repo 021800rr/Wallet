@@ -3,6 +3,7 @@
 namespace App\Tests;
 
 use App\Entity\Chf;
+use App\Entity\Contractor;
 use App\Entity\Wallet;
 use App\Repository\BackupRepository;
 use App\Repository\ChfRepository;
@@ -15,6 +16,7 @@ use App\Service\BalanceUpdater\BalanceUpdaterBackupFactory;
 use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterWallet;
 use App\Service\BalanceUpdater\BalanceUpdaterWalletFactory;
+use Exception;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -39,12 +41,15 @@ trait SetupRepos
     /** @var Chf[] $chfs */
     private array $chfs;
 
+    private Contractor $internalTransferOwner;
+
     /**
      * @throws TransportExceptionInterface
      * @throws ServerExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
+     * @throws Exception
      */
     protected function setUpRepos(): void
     {
@@ -82,5 +87,7 @@ trait SetupRepos
 
         $this->backupFactory = new BalanceUpdaterBackupFactory(new BalanceUpdaterBackup());
         $this->walletFactory = new BalanceUpdaterWalletFactory(new BalanceUpdaterWallet());
+
+        $this->internalTransferOwner = $contractorRepository->getInternalTransferOwner() ?? throw new Exception('no internal transfer owner');
     }
 }
