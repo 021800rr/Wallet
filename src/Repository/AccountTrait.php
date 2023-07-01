@@ -2,11 +2,30 @@
 
 namespace App\Repository;
 
+use App\Entity\AbstractAccount;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
 trait AccountTrait
 {
+    public function save(AbstractAccount $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(AbstractAccount $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
     /**
      * @throws NonUniqueResultException
      * @throws NoResultException
