@@ -2,54 +2,50 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\Wallet;
-use App\Repository\WalletRepository;
+use App\Tests\SetUp;
+use Doctrine\ORM\Query\Parameter;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class WalletRepositoryTest extends KernelTestCase
 {
-    use Setup;
+    use SetUp;
 
     public function testFindAll(): void
     {
-        $walletTransactions = $this->entityManager
-            ->getRepository(Wallet::class)
-            ->findAll();
+        $walletTransactions = $this->walletRepository->findAll();
         $this->assertSame(3, count($walletTransactions));
     }
 
     public function testGetAllRecords(): void
     {
-        $walletRepository = $this->getRepository();
-        $walletTransactions = $walletRepository->getAllRecords();
+        $walletTransactions = $this->walletRepository->getAllRecords();
         $this->assertSame(3, count($walletTransactions));
     }
 
     public function testSearch(): void
     {
-        $walletRepository = $this->getRepository();
-        $paginator = $walletRepository->search('-10', 15);
+        $paginator = $this->walletRepository->search('-10', 15);
 
-        $this->assertSame("amount", $paginator->getQuery()->getParameters()[2]->getName());
-        $this->assertSame(-10.0, $paginator->getQuery()->getParameters()[2]->getValue());
+        /** @var Parameter $parameter */
+        $parameter = $paginator->getQuery()->getParameters()[2];
+        $this->assertSame("amount", $parameter->getName());
+        $this->assertSame(-10.0, $parameter->getValue());
         $this->assertSame(1, $paginator->count());
 
-        $paginator = $walletRepository->search('191', 15);
+        $paginator = $this->walletRepository->search('191', 15);
 
-        $this->assertSame("balance", $paginator->getQuery()->getParameters()[3]->getName());
-        $this->assertSame(191.0, $paginator->getQuery()->getParameters()[3]->getValue());
+        /** @var Parameter $parameter */
+        $parameter = $paginator->getQuery()->getParameters()[3];
+        $this->assertSame("balance", $parameter->getName());
+        $this->assertSame(191.0, $parameter->getValue());
         $this->assertSame(1, $paginator->count());
 
-        $paginator = $walletRepository->search('all', 15);
+        $paginator = $this->walletRepository->search('all', 15);
 
-        $this->assertSame("contractor", $paginator->getQuery()->getParameters()[0]->getName());
-        $this->assertSame("%all%", $paginator->getQuery()->getParameters()[0]->getValue());
+        /** @var Parameter $parameter */
+        $parameter = $paginator->getQuery()->getParameters()[0];
+        $this->assertSame("contractor", $parameter->getName());
+        $this->assertSame("%all%", $parameter->getValue());
         $this->assertSame(2, $paginator->count());
-    }
-
-    private function getRepository(): WalletRepository
-    {
-        /** @var WalletRepository */
-        return $this->entityManager->getRepository(Wallet::class);
     }
 }

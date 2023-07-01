@@ -21,6 +21,7 @@ readonly class OffsetHelper extends AbstractSession implements OffsetHelperInter
             return $request->query->getInt('offset', 0);
         }
 
+        /** @var int */
         return $this->requestStack->getSession()->get('offset', 0);
     }
 

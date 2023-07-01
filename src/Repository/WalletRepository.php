@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\AbstractAccount;
 use App\Entity\Wallet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -25,27 +24,8 @@ class WalletRepository extends ServiceEntityRepository implements WalletReposito
         parent::__construct($registry, Wallet::class);
     }
 
-    public function save(AbstractAccount $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function remove(AbstractAccount $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
     public function search(string $data, int $offset): Paginator
     {
-
         $query = $this->createQueryBuilder('w')
             ->innerJoin('w.contractor', 'c')
             ->where('LOWER(c.description) like LOWER(:contractor)')

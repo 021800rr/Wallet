@@ -13,6 +13,7 @@ readonly class QueryHelper extends AbstractSession implements QueryHelperInterfa
 
     public function getQuery(): string
     {
+        /** @var string */
         return $this->requestStack->getSession()->get('query', '');
     }
 

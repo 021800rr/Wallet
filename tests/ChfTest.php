@@ -12,7 +12,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class ChfTest extends ApiTestCase
 {
-    use Setup;
+    use SetupApi;
 
     /**
      * @throws TransportExceptionInterface
@@ -142,7 +142,7 @@ class ChfTest extends ApiTestCase
         $this->client->request('DELETE', '/api/chfs/2', ['auth_bearer' => $this->token]);
         $this->assertResponseStatusCodeSame(204);
         $this->assertNull(
-            static::getContainer()->get('doctrine')->getRepository(Chf::class)->findOneBy(['id' => 2])
+            $this->chfRepository->findOneBy(['id' => 2])
         );
 
         $this->client->request('GET', '/api/chfs', ['auth_bearer' => $this->token]);

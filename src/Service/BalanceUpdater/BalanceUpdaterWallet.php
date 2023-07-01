@@ -13,7 +13,7 @@ class BalanceUpdaterWallet extends BalanceUpdaterAbstractAccount implements Bala
      * @param AccountRepositoryInterface $accountRepository
      * @param AbstractAccount $predecessor
      * @param AbstractAccount $transaction
-     * @param AbstractAccount[]|null $successors
+     * @param array<int, AbstractAccount>|null $successors
      * @return void
      */
     protected function walk(
@@ -25,6 +25,7 @@ class BalanceUpdaterWallet extends BalanceUpdaterAbstractAccount implements Bala
         $transaction->setBalance($predecessor->getBalance() + $transaction->getAmount());
         $accountRepository->save($transaction, true);
 
+        /** @var array<int, AbstractAccount> $successors */
         if (count($successors)) {
             $predecessor = $transaction;
             $transaction = array_shift($successors);

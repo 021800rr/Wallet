@@ -26,6 +26,7 @@ readonly class FixedFees implements FixedFeesInterface
         foreach ($this->feeRepository->findAll() as $fee) {
             $wallet = new Wallet();
 
+            /** @var Fee $fee */
             $wallet->setDate($this->getDate($fee));
             $wallet->setAmount($fee->getAmount());
             $wallet->setContractor($fee->getContractor());

@@ -58,7 +58,7 @@ class Contractor
 
     public function getId(): int
     {
-        return $this->id;
+        return (int) $this->id;
     }
 
     public function getDescription(): string

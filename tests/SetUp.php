@@ -2,17 +2,15 @@
 
 namespace App\Tests;
 
-use ApiPlatform\Symfony\Bundle\Test\Client;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-trait Setup
+trait SetUp
 {
-    protected Client $client;
-    protected string $token;
+    use SetupRepos;
 
     /**
      * @throws TransportExceptionInterface
@@ -23,16 +21,6 @@ trait Setup
      */
     protected function setUp(): void
     {
-        $this->client = self::createClient();
-        $response = $this->client->request('POST', '/api/login_check', [
-            'headers' => ['Content-Type' => 'application/json'],
-            'json' => [
-                'username' => 'rr',
-                'password' => 'rr',
-            ],
-        ]);
-        $json = $response->toArray();
-
-        $this->token = $json['token'];
+        $this->setUpRepos();
     }
 }

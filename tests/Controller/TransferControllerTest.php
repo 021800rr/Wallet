@@ -2,12 +2,13 @@
 
 namespace App\Tests\Controller;
 
+use App\Tests\SetupController;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class TransferControllerTest extends WebTestCase
 {
-    use Setup;
+    use SetupController;
 
     private KernelBrowser $client;
 

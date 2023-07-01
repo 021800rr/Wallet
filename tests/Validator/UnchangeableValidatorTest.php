@@ -29,10 +29,11 @@ class UnchangeableValidatorTest extends ConstraintValidatorTestCase
             'message' => 'myMessage',
         ]);
 
+        /** @var string|int $values */
         $this->validator->validate($values, $constraint);
 
         $this->buildViolation('myMessage')
-            ->setParameter('{{ string }}', $values)
+            ->setParameter('{{ string }}', (string) $values)
             ->assertRaised();
     }
 

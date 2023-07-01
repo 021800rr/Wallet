@@ -11,7 +11,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class PaymentsByMonthTest extends ApiTestCase
 {
-    use Setup;
+    use SetupApi;
 
     /**
      * @throws TransportExceptionInterface

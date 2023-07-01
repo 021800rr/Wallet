@@ -2,15 +2,14 @@
 
 namespace App\Service\BalanceSupervisor;
 
-use App\Entity\Chf;
-use App\Entity\Wallet;
+use App\Entity\AbstractAccount;
 use App\Repository\AccountRepositoryInterface;
 use Generator;
 
 interface BalanceSupervisorInterface
 {
     /**
-     * @param Chf[]|Wallet[] $wallets
+     * @param AbstractAccount[] $wallets
      * @return void
      */
     public function setWallets(array $wallets): void;

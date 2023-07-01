@@ -12,7 +12,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class BackupTest extends ApiTestCase
 {
-    use Setup;
+    use SetupApi;
 
     /**
      * @throws TransportExceptionInterface
@@ -60,7 +60,7 @@ class BackupTest extends ApiTestCase
         $this->client->request('DELETE', '/api/backups/2', ['auth_bearer' => $this->token]);
         $this->assertResponseStatusCodeSame(204);
         $this->assertNull(
-            static::getContainer()->get('doctrine')->getRepository(Backup::class)->findOneBy(['id' => 2])
+            $this->backupRepository->findOneBy(['id' => 2])
         );
 
         $this->client->request('GET', '/api/backups', ['auth_bearer' => $this->token]);

@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\AbstractAccount;
 use App\Entity\Backup;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -24,36 +23,23 @@ class BackupRepository extends ServiceEntityRepository implements BackupReposito
         parent::__construct($registry, Backup::class);
     }
 
-    public function save(AbstractAccount $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function remove(AbstractAccount $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-
     /**
      * @return array<int, array<string, string>>
      */
     public function paymentsByMonth(): array
     {
-        return $this->createQueryBuilder('p')
-            ->select('p.yearMonth', 'SUM(p.amount) as sum_of_amount')
-            ->groupBy('p.yearMonth')
-            ->orderBy('p.yearMonth', 'DESC')
-            ->setMaxResults(self::PAYMENTS_BY_MONTH_YEARS)
-            ->getQuery()
-            ->getResult();
+        $result = $this->createQueryBuilder('p')
+           ->select('p.yearMonth', 'SUM(p.amount) as sum_of_amount')
+           ->groupBy('p.yearMonth')
+           ->orderBy('p.yearMonth', 'DESC')
+           ->setMaxResults(self::PAYMENTS_BY_MONTH_YEARS)
+           ->getQuery()
+           ->getResult();
+
+        if (!is_array($result)) {
+            return [];
+        }
+
+        return $result;
     }
 }

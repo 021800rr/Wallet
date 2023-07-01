@@ -35,8 +35,8 @@ class Calculator implements CalculatorInterface
             $sum += $backup['sum_of_amount'];
         }
 
-        $firstDate = $this->foretellDate($backup['yearMonth']);
-        $lastDate = $this->foretellDate($backups[0]['yearMonth']);
+        $firstDate = $this->foretellDate((string) $backup['yearMonth']);
+        $lastDate = $this->foretellDate((string) $backups[0]['yearMonth']);
 
         $months = $this->computeNumberOfMonth($firstDate, $lastDate);
 
