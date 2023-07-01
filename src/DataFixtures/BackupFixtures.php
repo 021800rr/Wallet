@@ -10,8 +10,12 @@ use Doctrine\Persistence\ObjectManager;
 
 class BackupFixtures extends Fixture implements DependentFixtureInterface
 {
+    use InternalOwner;
+
     public function load(ObjectManager $manager): void
     {
+        $contractor = $this->getInternalOwner();
+
         $backup = new Backup();
         $backup->setDate(new DateTime('2021-05-01'));
         $backup->setYearMonth('2021-05');
@@ -19,7 +23,7 @@ class BackupFixtures extends Fixture implements DependentFixtureInterface
         $backup->setRetiring(50);
         $backup->setHoliday(50);
         $backup->setBalance(100.00);
-        $backup->setContractor($this->getReference(ContractorFixtures::INTERNAL));
+        $backup->setContractor($contractor);
         $backup->setDescription('a fresh one');
         $manager->persist($backup);
 
@@ -30,7 +34,7 @@ class BackupFixtures extends Fixture implements DependentFixtureInterface
         $backup->setRetiring(150);
         $backup->setHoliday(150);
         $backup->setBalance(300.00);
-        $backup->setContractor($this->getReference(ContractorFixtures::INTERNAL));
+        $backup->setContractor($contractor);
         $manager->persist($backup);
 
         $backup = new Backup();
@@ -40,7 +44,7 @@ class BackupFixtures extends Fixture implements DependentFixtureInterface
         $backup->setRetiring(300);
         $backup->setHoliday(300);
         $backup->setBalance(600.00);
-        $backup->setContractor($this->getReference(ContractorFixtures::INTERNAL));
+        $backup->setContractor($contractor);
         $manager->persist($backup);
 
         $manager->flush();

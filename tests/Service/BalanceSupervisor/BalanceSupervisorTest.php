@@ -2,8 +2,9 @@
 
 namespace App\Tests\Service\BalanceSupervisor;
 
+use App\Entity\Wallet;
 use App\Service\BalanceSupervisor\BalanceSupervisor;
-use App\Tests\Service\SetUp;
+use App\Tests\SetUp;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class BalanceSupervisorTest extends KernelTestCase
@@ -17,6 +18,7 @@ class BalanceSupervisorTest extends KernelTestCase
 
         $generator = $balanceSupervisor->crawl($this->walletRepository);
         $result = [];
+        /** @var Wallet $wallet */
         foreach($generator as $wallet) {
             $result[] = $wallet->__toString();
         }
@@ -34,6 +36,7 @@ class BalanceSupervisorTest extends KernelTestCase
 
         $generator = $balanceSupervisor->crawl($this->chfRepository);
         $result = [];
+        /** @var Wallet $wallet */
         foreach($generator as $wallet) {
             $result[] = $wallet->__toString();
         }

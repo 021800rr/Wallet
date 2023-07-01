@@ -6,97 +6,104 @@ use App\Entity\Backup;
 use App\Entity\Chf;
 use App\Entity\Eur;
 use App\Entity\Wallet;
-use App\Repository\BackupRepository;
-use App\Repository\ChfRepository;
-use App\Repository\EurRepository;
-use App\Repository\WalletRepository;
+use App\Tests\SetUp;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class AccountTraitTest extends KernelTestCase
 {
-    use Setup;
+    use SetUp;
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     * @throws Exception
+     */
     public function testBackupGetCurrentBalance(): void
     {
-        $repository = $this->getBackupRepository();
-        $balance = $repository->getCurrentBalance();
+        $balance = $this->backupRepository->getCurrentBalance();
         $this->assertSame(600.0, $balance);
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws Exception
+     */
     public function testBackupGetLastRecord(): void
     {
-        $repository = $this->getBackupRepository();
-        $last = $repository->getLastRecord();
+        /** @var Backup $last */
+        $last = $this->backupRepository->getLastRecord();
         $this->assertSame(3, $last->getId());
         $this->assertSame(600.0, $last->getBalance());
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     * @throws Exception
+     */
     public function testChfGetCurrentBalance(): void
     {
-        $repository = $this->getChfRepository();
-        $balance = $repository->getCurrentBalance();
+        $balance = $this->chfRepository->getCurrentBalance();
         $this->assertSame(70.07, $balance);
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws Exception
+     */
     public function testChfGetLastRecord(): void
     {
-        $repository = $this->getChfRepository();
-        $last = $repository->getLastRecord();
+        /** @var Chf $last */
+        $last = $this->chfRepository->getLastRecord();
         $this->assertSame(3, $last->getId());
         $this->assertSame(70.07, $last->getBalance());
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     * @throws Exception
+     */
     public function testEurGetCurrentBalance(): void
     {
-        $repository = $this->getEurRepository();
-        $balance = $repository->getCurrentBalance();
+        $balance = $this->eurRepository->getCurrentBalance();
         $this->assertSame(70.07, $balance);
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws Exception
+     */
     public function testEurGetLastRecord(): void
     {
-        $repository = $this->getEurRepository();
-        $last = $repository->getLastRecord();
+        /** @var Eur $last */
+        $last = $this->eurRepository->getLastRecord();
         $this->assertSame(3, $last->getId());
         $this->assertSame(70.07, $last->getBalance());
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     * @throws Exception
+     */
     public function testWalletGetCurrentBalance(): void
     {
-        $repository = $this->getWalletRepository();
-        $balance = $repository->getCurrentBalance();
+        $balance = $this->walletRepository->getCurrentBalance();
         $this->assertSame(170.0, $balance);
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
     public function testWalletGetLastRecord(): void
     {
-        $repository = $this->getWalletRepository();
-        $last = $repository->getLastRecord();
+        /** @var Wallet $last */
+        $last = $this->walletRepository->getLastRecord();
         $this->assertSame(3, $last->getId());
         $this->assertSame(170.0, $last->getBalance());
-    }
-
-    private function getBackupRepository(): BackupRepository
-    {
-        /** @var BackupRepository */
-        return $this->entityManager->getRepository(Backup::class);
-    }
-
-    private function getChfRepository(): ChfRepository
-    {
-        /** @var ChfRepository */
-        return $this->entityManager->getRepository(Chf::class);
-    }
-
-    private function getEurRepository(): EurRepository
-    {
-        /** @var EurRepository */
-        return $this->entityManager->getRepository(Eur::class);
-    }
-
-    private function getWalletRepository(): WalletRepository
-    {
-        /** @var WalletRepository */
-        return $this->entityManager->getRepository(Wallet::class);
     }
 }

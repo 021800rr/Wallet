@@ -3,15 +3,13 @@ parameters:
     ignoreErrors:
         -
           message: '#Method App\\Repository\\AccountRepositoryInterface::find\(\) has no return type specified\.#'
-          path: *
+          path: src/Repository/AccountRepositoryInterface.php
         -
           message: '#Method App\\Repository\\AccountRepositoryInterface::find\(\) has parameter \$id with no type specified\.#'
-          path: *
+          path: src/Repository/AccountRepositoryInterface.php
         -
           message: '#Method App\\Repository\\AccountRepositoryInterface::find\(\) has parameter \$lockMode with no type specified\.#'
-          path: *
+          path: src/Repository/AccountRepositoryInterface.php
         -
           message: '#Method App\\Repository\\AccountRepositoryInterface::find\(\) has parameter \$lockVersion with no type specified\.#'
-          path: *
-    excludePaths:
-        - src/State/*
+          path: src/Repository/AccountRepositoryInterface.php

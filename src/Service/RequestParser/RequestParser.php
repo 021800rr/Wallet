@@ -15,9 +15,9 @@ readonly class RequestParser implements RequestParserInterface
     /**
      * @param string $fullyQualifiedControllerName
      * @param SymfonyRequest $request
-     * @return int|array<int, int|string>
+     * @return array<int, int|string>
      */
-    public function strategy(string $fullyQualifiedControllerName, SymfonyRequest $request): int|array
+    public function strategy(string $fullyQualifiedControllerName, SymfonyRequest $request): array
     {
         return "App\\Controller\\SearchController" === $fullyQualifiedControllerName
             ? $this->searchHelper->process($request)

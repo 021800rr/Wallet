@@ -2,16 +2,15 @@
 
 namespace App\Tests;
 
-use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-class ChfCheckerTest extends ApiTestCase
+trait SetUp
 {
-    use SetupApi;
+    use SetupRepos;
 
     /**
      * @throws TransportExceptionInterface
@@ -20,14 +19,8 @@ class ChfCheckerTest extends ApiTestCase
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function testGet(): void
+    protected function setUp(): void
     {
-        $r = $this->client->request('GET', '/api/check/chfs', ['auth_bearer' => $this->token]);
-        $this->assertResponseIsSuccessful();
-        $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-
-        $this->assertJsonContains([
-            "result" => "Passed"
-        ]);
+        $this->setUpRepos();
     }
 }

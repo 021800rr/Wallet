@@ -50,7 +50,7 @@ abstract class AbstractAccount
 
     public function getId(): int
     {
-        return $this->id;
+        return (int) $this->id;
     }
 
     public function getDate(): DateTimeInterface

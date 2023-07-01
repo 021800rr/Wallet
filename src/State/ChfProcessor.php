@@ -5,6 +5,7 @@ namespace App\State;
 use ApiPlatform\Metadata\DeleteOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
+use App\Entity\Chf;
 use App\Repository\AccountRepositoryInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use Exception;
@@ -20,10 +21,13 @@ readonly class ChfProcessor implements ProcessorInterface
     }
 
     /**
+     * @param array<mixed, mixed> $uriVariables
+     * @param array<mixed, mixed> $context
      * @throws Exception
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
+        /** @var Chf $data */
         if ($operation instanceof DeleteOperationInterface) {
             $data->setAmount(0);
             $this->walletFactory->create()->compute($this->chfRepository, $data->getId());

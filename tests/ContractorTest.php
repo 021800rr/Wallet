@@ -13,7 +13,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class ContractorTest extends ApiTestCase
 {
-    use Setup;
+    use SetupApi;
 
     /**
      * @throws TransportExceptionInterface
@@ -100,12 +100,13 @@ class ContractorTest extends ApiTestCase
                 "description" => "HBO"
             ]
         ]);
+        /** @var string $iri */
         $iri = $this->findIriBy(Contractor::class, ['description' => 'HBO']);
 
         $this->client->request('DELETE', $iri, ['auth_bearer' => $this->token]);
         $this->assertResponseStatusCodeSame(204);
         $this->assertNull(
-            static::getContainer()->get('doctrine')->getRepository(Contractor::class)->findOneBy(['description' => 'HBO'])
+            $this->contractorRepository->findOneBy(['description' => 'HBO'])
         );
     }
 

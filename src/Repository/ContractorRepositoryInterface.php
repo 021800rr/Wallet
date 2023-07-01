@@ -10,5 +10,5 @@ interface ContractorRepositoryInterface extends AppRepositoryInterface
 
     public function remove(Contractor $entity, bool $flush = false): void;
 
-    public function getInternalTransferOwner(): Contractor;
+    public function getInternalTransferOwner(): ?Contractor;
 }

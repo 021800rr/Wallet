@@ -48,6 +48,7 @@ class SearchController extends AbstractController
         $form = $this->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var array<string, string> $data */
             $data = $form->getData();
             $query = $data['query'];
 
@@ -55,6 +56,10 @@ class SearchController extends AbstractController
             $offsetHelper->resetOffset();
             $offset = 0;
         } else {
+            /**
+             * @var string $query
+             * @var int $offset
+             */
             [$query, $offset] = $requestParser->strategy(SearchController::class, $request);
         }
         $paginator = $walletRepository->search($query, $offset);

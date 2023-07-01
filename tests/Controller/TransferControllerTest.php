@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class TransferControllerTest extends WebTestCase
 {
-    use Setup;
+    use ControllerSetup;
 
     private KernelBrowser $client;
 

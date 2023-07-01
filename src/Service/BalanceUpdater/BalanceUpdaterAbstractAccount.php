@@ -2,8 +2,7 @@
 
 namespace App\Service\BalanceUpdater;
 
-use App\Entity\AbstractWallet;
-use App\Entity\Backup;
+use App\Entity\AbstractAccount;
 use App\Repository\AccountRepositoryInterface;
 use Exception;
 
@@ -12,11 +11,12 @@ abstract class BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInt
     /**
      * @param AccountRepositoryInterface $accountRepository
      * @param int $id
-     * @return array<int, AbstractWallet|Backup|AbstractWallet[]|Backup[]|null>
+     * @return array<int, AbstractAccount|AbstractAccount[]|null>
      * @throws Exception
      */
     protected function setUp(AccountRepositoryInterface $accountRepository, int $id): array
     {
+        /** @var AbstractAccount[] $transactions */
         $transactions = $accountRepository->findAll();
         if (2 >= count($transactions)) {
             throw new Exception("I cravenly refuse to perform this operation");

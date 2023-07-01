@@ -12,9 +12,9 @@ class BalanceUpdaterBackup extends BalanceUpdaterAbstractAccount implements Bala
 
     /**
      * @param AccountRepositoryInterface $accountRepository
-     * @param Backup $predecessor
-     * @param Backup $transaction
-     * @param Backup[]|null $successors
+     * @param AbstractAccount $predecessor
+     * @param AbstractAccount $transaction
+     * @param AbstractAccount[]|null $successors
      * @return void
      */
     protected function walk(
@@ -23,6 +23,8 @@ class BalanceUpdaterBackup extends BalanceUpdaterAbstractAccount implements Bala
         AbstractAccount            $transaction,
         ?array                     $successors,
     ): void {
+        /** @var Backup $transaction */
+        /** @var Backup $predecessor */
         if (Backup::INAPPLICABLE === $transaction->getInterest()) {
             $transaction->setBalance($predecessor->getBalance() + $transaction->getAmount());
             $transaction = $this->setSubWallets($predecessor, $transaction);
@@ -36,6 +38,7 @@ class BalanceUpdaterBackup extends BalanceUpdaterAbstractAccount implements Bala
         }
         $accountRepository->save($transaction, true);
 
+        /** @var array<int, Backup> $successors */
         if (count($successors)) {
             $predecessor = $transaction;
             $transaction = array_shift($successors);

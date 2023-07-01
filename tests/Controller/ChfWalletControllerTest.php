@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ChfWalletControllerTest extends WebTestCase
 {
-    use Setup;
+    use ControllerSetup;
 
     private KernelBrowser $client;
 
@@ -43,11 +43,15 @@ class ChfWalletControllerTest extends WebTestCase
         $crawler = $this->client->click(
             $crawler->filter('a#chf_edit1')->link()
         );
+
         $form = $crawler->selectButton('chf_save')->form();
         $values = $form->getValues();
         $this->assertSame('40.04', $values["chf[amount]"]);
-        $form['chf[amount]']->setValue('1');
-        $this->client->submit($form);
+
+        $this->client->submitForm('chf_save', [
+            'chf[amount]' => '1',
+        ]);
+
         $this->assertSelectorTextContains('td#chf_balance1', '31.03');
     }
 

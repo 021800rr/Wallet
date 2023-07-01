@@ -2,33 +2,28 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\Contractor;
-use App\Repository\ContractorRepository;
+use App\Tests\SetUp;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class ContractorRepositoryTest extends KernelTestCase
 {
-    use Setup;
+    use SetUp;
 
     public function testFindAll(): void
     {
-        $contractorRepository = $this->getRepository();
-        $contractors = $contractorRepository->findAll();
+        $contractors = $this->contractorRepository->findAll();
         $this->assertSame(5, count($contractors));
     }
 
+    /**
+     * @throws Exception
+     */
     public function testGetInternalTransferOwner(): void
     {
-        $contractorRepository = $this->getRepository();
-        $contractor = $contractorRepository->getInternalTransferOwner();
+        $contractor = $this->contractorRepository->getInternalTransferOwner() ?? throw new Exception('no internal transfer owner');
 
         $this->assertSame(5, $contractor->getId());
         $this->assertSame("Przelew własny", $contractor->getDescription());
-    }
-
-    private function getRepository(): ContractorRepository
-    {
-        /** @var ContractorRepository */
-        return $this->entityManager->getRepository(Contractor::class);
     }
 }

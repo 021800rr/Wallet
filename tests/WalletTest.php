@@ -12,7 +12,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class WalletTest extends ApiTestCase
 {
-    use Setup;
+    use SetupApi;
 
     /**
      * @throws TransportExceptionInterface
@@ -156,7 +156,7 @@ class WalletTest extends ApiTestCase
         $this->client->request('DELETE', '/api/wallets/2', ['auth_bearer' => $this->token]);
         $this->assertResponseStatusCodeSame(204);
         $this->assertNull(
-            static::getContainer()->get('doctrine')->getRepository(Wallet::class)->findOneBy(['id' => 2])
+            $this->walletRepository->findOneBy(['id' => 2])
         );
 
         $this->client->request('GET', '/api/wallets', ['auth_bearer' => $this->token]);

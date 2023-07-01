@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class EuroWalletControllerTest extends WebTestCase
 {
-    use Setup;
+    use ControllerSetup;
 
     private KernelBrowser $client;
 
@@ -37,12 +37,14 @@ class EuroWalletControllerTest extends WebTestCase
     public function testEdit(): void
     {
         $crawler = $this->client->request('GET', '/en/eur');
-        $crawler = $this->client->click(
+        $this->client->click(
             $crawler->filter('a#eur_edit1')->link()
         );
-        $form = $crawler->selectButton('eur_save')->form();
-        $form['eur[amount]']->setValue('30.03');
-        $this->client->submit($form);
+
+        $this->client->submitForm('eur_save', [
+            'eur[amount]' => '30.03',
+        ]);
+
         $this->assertSelectorTextContains('td#eur_balance1', '60.06');
     }
 

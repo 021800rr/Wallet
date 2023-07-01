@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class WalletControllerTest extends WebTestCase
 {
-    use Setup;
+    use ControllerSetup;
 
     private KernelBrowser $client;
 
@@ -42,8 +42,9 @@ class WalletControllerTest extends WebTestCase
         $form = $crawler->selectButton('wallet_save')->form();
         $values = $form->getValues();
         $this->assertSame('-20.00', $values["wallet[amount]"]);
-        $form['wallet[amount]']->setValue('-40');
-        $this->client->submit($form);
+        $this->client->submitForm('wallet_save', [
+            'wallet[amount]' => '-40',
+        ]);
         $this->assertSelectorTextContains('td#wallet_balance1', '151');
     }
 
@@ -105,8 +106,9 @@ class WalletControllerTest extends WebTestCase
         $form = $crawler->selectButton('wallet_save')->form();
         $values = $form->getValues();
         $this->assertSame('-10.00', $values["wallet[amount]"]);
-        $form['wallet[amount]']->setValue('-11');
-        $this->client->submit($form);
+        $this->client->submitForm('wallet_save', [
+            'wallet[amount]' => '-11',
+        ]);
         $this->assertSelectorTextContains('td#wallet_balance2', '189');
 
         // B: Zmniejsz wydatki do pierwotnej wartości, ponowne przeliczenie niczego nie zepsuje.
@@ -120,8 +122,9 @@ class WalletControllerTest extends WebTestCase
         $form = $crawler->selectButton('wallet_save')->form();
         $values = $form->getValues();
         $this->assertSame('-11.00', $values["wallet[amount]"]);
-        $form['wallet[amount]']->setValue('-10');
-        $this->client->submit($form);
+        $this->client->submitForm('wallet_save', [
+            'wallet[amount]' => '-10',
+        ]);
         $this->assertSelectorTextContains('td#wallet_balance2', '190');
 
         // Sprawdź, czy błąd został usunięty.

@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ContractorControllerTest extends WebTestCase
 {
-    use Setup;
+    use ControllerSetup;
 
     private KernelBrowser $client;
 
@@ -33,12 +33,14 @@ class ContractorControllerTest extends WebTestCase
     public function testEdit(): void
     {
         $crawler = $this->client->request('GET', '/en/contractor');
-        $crawler = $this->client->click(
+        $this->client->click(
             $crawler->filter('a#contractor_edit2')->link()
         );
-        $form = $crawler->selectButton('contractor_save')->form();
-        $form['contractor[description]']->setValue('Media Expert xxx');
-        $this->client->submit($form);
+
+        $this->client->submitForm('contractor_save', [
+            'contractor[description]' => 'Media Expert xxx',
+        ]);
+
         $this->assertSelectorTextContains('td#description2', 'Media Expert xxx');
     }
 

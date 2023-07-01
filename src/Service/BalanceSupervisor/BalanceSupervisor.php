@@ -2,6 +2,7 @@
 
 namespace App\Service\BalanceSupervisor;
 
+use App\Entity\AbstractAccount;
 use App\Entity\Chf;
 use App\Entity\Wallet;
 use App\Repository\AccountRepositoryInterface;
@@ -9,12 +10,12 @@ use Generator;
 
 class BalanceSupervisor implements BalanceSupervisorInterface
 {
-    /** @var Wallet[]|Chf[] */
+    /** @var AbstractAccount[] */
     private array $supervisors;
     private float $initialBalance;
 
     /**
-     * @param Wallet[]|Chf[] $wallets
+     * @param AbstractAccount[] $wallets
      * @return void
      */
     public function setWallets(array $wallets): void

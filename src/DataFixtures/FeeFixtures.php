@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Contractor;
 use App\Entity\Fee;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -14,13 +15,17 @@ class FeeFixtures extends Fixture implements DependentFixtureInterface
         $fee = new Fee();
         $fee->setDate(2);
         $fee->setAmount(-52);
-        $fee->setContractor($this->getReference(ContractorFixtures::NETFLIX));
+        /** @var Contractor $contractor */
+        $contractor = $this->getReference(ContractorFixtures::NETFLIX);
+        $fee->setContractor($contractor);
         $manager->persist($fee);
 
         $fee = new Fee();
         $fee->setDate(4);
         $fee->setAmount(-19.99);
-        $fee->setContractor($this->getReference(ContractorFixtures::SPOTIFY));
+        /** @var Contractor $contractor */
+        $contractor = $this->getReference(ContractorFixtures::SPOTIFY);
+        $fee->setContractor($contractor);
         $manager->persist($fee);
 
         $manager->flush();

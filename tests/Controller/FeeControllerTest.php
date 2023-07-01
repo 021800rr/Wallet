@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class FeeControllerTest extends WebTestCase
 {
-    use Setup;
+    use ControllerSetup;
 
     private KernelBrowser $client;
 
@@ -52,10 +52,10 @@ class FeeControllerTest extends WebTestCase
         $this->assertSame('4', $values["fee[date]"]);
         $this->assertSame('-19.99', $values["fee[amount]"]);
 
-        $form['fee[date]']->setValue('10');
-        $form['fee[amount]']->setValue('-20');
-
-        $this->client->submit($form);
+        $this->client->submitForm('fee_save', [
+            'fee[date]' => '10',
+            'fee[amount]' => '-20',
+        ]);
 
         $this->assertSelectorTextContains('td#fee_date1', '10');
         $this->assertSelectorTextContains('td#fee_amount1', '-20');

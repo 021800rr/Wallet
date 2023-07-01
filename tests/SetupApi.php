@@ -9,17 +9,19 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-trait Setup
+trait SetupApi
 {
+    use SetupRepos;
+
     protected Client $client;
     protected string $token;
 
     /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
      */
     protected function setUp(): void
     {
@@ -34,5 +36,7 @@ trait Setup
         $json = $response->toArray();
 
         $this->token = $json['token'];
+
+        $this->setUpRepos();
     }
 }

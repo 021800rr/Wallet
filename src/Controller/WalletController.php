@@ -37,7 +37,8 @@ class WalletController extends AbstractController
     #[Route('/', name: 'wallet_index', methods: ['GET'])]
     public function index(Request $request, RequestParserInterface $requestParser): Response
     {
-        $offset = $requestParser->strategy(WalletController::class, $request);
+        /** @var int $offset */
+        [$query, $offset] = $requestParser->strategy(WalletController::class, $request);
         $paginator = $this->walletRepository->getPaginator($offset);
 
         return $this->render('wallet/index.html.twig', [
@@ -140,6 +141,7 @@ class WalletController extends AbstractController
         $generator = $supervisor->crawl($this->walletRepository);
         $caught = false;
         foreach ($generator as $wallet) {
+            /** @var Wallet $wallet */
             $this->addFlash('error', $wallet->__toString());
             $caught = true;
         }

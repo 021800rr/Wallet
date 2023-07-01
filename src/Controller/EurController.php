@@ -52,7 +52,7 @@ class EurController extends AbstractController
     public function new(Request $request, ContractorRepositoryInterface $contractorRepository): RedirectResponse|Response
     {
         $eur = new Eur();
-        $contractor = $contractorRepository->getInternalTransferOwner();
+        $contractor = $contractorRepository->getInternalTransferOwner() ?? throw new Exception('no internal transfer owner');
         $eur->setContractor($contractor);
 
         return $this->upsert($eur, $request);

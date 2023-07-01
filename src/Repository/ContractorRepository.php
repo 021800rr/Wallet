@@ -55,7 +55,7 @@ class ContractorRepository extends ServiceEntityRepository implements Contractor
         return new Paginator($query);
     }
 
-    public function getInternalTransferOwner(): Contractor
+    public function getInternalTransferOwner(): ?Contractor
     {
         return $this->findOneBy([
             'description' => ContractorRepository::INTERNAL_TRANSFER

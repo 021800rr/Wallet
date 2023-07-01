@@ -13,13 +13,21 @@ trait AccountTrait
      */
     public function getCurrentBalance(): float
     {
-        return $this->createQueryBuilder('w')
+        $result = $this->createQueryBuilder('w')
             ->select('w.balance')
             ->orderBy('w.date', 'DESC')
             ->addOrderBy('w.id', 'DESC')
             ->getQuery()
             ->setMaxResults(1)
             ->getSingleScalarResult();
+
+        if (is_int($result) || is_string($result)) {
+            $result = (float) $result;
+        } elseif (!is_float($result)) {
+            $result = 0.0;
+        }
+
+        return $result;
     }
 
     /**
@@ -38,12 +46,16 @@ trait AccountTrait
 
     public function getAllRecords(): array
     {
-        return array_reverse(
-            $this->createQueryBuilder('w')
-                ->addOrderBy('w.date', 'DESC')
-                ->addOrderBy('w.id', 'DESC')
-                ->getQuery()
-                ->getResult()
-        );
+        $array = $this->createQueryBuilder('w')
+            ->addOrderBy('w.date', 'DESC')
+            ->addOrderBy('w.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        if (!is_array($array)) {
+            return [];
+        }
+
+        return array_reverse($array);
     }
 }

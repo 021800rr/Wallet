@@ -48,12 +48,18 @@ class BackupRepository extends ServiceEntityRepository implements BackupReposito
      */
     public function paymentsByMonth(): array
     {
-        return $this->createQueryBuilder('p')
-            ->select('p.yearMonth', 'SUM(p.amount) as sum_of_amount')
-            ->groupBy('p.yearMonth')
-            ->orderBy('p.yearMonth', 'DESC')
-            ->setMaxResults(self::PAYMENTS_BY_MONTH_YEARS)
-            ->getQuery()
-            ->getResult();
+        $result = $this->createQueryBuilder('p')
+           ->select('p.yearMonth', 'SUM(p.amount) as sum_of_amount')
+           ->groupBy('p.yearMonth')
+           ->orderBy('p.yearMonth', 'DESC')
+           ->setMaxResults(self::PAYMENTS_BY_MONTH_YEARS)
+           ->getQuery()
+           ->getResult();
+
+        if (!is_array($result)) {
+            return [];
+        }
+
+        return $result;
     }
 }

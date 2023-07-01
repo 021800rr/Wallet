@@ -3,10 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\AbstractAccount;
-use App\Entity\Backup;
-use App\Entity\Chf;
-use App\Entity\Eur;
-use App\Entity\Wallet;
 
 interface AccountRepositoryInterface extends AppRepositoryInterface
 {
@@ -15,7 +11,7 @@ interface AccountRepositoryInterface extends AppRepositoryInterface
     public function getLastRecord(): mixed;
 
     /**
-     * @return Backup[]|Chf[]|Eur[]|Wallet[]
+     * @return AbstractAccount[]
      */
     public function getAllRecords(): array;
 
