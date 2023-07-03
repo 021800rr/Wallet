@@ -10,11 +10,11 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Repository\WalletRepository;
-use App\State\WalletProcessor;
+use App\Repository\PlnRepository;
+use App\State\PlnProcessor;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: WalletRepository::class)]
+#[ORM\Entity(repositoryClass: PlnRepository::class)]
 #[ORM\Table(name: 'wallet')]
 #[ApiResource(
     normalizationContext: ['groups' => ['account:read']],
@@ -23,14 +23,14 @@ use Doctrine\ORM\Mapping as ORM;
 #[GetCollection]
 #[Post(
     denormalizationContext: ['groups' => ['account:create']],
-    processor: WalletProcessor::class,
+    processor: PlnProcessor::class,
 )]
 #[Put(
     denormalizationContext: ['groups' => ['account:update']],
-    processor: WalletProcessor::class,
+    processor: PlnProcessor::class,
 )]
 #[Patch(denormalizationContext: ['groups' => ['account:patch']], )]
-#[Delete(processor: WalletProcessor::class, )]
+#[Delete(processor: PlnProcessor::class, )]
 #[ApiFilter(
     SearchFilter::class,
     properties: [
@@ -39,6 +39,6 @@ use Doctrine\ORM\Mapping as ORM;
         'contractor.description' => 'ipartial'
     ]
 )]
-class Wallet extends AbstractWallet
+class Pln extends AbstractWallet
 {
 }

@@ -4,7 +4,7 @@ namespace App\Service\RequestParser;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
-class SearchHelper extends AbstractParser implements ControllerHelperInterface
+class SearchControllerHelper extends AbstractParser implements ControllerHelperInterface
 {
     /**
      * @param SymfonyRequest $request

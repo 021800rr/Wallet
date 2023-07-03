@@ -3,14 +3,14 @@
 namespace App\Form;
 
 use App\Entity\Contractor;
-use App\Entity\Wallet;
+use App\Entity\Pln;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class WalletType extends AbstractAccountType
+class PlnType extends AbstractAccountType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -36,7 +36,7 @@ class WalletType extends AbstractAccountType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Wallet::class,
+            'data_class' => Pln::class,
         ]);
     }
 }

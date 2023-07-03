@@ -23,15 +23,15 @@ class FeeTest extends ApiTestCase
      * @throws TransportExceptionInterface
      * @throws ServerExceptionInterface
      */
-    public function testPostInsertToWallet(): void
+    public function testPostInsertToPln(): void
     {
-        $this->client->request('GET', '/api/wallets', ['auth_bearer' => $this->token]);
+        $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:totalItems" => 3,
         ]);
-        $this->client->request('POST', '/api/fee/insert/to/wallet', ['auth_bearer' => $this->token]);
+        $this->client->request('POST', '/api/fees/insert/to/pln', ['auth_bearer' => $this->token]);
         $this->assertResponseStatusCodeSame(204);
-        $this->client->request('GET', '/api/wallets', ['auth_bearer' => $this->token]);
+        $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:totalItems" => 5,
         ]);

@@ -21,7 +21,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     denormalizationContext: ['groups' => ['fee:create']],
 )]
 #[Post(
-    uriTemplate: '/fee/insert/to/wallet',
+    uriTemplate: '/fees/insert/to/pln',
     controller: ApiFeeController::class,
     input: false,
     output: false,

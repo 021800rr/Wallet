@@ -2,14 +2,13 @@
 
 namespace App\Repository;
 
-use App\Entity\Backup;
-use App\Entity\AbstractWallet;
+use App\Entity\AbstractAccount;
 use App\Entity\Fee;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 trait AppTrait
 {
-    /** @return AbstractWallet[]|Backup[]|Fee[] array */
+    /** @return AbstractAccount[]|Fee[] */
     public function findAll(): array
     {
         return $this->findBy([], ['date' => 'DESC', 'id' => 'DESC']);

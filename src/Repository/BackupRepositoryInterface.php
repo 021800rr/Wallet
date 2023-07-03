@@ -2,8 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\Backup;
-
 interface BackupRepositoryInterface extends AccountRepositoryInterface
 {
     /**

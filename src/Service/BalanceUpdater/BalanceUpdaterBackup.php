@@ -27,7 +27,7 @@ class BalanceUpdaterBackup extends BalanceUpdaterAbstractAccount implements Bala
         /** @var Backup $predecessor */
         if (Backup::INAPPLICABLE === $transaction->getInterest()) {
             $transaction->setBalance($predecessor->getBalance() + $transaction->getAmount());
-            $transaction = $this->setSubWallets($predecessor, $transaction);
+            $transaction = $this->setSubAccounts($predecessor, $transaction);
         } elseif (Backup::NOT_PROCESSED === $transaction->getInterest()) {
             $transaction->setBalance($predecessor->getBalance() + $transaction->getBalance());
             $transaction->setRetiring($predecessor->getRetiring() + $transaction->getRetiring());
@@ -46,7 +46,7 @@ class BalanceUpdaterBackup extends BalanceUpdaterAbstractAccount implements Bala
         }
     }
 
-    private function setSubWallets(Backup $predecessor, Backup $transaction): Backup
+    private function setSubAccounts(Backup $predecessor, Backup $transaction): Backup
     {
         if (0.0 < $transaction->getAmount()) {
             $transaction->setRetiring($predecessor->getRetiring() + $transaction->getAmount() / 2);

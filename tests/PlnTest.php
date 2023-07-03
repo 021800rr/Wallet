@@ -3,14 +3,14 @@
 namespace App\Tests;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
-use App\Entity\Wallet;
+use App\Entity\Pln;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-class WalletTest extends ApiTestCase
+class PlnTest extends ApiTestCase
 {
     use SetupApi;
 
@@ -23,10 +23,10 @@ class WalletTest extends ApiTestCase
      */
     public function testGetCollection(): void
     {
-        $this->client->request('GET', '/api/wallets', ['auth_bearer' => $this->token]);
+        $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-        $this->assertMatchesResourceCollectionJsonSchema(Wallet::class);
+        $this->assertMatchesResourceCollectionJsonSchema(Pln::class);
 
         $this->assertJsonContains([
             "hydra:totalItems" => 3,
@@ -73,7 +73,7 @@ class WalletTest extends ApiTestCase
      */
     public function testPost(): void
     {
-        $this->client->request('POST', '/api/wallets', [
+        $this->client->request('POST', '/api/plns', [
             'auth_bearer' => $this->token,
             'json' => [
                 "date" => "2023-06-26",
@@ -93,7 +93,7 @@ class WalletTest extends ApiTestCase
             ]
         ]);
 
-        $this->client->request('GET', '/api/wallets', ['auth_bearer' => $this->token]);
+        $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:totalItems" => 4,
             "hydra:member" => [
@@ -114,7 +114,7 @@ class WalletTest extends ApiTestCase
      */
     public function testPut(): void
     {
-        $this->client->request('PUT', '/api/wallets/2', [
+        $this->client->request('PUT', '/api/plns/2', [
             'auth_bearer' => $this->token,
             'json' => [
                 "date" => "2021-05-11",
@@ -133,7 +133,7 @@ class WalletTest extends ApiTestCase
             "description" => "test test"
         ]);
 
-        $this->client->request('GET', '/api/wallets', ['auth_bearer' => $this->token]);
+        $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:totalItems" => 3,
             "hydra:member" => [
@@ -153,13 +153,13 @@ class WalletTest extends ApiTestCase
      */
     public function testDelete(): void
     {
-        $this->client->request('DELETE', '/api/wallets/2', ['auth_bearer' => $this->token]);
+        $this->client->request('DELETE', '/api/plns/2', ['auth_bearer' => $this->token]);
         $this->assertResponseStatusCodeSame(204);
         $this->assertNull(
-            $this->walletRepository->findOneBy(['id' => 2])
+            $this->plnRepository->findOneBy(['id' => 2])
         );
 
-        $this->client->request('GET', '/api/wallets', ['auth_bearer' => $this->token]);
+        $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:totalItems" => 2,
             "hydra:member" => [
@@ -179,7 +179,7 @@ class WalletTest extends ApiTestCase
      */
     public function testPatch(): void
     {
-        $this->client->request('PATCH', '/api/wallets/2', [
+        $this->client->request('PATCH', '/api/plns/2', [
             'auth_bearer' => $this->token,
             'json' => [
                 "isConsistent" => true,

@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Wallet;
+use App\Entity\Pln;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -10,14 +10,14 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TransferToWalletType extends AbstractType
+class TransferToPlnType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('amount', MoneyType::class, [
                 'currency' => 'PLN',
-                'label' => 'Wallet',
+                'label' => 'PlnWallet',
                 'attr' => [
                     'required' => true
                 ]
@@ -35,7 +35,7 @@ class TransferToWalletType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Wallet::class,
+            'data_class' => Pln::class,
         ]);
     }
 }

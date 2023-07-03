@@ -9,7 +9,7 @@
     {% for backup in backups %}
         <tr>
             <td>{{ backup.yearMonth }}</td>
-            <td class="text-end row_money" id="backup_sum_of_amount{{ loop.index }}">{{ backup.sum_of_amount }}</td>
+            <td class="text-end row_money" id="backup_sum_of_amounts{{ loop.index }}">{{ backup.sum_of_amounts }}</td>
         </tr>
     {% endfor %}
     </tbody>

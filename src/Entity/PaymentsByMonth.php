@@ -24,7 +24,7 @@ class PaymentsByMonth
     private ?float $expected;
 
     #[Groups(['payments:read'])]
-    private ?float $walletBalance;
+    private ?float $plnBalance;
 
     #[Groups(['payments:read'])]
     private ?float $chfBalance;
@@ -60,14 +60,14 @@ class PaymentsByMonth
         $this->expected = $expected;
     }
 
-    public function getWalletBalance(): ?float
+    public function getPlnBalance(): ?float
     {
-        return $this->walletBalance;
+        return $this->plnBalance;
     }
 
-    public function setWalletBalance(float $walletBalance): void
+    public function setPlnBalance(float $plnBalance): void
     {
-        $this->walletBalance = $walletBalance;
+        $this->plnBalance = $plnBalance;
     }
 
     public function getChfBalance(): ?float

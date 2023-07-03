@@ -30,15 +30,15 @@ class PaymentsByMonthTest extends ApiTestCase
             "backups" => [
                 [
                     "yearMonth" => "2021-06",
-                    "sum_of_amount" => "300"
+                    "sum_of_amounts" => "300"
                 ],
                 [
                     "yearMonth" => "2021-05",
-                    "sum_of_amount" => "300"
+                    "sum_of_amounts" => "300"
                 ]
             ],
             "expected" => 300,
-            "walletBalance" => 170,
+            "plnBalance" => 170,
             "chfBalance" => 70.07,
             "backupLastRecord" => [
                 "balance" => 600

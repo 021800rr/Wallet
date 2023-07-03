@@ -66,7 +66,7 @@ class FeeController extends AbstractController
         return $this->redirectToRoute('fee_index');
     }
 
-    #[Route('/insert', name: 'fee_insert_to_wallet', methods: ['POST'])]
+    #[Route('/insert', name: 'fee_insert_to_pln', methods: ['POST'])]
     public function insert(
         Request                $request,
         FixedFeesInterface     $fixedFees,
@@ -75,7 +75,7 @@ class FeeController extends AbstractController
         if ($this->isCsrfTokenValid('fixedfees', (string) $request->request->get('_token'))) {
             $feeHandler->handle($fixedFees);
 
-            return $this->redirectToRoute('wallet_index');
+            return $this->redirectToRoute('pln_index');
         }
 
         return $this->redirectToRoute('fee_index');

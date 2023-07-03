@@ -34,11 +34,11 @@ class CalculatorTest extends TestCase
                     [
                         [
                             'yearMonth' => '2021-06',
-                            'sum_of_amount' => 300.0,
+                            'sum_of_amounts' => 300.0,
                         ],
                         [
                             'yearMonth' => '2021-05',
-                            'sum_of_amount' => 300.0,
+                            'sum_of_amounts' => 300.0,
                         ],
                     ],
                     300
@@ -47,11 +47,11 @@ class CalculatorTest extends TestCase
                     [
                         [
                             'yearMonth' => '2021-06',
-                            'sum_of_amount' => 300.0,
+                            'sum_of_amounts' => 300.0,
                         ],
                         [
                             'yearMonth' => '2021-04',
-                            'sum_of_amount' => 300.0,
+                            'sum_of_amounts' => 300.0,
                         ],
                     ],
                     200

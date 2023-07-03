@@ -8,7 +8,7 @@ readonly class RequestParser implements RequestParserInterface
 {
     public function __construct(
         private ControllerHelperInterface $searchHelper,
-        private ControllerHelperInterface $walletHelper,
+        private ControllerHelperInterface $plnHelper,
     ) {
     }
 
@@ -21,6 +21,6 @@ readonly class RequestParser implements RequestParserInterface
     {
         return "App\\Controller\\SearchController" === $fullyQualifiedControllerName
             ? $this->searchHelper->process($request)
-            : $this->walletHelper->process($request);
+            : $this->plnHelper->process($request);
     }
 }

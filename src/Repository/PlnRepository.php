@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Wallet;
+use App\Entity\Pln;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Wallet>
+ * @extends ServiceEntityRepository<Pln>
  *
- * @method Wallet|null find($id, $lockMode = null, $lockVersion = null)
- * @method Wallet|null findOneBy(array $criteria, array $orderBy = null)
- * @method Wallet[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Pln|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Pln|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Pln[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class WalletRepository extends ServiceEntityRepository implements WalletRepositoryInterface
+class PlnRepository extends ServiceEntityRepository implements AccountRepositoryInterface, PlnSearchRepositoryInterface
 {
     use AccountTrait;
     use AppTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Wallet::class);
+        parent::__construct($registry, Pln::class);
     }
 
     public function search(string $data, int $offset): Paginator

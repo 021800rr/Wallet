@@ -2,20 +2,20 @@
 
 namespace App\Service\BalanceSupervisor;
 
-use App\Entity\AbstractAccount;
+use App\Entity\AbstractWallet;
 use App\Entity\Chf;
-use App\Entity\Wallet;
+use App\Entity\Pln;
 use App\Repository\AccountRepositoryInterface;
 use Generator;
 
 class BalanceSupervisor implements BalanceSupervisorInterface
 {
-    /** @var AbstractAccount[] */
+    /** @var AbstractWallet[] */
     private array $supervisors;
     private float $initialBalance;
 
     /**
-     * @param AbstractAccount[] $wallets
+     * @param AbstractWallet[] $wallets
      * @return void
      */
     public function setWallets(array $wallets): void
@@ -26,27 +26,27 @@ class BalanceSupervisor implements BalanceSupervisorInterface
 
     public function crawl(AccountRepositoryInterface $accountRepository): Generator
     {
-        $account = null;
+        $wallet = null;
         for ($step = 1; $step < count($this->supervisors); $step++) {
-            /** @var Wallet|Chf $account */
-            $account = $accountRepository->find($this->supervisors[$step]->getId());
-            $balanceSupervisorBefore = $account->getBalanceSupervisor();
-            $checker = (round($this->initialBalance + $account->getAmount(), 2));
-            if ($account->getBalance() !== $checker) {
-                $account->setBalanceSupervisor($checker);
-                yield($account);
-                $accountRepository->save($account);
+            /** @var Pln|Chf $wallet */
+            $wallet = $accountRepository->find($this->supervisors[$step]->getId());
+            $balanceSupervisorBefore = $wallet->getBalanceSupervisor();
+            $checker = (round($this->initialBalance + $wallet->getAmount(), 2));
+            if ($wallet->getBalance() !== $checker) {
+                $wallet->setBalanceSupervisor($checker);
+                yield($wallet);
+                $accountRepository->save($wallet);
             } else {
-                $account->setBalanceSupervisor(null);
+                $wallet->setBalanceSupervisor(null);
             }
-            $balanceSupervisorAfter = $account->getBalanceSupervisor();
+            $balanceSupervisorAfter = $wallet->getBalanceSupervisor();
             if ($balanceSupervisorBefore !== $balanceSupervisorAfter) {
-                $accountRepository->save($account);
+                $accountRepository->save($wallet);
             }
-            $this->initialBalance = $account->getBalance();
+            $this->initialBalance = $wallet->getBalance();
         }
-        if ($account) {
-            $accountRepository->save($account, true);
+        if ($wallet) {
+            $accountRepository->save($wallet, true);
         }
     }
 }

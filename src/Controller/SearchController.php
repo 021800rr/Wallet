@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\Wallet;
+use App\Entity\Pln;
+use App\Repository\PlnSearchRepositoryInterface;
 use App\Repository\PaginatorEnum;
-use App\Repository\WalletRepositoryInterface;
 use App\Service\OffsetQuery\OffsetHelperInterface;
 use App\Service\OffsetQuery\QueryHelperInterface;
 use App\Service\RequestParser\RequestParserInterface;
@@ -39,11 +39,11 @@ class SearchController extends AbstractController
 
     #[Route('/result', name: 'search_result')]
     public function search(
-        Request                   $request,
-        WalletRepositoryInterface $walletRepository,
-        QueryHelperInterface      $queryHelper,
-        OffsetHelperInterface     $offsetHelper,
-        RequestParserInterface    $requestParser,
+        Request                      $request,
+        PlnSearchRepositoryInterface $plnRepository,
+        QueryHelperInterface         $queryHelper,
+        OffsetHelperInterface        $offsetHelper,
+        RequestParserInterface       $requestParser,
     ): Response {
         $form = $this->getForm();
         $form->handleRequest($request);
@@ -62,7 +62,7 @@ class SearchController extends AbstractController
              */
             [$query, $offset] = $requestParser->strategy(SearchController::class, $request);
         }
-        $paginator = $walletRepository->search($query, $offset);
+        $paginator = $plnRepository->search($query, $offset);
 
         return $this->render('search/result.html.twig', [
             'query' => $query,
@@ -76,28 +76,28 @@ class SearchController extends AbstractController
      * @throws Exception
      */
     #[Route('/edit/{id}', name: 'search_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Wallet $wallet, WalletController $walletController): Response
+    public function edit(Request $request, Pln $pln, PlnController $plnController): Response
     {
-        return $walletController->edit($request, $wallet, 'search_result');
+        return $plnController->edit($request, $pln, 'search_result');
     }
 
     #[Route('/isconsistent/{id}/{boolAsString}', name: 'search_is_consistent', methods: ['POST'])]
     public function isConsistent(
-        Request          $request,
-        Wallet           $wallet,
-        WalletController $walletController,
-        string           $boolAsString = '',
+        Request       $request,
+        Pln           $pln,
+        PlnController $plnController,
+        string        $boolAsString = '',
     ): Response {
-        return $walletController->isConsistent($request, $wallet, $boolAsString, 'search_result');
+        return $plnController->isConsistent($request, $pln, $boolAsString, 'search_result');
     }
 
     /**
      * @throws Exception
      */
     #[Route('/delete/{id}', name: 'search_delete', methods: ['POST'])]
-    public function delete(Request $request, Wallet $wallet, WalletController $walletController): Response
+    public function delete(Request $request, Pln $pln, PlnController $plnController): Response
     {
-        return $walletController->delete($request, $wallet, 'search_result');
+        return $plnController->delete($request, $pln, 'search_result');
     }
 
     private function getForm(string $query = ''): FormInterface

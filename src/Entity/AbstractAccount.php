@@ -34,7 +34,7 @@ abstract class AbstractAccount
     protected float $balance = 0.00;
 
     #[Groups(['account:read', 'account:create' , 'account:update'])]
-    #[ORM\ManyToOne(targetEntity: Contractor::class, inversedBy: 'wallets')]
+    #[ORM\ManyToOne(targetEntity: Contractor::class)]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotBlank]
     protected Contractor $contractor;

@@ -12,13 +12,13 @@
         </tr>
         </thead>
         <tbody>
-        {% for wallet in paginator %}
+        {% for pln in paginator %}
             <tr>
-                <td>{{ wallet.date|date("Y-m-d") }}</td>
-                <td class="text-end row_money_amount" id="search_amount{{ loop.index }}">{{ wallet.amount }}</td>
-                <td class="text-end row_money" id="search_balance{{ loop.index }}">{{ wallet.balance }}</td>
-                <td class="ps-4" id="search_contractor{{ loop.index }}">{{ wallet.contractor.description }}</td>
-                <td class="ps-4" id="search_description{{ loop.index }}">{{ wallet.description }}</td>
+                <td>{{ pln.date|date("Y-m-d") }}</td>
+                <td class="text-end row_money_amount" id="search_amount{{ loop.index }}">{{ pln.amount }}</td>
+                <td class="text-end row_money" id="search_balance{{ loop.index }}">{{ pln.balance }}</td>
+                <td class="ps-4" id="search_contractor{{ loop.index }}">{{ pln.contractor.description }}</td>
+                <td class="ps-4" id="search_description{{ loop.index }}">{{ pln.description }}</td>
                 <td class="text-center">{{ include('search/_is_consistent_form.html.twig') }}</td>
                 <td class="text-center">{{ include('search/_edit_a.html.twig') }}</td>
                 <td class="text-center">{{ include('search/_delete_form.html.twig') }}</td>
