@@ -14,7 +14,7 @@ class BackupFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
-        $contractor = $this->getInternalOwner();
+        $internalOwner = $this->getInternalOwner();
 
         $backup = new Backup();
         $backup->setDate(new DateTime('2021-05-01'));
@@ -23,7 +23,7 @@ class BackupFixtures extends Fixture implements DependentFixtureInterface
         $backup->setRetiring(50);
         $backup->setHoliday(50);
         $backup->setBalance(100.00);
-        $backup->setContractor($contractor);
+        $backup->setContractor($internalOwner);
         $backup->setDescription('a fresh one');
         $manager->persist($backup);
 
@@ -34,7 +34,7 @@ class BackupFixtures extends Fixture implements DependentFixtureInterface
         $backup->setRetiring(150);
         $backup->setHoliday(150);
         $backup->setBalance(300.00);
-        $backup->setContractor($contractor);
+        $backup->setContractor($internalOwner);
         $manager->persist($backup);
 
         $backup = new Backup();
@@ -44,7 +44,7 @@ class BackupFixtures extends Fixture implements DependentFixtureInterface
         $backup->setRetiring(300);
         $backup->setHoliday(300);
         $backup->setBalance(600.00);
-        $backup->setContractor($contractor);
+        $backup->setContractor($internalOwner);
         $manager->persist($backup);
 
         $manager->flush();

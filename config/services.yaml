@@ -17,10 +17,12 @@ services:
             - '%env(DATABASE_URL)%'
 
     App\Service\BalanceUpdater\BalanceUpdaterBackup: ~
-    App\Service\BalanceUpdater\BalanceUpdaterAccountInterface $backup: '@App\Service\BalanceUpdater\BalanceUpdaterBackup'
+    App\Service\BalanceUpdater\BalanceUpdaterAccountInterface $backupUpdater: '@App\Service\BalanceUpdater\BalanceUpdaterBackup'
 
     App\Service\BalanceUpdater\BalanceUpdaterWallet: ~
-    App\Service\BalanceUpdater\BalanceUpdaterAccountInterface $wallet: '@App\Service\BalanceUpdater\BalanceUpdaterWallet'
+    App\Service\BalanceUpdater\BalanceUpdaterAccountInterface $walletUpdater: '@App\Service\BalanceUpdater\BalanceUpdaterWallet'
+
+    #
 
     App\Service\BalanceUpdater\BalanceUpdaterBackupFactory: ~
     App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface $backupFactory: '@App\Service\BalanceUpdater\BalanceUpdaterBackupFactory'
@@ -28,22 +30,29 @@ services:
     App\Service\BalanceUpdater\BalanceUpdaterWalletFactory: ~
     App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface $walletFactory: '@App\Service\BalanceUpdater\BalanceUpdaterWalletFactory'
 
+    ###
+
+    App\Repository\PlnRepository: ~
+    App\Repository\AccountRepositoryInterface $plnRepository: '@App\Repository\PlnRepository'
+
     App\Repository\ChfRepository: ~
     App\Repository\AccountRepositoryInterface $chfRepository: '@App\Repository\ChfRepository'
 
     App\Repository\EurRepository: ~
     App\Repository\AccountRepositoryInterface $eurRepository: '@App\Repository\EurRepository'
 
+    ###
+
     App\Repository\FeeRepository: ~
     App\Repository\FeeRepositoryInterface $feeRepository: '@App\Repository\FeeRepository'
 
-    App\Service\RequestParser\SearchHelper: ~
-    App\Service\RequestParser\ControllerHelperInterface $searchHelper: '@App\Service\RequestParser\SearchHelper'
+    App\Service\RequestParser\SearchControllerHelper: ~
+    App\Service\RequestParser\ControllerHelperInterface $searchHelper: '@App\Service\RequestParser\SearchControllerHelper'
 
-    App\Service\RequestParser\WalletHelper: ~
-    App\Service\RequestParser\ControllerHelperInterface $walletHelper: '@App\Service\RequestParser\WalletHelper'
+    App\Service\RequestParser\PlnControllerHelper: ~
+    App\Service\RequestParser\ControllerHelperInterface $plnHelper: '@App\Service\RequestParser\PlnControllerHelper'
 
-    App\State\WalletProcessor:
+    App\State\PlnProcessor:
         bind:
             $persistProcessor: '@api_platform.doctrine.orm.state.persist_processor'
             $removeProcessor: '@api_platform.doctrine.orm.state.remove_processor'

@@ -8,10 +8,10 @@ use App\State\TransferProcessor;
 
 #[ApiResource]
 #[Post(
-    uriTemplate: '/transfer/to/wallet',
+    uriTemplate: '/transfer/to/pln',
     denormalizationContext: ['groups' => ['transfer:create']],
     processor: TransferProcessor::class,
 )]
-class TransferToWallet extends AbstractTransfer
+class TransferToPln extends AbstractTransfer
 {
 }

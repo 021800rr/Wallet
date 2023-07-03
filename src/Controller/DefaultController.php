@@ -13,6 +13,6 @@ class DefaultController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function indexNoLocale(): Response
     {
-        return $this->redirectToRoute('wallet_index', ['_locale' => 'pl']);
+        return $this->redirectToRoute('pln_index', ['_locale' => 'pl']);
     }
 }

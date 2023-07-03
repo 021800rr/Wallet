@@ -23,13 +23,11 @@ class BackupRepository extends ServiceEntityRepository implements BackupReposito
         parent::__construct($registry, Backup::class);
     }
 
-    /**
-     * @return array<int, array<string, string>>
-     */
+    /** @return array<int, array<string, string>> */
     public function paymentsByMonth(): array
     {
         $result = $this->createQueryBuilder('p')
-           ->select('p.yearMonth', 'SUM(p.amount) as sum_of_amount')
+           ->select('p.yearMonth', 'SUM(p.amount) as sum_of_amounts')
            ->groupBy('p.yearMonth')
            ->orderBy('p.yearMonth', 'DESC')
            ->setMaxResults(self::PAYMENTS_BY_MONTH_YEARS)

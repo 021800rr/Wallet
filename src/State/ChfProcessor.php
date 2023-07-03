@@ -7,17 +7,20 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Chf;
 use App\Repository\AccountRepositoryInterface;
+use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use Exception;
 
-readonly class ChfProcessor implements ProcessorInterface
+class ChfProcessor implements ProcessorInterface
 {
     public function __construct(
-        private ProcessorInterface             $persistProcessor,
-        private ProcessorInterface             $removeProcessor,
-        private BalanceUpdaterFactoryInterface $walletFactory,
-        private AccountRepositoryInterface     $chfRepository,
+        BalanceUpdaterFactoryInterface              $walletFactory,
+        private BalanceUpdaterAccountInterface      $walletUpdater,
+        private readonly ProcessorInterface         $persistProcessor,
+        private readonly ProcessorInterface         $removeProcessor,
+        private readonly AccountRepositoryInterface $chfRepository,
     ) {
+        $this->walletUpdater = $walletFactory->create();
     }
 
     /**
@@ -30,11 +33,11 @@ readonly class ChfProcessor implements ProcessorInterface
         /** @var Chf $data */
         if ($operation instanceof DeleteOperationInterface) {
             $data->setAmount(0);
-            $this->walletFactory->create()->compute($this->chfRepository, $data->getId());
+            $this->walletUpdater->compute($this->chfRepository, $data->getId());
             $this->removeProcessor->process($data, $operation, $uriVariables, $context);
         } else {
             $this->persistProcessor->process($data, $operation, $uriVariables, $context);
-            $this->walletFactory->create()->compute($this->chfRepository, $data->getId());
+            $this->walletUpdater->compute($this->chfRepository, $data->getId());
         }
     }
 }

@@ -1,6 +1,5 @@
-<form method="post"
-      id="pln_delete{{ loop.index }}"
-      action="{{ path('search_delete', {'id': pln.id}) }}"
+<form method="post" id="pln_delete{{ loop.index }}"
+      action="{{ path('pln_delete', {'id': pln.id}) }}"
       onsubmit="return confirm('Are you sure you want to delete this item?');">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ pln.id) }}">
     <input type="image" src="{{ asset('images/delete.png') }}" alt="delete" width="14" height="14"/>

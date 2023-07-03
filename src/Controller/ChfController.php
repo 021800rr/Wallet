@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\AbstractWallet;
 use App\Entity\Chf;
 use App\Form\ChfType;
 use App\Repository\AccountRepositoryInterface;
 use App\Repository\ContractorRepositoryInterface;
 use App\Repository\PaginatorEnum;
 use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
+use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -29,9 +31,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ChfController extends AbstractController
 {
     public function __construct(
-        private readonly BalanceUpdaterFactoryInterface $walletFactory,
+        BalanceUpdaterFactoryInterface              $walletFactory,
+        private BalanceUpdaterAccountInterface      $walletUpdater,
         private readonly AccountRepositoryInterface $chfRepository,
     ) {
+        $this->walletUpdater = $walletFactory->create();
     }
 
     #[Route('/', name: 'chf_index', methods: ['GET'])]
@@ -54,8 +58,8 @@ class ChfController extends AbstractController
     public function new(Request $request, ContractorRepositoryInterface $contractorRepository): RedirectResponse|Response
     {
         $chf = new Chf();
-        $contractor = $contractorRepository->getInternalTransferOwner() ?? throw new Exception('no internal transfer owner');
-        $chf->setContractor($contractor);
+        $internalTransferOwner = $contractorRepository->getInternalTransferOwner() ?? throw new Exception('no internal transfer owner');
+        $chf->setContractor($internalTransferOwner);
 
         return $this->upsert($chf, $request);
     }
@@ -97,7 +101,7 @@ class ChfController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $chf->getId(), (string) $request->request->get('_token'))) {
             $chf->setAmount(0);
-            $this->walletFactory->create()->compute($this->chfRepository, $chf->getId());
+            $this->walletUpdater->compute($this->chfRepository, $chf->getId());
             $this->chfRepository->remove($chf, true);
         }
 
@@ -109,12 +113,14 @@ class ChfController extends AbstractController
         BalanceSupervisorInterface $supervisor,
         TranslatorInterface $translator,
     ): RedirectResponse {
-        $supervisor->setWallets($this->chfRepository->getAllRecords());
+        /** @var AbstractWallet[] $chfs */
+        $chfs = $this->chfRepository->getAllRecords();
+        $supervisor->setWallets($chfs);
         $generator = $supervisor->crawl($this->chfRepository);
         $caught = false;
-        foreach ($generator as $wallet) {
-            /** @var Chf $wallet */
-            $this->addFlash('error', $wallet->__toString());
+        /** @var Chf $chf */
+        foreach ($generator as $chf) {
+            $this->addFlash('error', $chf->__toString());
             $caught = true;
         }
         if (false === $caught) {
@@ -137,7 +143,7 @@ class ChfController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $this->chfRepository->save($chf, true);
-            $this->walletFactory->create()->compute($this->chfRepository, $chf->getId());
+            $this->walletUpdater->compute($this->chfRepository, $chf->getId());
 
             return $this->redirectToRoute('chf_index');
         }

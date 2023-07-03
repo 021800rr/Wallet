@@ -7,6 +7,7 @@ use App\Form\EurType;
 use App\Repository\AccountRepositoryInterface;
 use App\Repository\ContractorRepositoryInterface;
 use App\Repository\PaginatorEnum;
+use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -27,9 +28,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class EurController extends AbstractController
 {
     public function __construct(
-        private readonly BalanceUpdaterFactoryInterface $walletFactory,
+        BalanceUpdaterFactoryInterface              $walletFactory,
+        private BalanceUpdaterAccountInterface      $walletUpdater,
         private readonly AccountRepositoryInterface $eurRepository,
     ) {
+        $this->walletUpdater = $walletFactory->create();
     }
 
     #[Route('/', name: 'eur_index', methods: ['GET'])]
@@ -52,8 +55,8 @@ class EurController extends AbstractController
     public function new(Request $request, ContractorRepositoryInterface $contractorRepository): RedirectResponse|Response
     {
         $eur = new Eur();
-        $contractor = $contractorRepository->getInternalTransferOwner() ?? throw new Exception('no internal transfer owner');
-        $eur->setContractor($contractor);
+        $internalTransferOwner = $contractorRepository->getInternalTransferOwner() ?? throw new Exception('no internal transfer owner');
+        $eur->setContractor($internalTransferOwner);
 
         return $this->upsert($eur, $request);
     }
@@ -95,7 +98,7 @@ class EurController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $eur->getId(), (string) $request->request->get('_token'))) {
             $eur->setAmount(0);
-            $this->walletFactory->create()->compute($this->eurRepository, $eur->getId());
+            $this->walletUpdater->compute($this->eurRepository, $eur->getId());
             $this->eurRepository->remove($eur, true);
         }
 
@@ -116,7 +119,7 @@ class EurController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $this->eurRepository->save($eur, true);
-            $this->walletFactory->create()->compute($this->eurRepository, $eur->getId());
+            $this->walletUpdater->compute($this->eurRepository, $eur->getId());
 
             return $this->redirectToRoute('eur_index');
         }

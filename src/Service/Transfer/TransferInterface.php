@@ -3,11 +3,11 @@
 namespace App\Service\Transfer;
 
 use App\Entity\Backup;
-use App\Entity\Wallet;
+use App\Entity\Pln;
 
 interface TransferInterface
 {
     public function moveToBackup(Backup $backup, int $currency = 0): void;
 
-    public function moveToWallet(Wallet $wallet): void;
+    public function moveToPln(Pln $pln): void;
 }

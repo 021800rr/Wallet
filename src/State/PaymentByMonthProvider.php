@@ -8,7 +8,6 @@ use App\Entity\Backup;
 use App\Entity\PaymentsByMonth;
 use App\Repository\AccountRepositoryInterface;
 use App\Repository\BackupRepositoryInterface;
-use App\Repository\WalletRepositoryInterface;
 use App\Service\ExpectedBackup\CalculatorInterface;
 
 readonly class PaymentByMonthProvider implements ProviderInterface
@@ -16,7 +15,7 @@ readonly class PaymentByMonthProvider implements ProviderInterface
     public function __construct(
         private BackupRepositoryInterface  $backupRepository,
         private CalculatorInterface        $calculator,
-        private WalletRepositoryInterface  $walletRepository,
+        private AccountRepositoryInterface $plnRepository,
         private AccountRepositoryInterface $chfRepository,
     ) {
     }
@@ -31,11 +30,11 @@ readonly class PaymentByMonthProvider implements ProviderInterface
         // [
         //      [
         //          yearMonth => 2021-06,
-        //          sum_of_amount => 300
+        //          sum_of_amounts => 300
         //      ],
         //      [
         //          yearMonth => 2021-05,
-        //          sum_of_amount => 100
+        //          sum_of_amounts => 100
         //      ]
         // ]
         $backups = $this->backupRepository->paymentsByMonth();
@@ -43,16 +42,16 @@ readonly class PaymentByMonthProvider implements ProviderInterface
         /** @var Backup $backupLastRecord */
         $backupLastRecord = $this->backupRepository->getLastRecord();
 
-        $walletBalance = $this->walletRepository->getCurrentBalance();
+        $plnBalance = $this->plnRepository->getCurrentBalance();
 
         $paymentByMonth = new PaymentsByMonth();
 
         $paymentByMonth->setBackups($backups);
         $paymentByMonth->setExpected($this->calculator->compute($backups));
-        $paymentByMonth->setWalletBalance($walletBalance);
+        $paymentByMonth->setPlnBalance($plnBalance);
         $paymentByMonth->setChfBalance($this->chfRepository->getCurrentBalance());
         $paymentByMonth->setBackupLastRecord($backupLastRecord);
-        $paymentByMonth->setTotal($walletBalance + $backupLastRecord->getBalance());
+        $paymentByMonth->setTotal($plnBalance + $backupLastRecord->getBalance());
 
         return $paymentByMonth;
     }

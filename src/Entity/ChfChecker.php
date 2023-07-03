@@ -13,6 +13,6 @@ use App\State\ChfCheckerProvider;
     uriTemplate: '/check/chfs',
     provider: ChfCheckerProvider::class,
 )]
-class ChfChecker extends AbstractAccountChecker
+class ChfChecker extends AbstractWalletChecker
 {
 }

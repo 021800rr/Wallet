@@ -5,7 +5,7 @@ namespace App\Tests\Repository;
 use App\Entity\Backup;
 use App\Entity\Chf;
 use App\Entity\Eur;
-use App\Entity\Wallet;
+use App\Entity\Pln;
 use App\Tests\SetUp;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -90,19 +90,19 @@ class AccountTraitTest extends KernelTestCase
      * @throws NoResultException
      * @throws Exception
      */
-    public function testWalletGetCurrentBalance(): void
+    public function testPlnGetCurrentBalance(): void
     {
-        $balance = $this->walletRepository->getCurrentBalance();
+        $balance = $this->plnRepository->getCurrentBalance();
         $this->assertSame(170.0, $balance);
     }
 
     /**
      * @throws NonUniqueResultException
      */
-    public function testWalletGetLastRecord(): void
+    public function testPlnGetLastRecord(): void
     {
-        /** @var Wallet $last */
-        $last = $this->walletRepository->getLastRecord();
+        /** @var Pln $last */
+        $last = $this->plnRepository->getLastRecord();
         $this->assertSame(3, $last->getId());
         $this->assertSame(170.0, $last->getBalance());
     }

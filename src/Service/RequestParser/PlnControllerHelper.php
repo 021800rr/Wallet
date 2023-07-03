@@ -4,7 +4,7 @@ namespace App\Service\RequestParser;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
-class WalletHelper extends AbstractParser implements ControllerHelperInterface
+class PlnControllerHelper extends AbstractParser implements ControllerHelperInterface
 {
     /**
      * @param SymfonyRequest $request

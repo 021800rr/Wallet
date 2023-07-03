@@ -6,25 +6,25 @@ use App\Tests\SetUp;
 use Doctrine\ORM\Query\Parameter;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class WalletRepositoryTest extends KernelTestCase
+class PlnRepositoryTest extends KernelTestCase
 {
     use SetUp;
 
     public function testFindAll(): void
     {
-        $walletTransactions = $this->walletRepository->findAll();
-        $this->assertSame(3, count($walletTransactions));
+        $plnTransactions = $this->plnRepository->findAll();
+        $this->assertSame(3, count($plnTransactions));
     }
 
     public function testGetAllRecords(): void
     {
-        $walletTransactions = $this->walletRepository->getAllRecords();
-        $this->assertSame(3, count($walletTransactions));
+        $plnTransactions = $this->plnRepository->getAllRecords();
+        $this->assertSame(3, count($plnTransactions));
     }
 
     public function testSearch(): void
     {
-        $paginator = $this->walletRepository->search('-10', 15);
+        $paginator = $this->plnRepository->search('-10', 15);
 
         /** @var Parameter $parameter */
         $parameter = $paginator->getQuery()->getParameters()[2];
@@ -32,7 +32,7 @@ class WalletRepositoryTest extends KernelTestCase
         $this->assertSame(-10.0, $parameter->getValue());
         $this->assertSame(1, $paginator->count());
 
-        $paginator = $this->walletRepository->search('191', 15);
+        $paginator = $this->plnRepository->search('191', 15);
 
         /** @var Parameter $parameter */
         $parameter = $paginator->getQuery()->getParameters()[3];
@@ -40,7 +40,7 @@ class WalletRepositoryTest extends KernelTestCase
         $this->assertSame(191.0, $parameter->getValue());
         $this->assertSame(1, $paginator->count());
 
-        $paginator = $this->walletRepository->search('all', 15);
+        $paginator = $this->plnRepository->search('all', 15);
 
         /** @var Parameter $parameter */
         $parameter = $paginator->getQuery()->getParameters()[0];

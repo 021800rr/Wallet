@@ -8,9 +8,9 @@ trait InternalOwner
 {
     public function getInternalOwner(): Contractor
     {
-        /** @var Contractor $contractor */
-        $contractor = $this->getReference(ContractorFixtures::INTERNAL);
+        /** @var Contractor $internalOwner */
+        $internalOwner = $this->getReference(ContractorFixtures::INTERNAL);
 
-        return $contractor;
+        return $internalOwner;
     }
 }

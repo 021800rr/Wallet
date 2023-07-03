@@ -44,15 +44,11 @@ class Contractor
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     private ?string $account;
 
-    #[ORM\OneToMany(mappedBy: "contractor", targetEntity: Wallet::class)]
-    private Collection $wallets;
-
     #[ORM\OneToMany(mappedBy: "contractor", targetEntity: Fee::class)]
     private Collection $fees;
 
     public function __construct()
     {
-        $this->wallets = new ArrayCollection();
         $this->fees = new ArrayCollection();
     }
 
@@ -81,21 +77,6 @@ class Contractor
     public function setAccount(?string $account): self
     {
         $this->account = $account;
-
-        return $this;
-    }
-
-    public function getWallets(): Collection
-    {
-        return $this->wallets;
-    }
-
-    public function addWallet(Wallet $wallet): self
-    {
-        if (!$this->wallets->contains($wallet)) {
-            $this->wallets[] = $wallet;
-            $wallet->setContractor($this);
-        }
 
         return $this;
     }

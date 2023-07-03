@@ -9,7 +9,7 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-class WalletCheckerTest extends ApiTestCase
+class PlnCheckerTest extends ApiTestCase
 {
     use SetupApi;
 
@@ -22,13 +22,13 @@ class WalletCheckerTest extends ApiTestCase
      */
     public function testGet(): void
     {
-        $r = $this->client->request('GET', '/api/check/wallets', ['auth_bearer' => $this->token]);
+        $r = $this->client->request('GET', '/api/check/plns', ['auth_bearer' => $this->token]);
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
         $this->assertJsonContains([
             "result" => "Error",
-            "accounts" => [
+            "wallets" => [
                 [
                     "balance_supervisor" => 190,
                     "id" => 2,

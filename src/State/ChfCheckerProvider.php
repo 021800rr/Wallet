@@ -6,7 +6,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Entity\ChfChecker;
 
-readonly class ChfCheckerProvider extends AbstractAccountCheckerProvider implements ProviderInterface
+readonly class ChfCheckerProvider extends AbstractWalletCheckerProvider implements ProviderInterface
 {
     /**
      * @param array<mixed, mixed> $uriVariables

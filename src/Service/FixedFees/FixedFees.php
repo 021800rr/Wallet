@@ -3,36 +3,39 @@
 namespace App\Service\FixedFees;
 
 use App\Entity\Fee;
-use App\Entity\Wallet;
+use App\Entity\Pln;
 use App\Repository\FeeRepositoryInterface;
-use App\Repository\WalletRepositoryInterface;
+use App\Repository\AccountRepositoryInterface;
+use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use DateInterval;
 use DateTime;
 use Exception;
 
-readonly class FixedFees implements FixedFeesInterface
+class FixedFees implements FixedFeesInterface
 {
     public function __construct(
-        private FeeRepositoryInterface         $feeRepository,
-        private BalanceUpdaterFactoryInterface $walletFactory,
-        private WalletRepositoryInterface      $walletRepository,
+        BalanceUpdaterFactoryInterface              $walletFactory,
+        private BalanceUpdaterAccountInterface      $walletUpdater,
+        private readonly FeeRepositoryInterface     $feeRepository,
+        private readonly AccountRepositoryInterface $plnRepository,
     ) {
+        $this->walletUpdater = $walletFactory->create();
     }
 
     /** @throws Exception */
     public function insert(): void
     {
         foreach ($this->feeRepository->findAll() as $fee) {
-            $wallet = new Wallet();
+            $pln = new Pln();
 
             /** @var Fee $fee */
-            $wallet->setDate($this->getDate($fee));
-            $wallet->setAmount($fee->getAmount());
-            $wallet->setContractor($fee->getContractor());
+            $pln->setDate($this->getDate($fee));
+            $pln->setAmount($fee->getAmount());
+            $pln->setContractor($fee->getContractor());
 
-            $this->walletRepository->save($wallet, true);
-            $this->walletFactory->create()->compute($this->walletRepository, $wallet->getId());
+            $this->plnRepository->save($pln, true);
+            $this->walletUpdater->compute($this->plnRepository, $pln->getId());
         }
     }
 

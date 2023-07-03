@@ -4,14 +4,14 @@ namespace App\Entity;
 
 use Symfony\Component\Serializer\Annotation\Groups;
 
-abstract class AbstractAccountChecker
+abstract class AbstractWalletChecker
 {
     #[Groups(['account:read'])]
     protected string $result = 'Error';
 
     /** @var AbstractWallet[] */
     #[Groups(['account:read'])]
-    protected array $accounts = [];
+    protected array $wallets = [];
 
     public function getResult(): string
     {
@@ -24,13 +24,13 @@ abstract class AbstractAccountChecker
     }
 
     /** @return AbstractWallet[] */
-    public function getAccounts(): array
+    public function getWallets(): array
     {
-        return $this->accounts;
+        return $this->wallets;
     }
 
-    public function addAccount(AbstractWallet $account): void
+    public function addWallet(AbstractWallet $wallet): void
     {
-        $this->accounts[] = $account;
+        $this->wallets[] = $wallet;
     }
 }

@@ -14,21 +14,21 @@ class SearchControllerTest extends WebTestCase
 
     public function testIndex(): void
     {
-        $this->client->request('GET', '/en/wallet');
+        $this->client->request('GET', '/en/pln');
         $this->client->submitForm('form_search', [
             'form[query]' => '191',
         ]);
 
         $this->assertSelectorTextContains('td#search_balance1', '191');
 
-        $this->client->request('GET', '/en/wallet');
+        $this->client->request('GET', '/en/pln');
         $this->client->submitForm('form_search', [
             'form[query]' => '-10',
         ]);
 
         $this->assertSelectorTextContains('td#search_amount1', '-10');
 
-        $this->client->request('GET', '/en/wallet');
+        $this->client->request('GET', '/en/pln');
         $this->client->submitForm('form_search', [
             'form[query]' => 'all',
         ]);
@@ -39,7 +39,7 @@ class SearchControllerTest extends WebTestCase
 
     public function testChangeIsConsistent(): void
     {
-        $this->client->request('GET', '/en/wallet');
+        $this->client->request('GET', '/en/pln');
         $crawler = $this->client->submitForm('form_search', [
             'form[query]' => 'all',
         ]);
@@ -57,7 +57,7 @@ class SearchControllerTest extends WebTestCase
 
     public function testEdit(): void
     {
-        $this->client->request('GET', '/en/wallet');
+        $this->client->request('GET', '/en/pln');
         $crawler = $this->client->submitForm('form_search', [
             'form[query]' => 'all',
         ]);
@@ -65,17 +65,17 @@ class SearchControllerTest extends WebTestCase
         $this->assertSelectorTextContains('td#search_amount1', '-20');
 
         $this->client->click(
-            $crawler->filter('a#wallet_edit1')->link()
+            $crawler->filter('a#pln_edit1')->link()
         );
-        $this->client->submitForm('wallet_save', [
-            'wallet[amount]' => '-40',
+        $this->client->submitForm('pln_save', [
+            'pln[amount]' => '-40',
         ]);
         $this->assertSelectorTextContains('td#search_balance1', '151');
     }
 
     public function testDelete(): void
     {
-        $crawler = $this->client->request('GET', '/en/wallet');
+        $crawler = $this->client->request('GET', '/en/pln');
         $crawler->selectButton('form_search')->form();
         $crawler = $this->client->submitForm('form_search', [
             'form[query]' => 'all',
@@ -87,7 +87,7 @@ class SearchControllerTest extends WebTestCase
         $this->assertSelectorTextContains('td#search_balance2', '191');
 
         $this->client->submit(
-            $crawler->filter('form#wallet_delete2')->form()
+            $crawler->filter('form#pln_delete2')->form()
         );
         $this->assertSelectorTextContains('td#search_balance1', '180');
     }
