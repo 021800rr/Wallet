@@ -21,14 +21,19 @@ readonly class Interest implements InterestInterface
 
         /** @var DateTimeInterface $date */
         $date = $dataArray['date'];
+
         /** @var Contractor $contractor */
         $contractor = $dataArray['contractor'];
+
         /** @var float $retiring */
         $retiring = $dataArray['retiring'];
+
         /** @var float $holiday */
         $holiday = $dataArray['holiday'];
+
         /** @var float $amount */
         $amount = $dataArray['amount'];
+
         /** @var float $balance */
         $balance = $dataArray['balance'];
 
@@ -57,12 +62,16 @@ readonly class Interest implements InterestInterface
 
         /** @var float $retiring */
         $retiring = $formArray['retiring'];
+
         /** @var float $retiringTax */
         $retiringTax = $formArray['retiring_tax'];
+
         /** @var float $holiday */
         $holiday = $formArray['holiday'];
+
         /** @var float $holidayTax */
         $holidayTax = $formArray['holiday_tax'];
+
         $formArray['retiring'] = $retiring - $retiringTax;
         $formArray['holiday'] = $holiday - $holidayTax;
 

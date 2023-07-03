@@ -4,13 +4,13 @@ namespace App\Tests;
 
 use App\Entity\Chf;
 use App\Entity\Contractor;
-use App\Entity\Wallet;
+use App\Entity\Pln;
 use App\Repository\BackupRepository;
 use App\Repository\ChfRepository;
 use App\Repository\ContractorRepository;
 use App\Repository\EurRepository;
 use App\Repository\FeeRepository;
-use App\Repository\WalletRepository;
+use App\Repository\PlnRepository;
 use App\Service\BalanceUpdater\BalanceUpdaterBackup;
 use App\Service\BalanceUpdater\BalanceUpdaterBackupFactory;
 use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
@@ -31,12 +31,12 @@ trait SetupRepos
     private EurRepository $eurRepository;
     private ContractorRepository $contractorRepository;
     private FeeRepository $feeRepository;
-    private WalletRepository $walletRepository;
+    private PlnRepository $plnRepository;
     private BalanceUpdaterFactoryInterface $backupFactory;
     private BalanceUpdaterFactoryInterface $walletFactory;
 
-    /** @var Wallet[] $wallets */
-    private array $wallets;
+    /** @var Pln[] $plns */
+    private array $plns;
 
     /** @var Chf[] $chfs */
     private array $chfs;
@@ -73,13 +73,13 @@ trait SetupRepos
         $feeRepository = static::getContainer()->get(FeeRepository::class);
         $this->feeRepository = $feeRepository;
 
-        /** @var WalletRepository $walletRepository */
-        $walletRepository = static::getContainer()->get(WalletRepository::class);
-        $this->walletRepository = $walletRepository;
+        /** @var PlnRepository $plnRepository */
+        $plnRepository = static::getContainer()->get(PlnRepository::class);
+        $this->plnRepository = $plnRepository;
 
-        /** @var Wallet[] $wallets */
-        $wallets = $this->walletRepository->getAllRecords();
-        $this->wallets = $wallets;
+        /** @var Pln[] $plns */
+        $plns = $this->plnRepository->getAllRecords();
+        $this->plns = $plns;
 
         /** @var Chf[] $chfs */
         $chfs = $this->chfRepository->getAllRecords();

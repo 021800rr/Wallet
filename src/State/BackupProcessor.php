@@ -7,17 +7,20 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Backup;
 use App\Repository\BackupRepositoryInterface;
+use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use Exception;
 
-readonly class BackupProcessor implements ProcessorInterface
+class BackupProcessor implements ProcessorInterface
 {
     public function __construct(
-        private ProcessorInterface             $persistProcessor,
-        private ProcessorInterface             $removeProcessor,
-        private BalanceUpdaterFactoryInterface $backupFactory,
-        private BackupRepositoryInterface      $backupRepository,
+        BalanceUpdaterFactoryInterface             $backupFactory,
+        private BalanceUpdaterAccountInterface     $backupUpdater,
+        private readonly ProcessorInterface        $persistProcessor,
+        private readonly ProcessorInterface        $removeProcessor,
+        private readonly BackupRepositoryInterface $backupRepository,
     ) {
+        $this->backupUpdater = $backupFactory->create();
     }
 
     /**
@@ -30,11 +33,11 @@ readonly class BackupProcessor implements ProcessorInterface
         /** @var Backup $data */
         if ($operation instanceof DeleteOperationInterface) {
             $data->setAmount(0);
-            $this->backupFactory->create()->compute($this->backupRepository, $data->getId());
+            $this->backupUpdater->compute($this->backupRepository, $data->getId());
             $this->removeProcessor->process($data, $operation, $uriVariables, $context);
         } else {
             $this->persistProcessor->process($data, $operation, $uriVariables, $context);
-            $this->backupFactory->create()->compute($this->backupRepository, $data->getId());
+            $this->backupUpdater->compute($this->backupRepository, $data->getId());
         }
     }
 }

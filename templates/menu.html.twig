@@ -82,18 +82,18 @@
                 </ul>
             </li>
             <li class="nav-item me-2">
-                <a class="btn btn-outline-dark" href="{{ path('wallet_index') }}" id="base_wallet_index">
+                <a class="btn btn-outline-dark" href="{{ path('pln_index') }}" id="base_wallet_index">
                     {{ 'Wallet'|trans }}
                 </a>
             </li>
             <li class="nav-item me-2">
-                <a class="btn btn-outline-dark" href="{{ path('wallet_new') }}" id="base_wallet_new">
+                <a class="btn btn-outline-dark" href="{{ path('pln_new') }}" id="base_wallet_new">
                     {{ 'New Receipt'|trans }}
                 </a>
             </li>
-            {% if 'wallet_index' == app.request.attributes.get('_route') %}
+            {% if 'pln_index' == app.request.attributes.get('_route') %}
                 <li class="nav-item me-2">
-                    <a class="btn btn-outline-dark" href="{{ path('wallet_check') }}" id="base_wallet_new">
+                    <a class="btn btn-outline-dark" href="{{ path('pln_check') }}" id="base_wallet_new">
                         {{ 'Check'|trans }}
                     </a>
                 </li>
@@ -105,7 +105,7 @@
                 </li>
             {% endif %}
         </ul>
-        {% if app.request.attributes.get('_route') in ['search_result', 'wallet_index'] %}
+        {% if app.request.attributes.get('_route') in ['search_result', 'pln_index'] %}
             {{ render(controller(
                 'App\\Controller\\SearchController::index', {'query':  query|default('') }
             )) }}

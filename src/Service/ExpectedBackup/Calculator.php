@@ -11,11 +11,11 @@ class Calculator implements CalculatorInterface
     // [
     //      [
     //          'yearMonth' => string 2021-06,
-    //          'sum_of_amount' => float 300,
+    //          'sum_of_amounts' => float 300,
     //      ],
     //      [
     //          'yearMonth' => string 2021-05,
-    //          'sum_of_amount' => float 300,
+    //          'sum_of_amounts' => float 300,
     //      ],
     // ]
     /**
@@ -32,7 +32,7 @@ class Calculator implements CalculatorInterface
         $backup['yearMonth'] = '1970-01';
         $sum = 0;
         foreach ($backups as $backup) {
-            $sum += $backup['sum_of_amount'];
+            $sum += $backup['sum_of_amounts'];
         }
 
         $firstDate = $this->foretellDate((string) $backup['yearMonth']);

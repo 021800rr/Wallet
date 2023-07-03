@@ -50,7 +50,6 @@ trait AccountTrait
     }
 
     /**
-     * @return int|mixed|string
      * @throws NonUniqueResultException
      */
     public function getLastRecord(): mixed

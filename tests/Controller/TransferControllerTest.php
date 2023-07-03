@@ -14,8 +14,8 @@ class TransferControllerTest extends WebTestCase
 
     public function testIndex(): void
     {
-        $this->client->request('GET', '/en/wallet');
-        $this->assertSelectorTextContains('td#wallet_balance1', '170');
+        $this->client->request('GET', '/en/pln');
+        $this->assertSelectorTextContains('td#pln_balance1', '170');
 
         $this->client->clickLink('Backup');
         $this->assertSelectorTextContains('td#backup_balance1', '600');
@@ -27,8 +27,8 @@ class TransferControllerTest extends WebTestCase
         $form['transfer_to_backup[amount]'] = '100';
         $this->client->submit($form);
 
-        $this->client->request('GET', '/en/wallet');
-        $this->assertSelectorTextContains('td#wallet_balance1', '70');
+        $this->client->request('GET', '/en/pln');
+        $this->assertSelectorTextContains('td#pln_balance1', '70');
 
         $this->client->request('GET', '/en/backup');
         $this->assertSelectorTextContains('td#backup_balance1', '700');
@@ -36,12 +36,12 @@ class TransferControllerTest extends WebTestCase
         $this->assertSelectorTextContains('td#backup_holiday1', '350');
 
         $crawler = $this->client->clickLink('Transfer');
-        $form = $crawler->filter('button#transfer_to_wallet_save')->form();
-        $form['transfer_to_wallet[amount]'] = '100';
+        $form = $crawler->filter('button#transfer_to_pln_save')->form();
+        $form['transfer_to_pln[amount]'] = '100';
         $this->client->submit($form);
 
-        $this->client->request('GET', '/en/wallet');
-        $this->assertSelectorTextContains('td#wallet_balance1', '170');
+        $this->client->request('GET', '/en/pln');
+        $this->assertSelectorTextContains('td#pln_balance1', '170');
 
         $this->client->clickLink('Backup');
         $this->assertSelectorTextContains('td#backup_balance1', '600');
@@ -51,15 +51,15 @@ class TransferControllerTest extends WebTestCase
 
     public function testCurrency(): void
     {
-        $this->client->request('GET', '/en/wallet');
+        $this->client->request('GET', '/en/pln');
         $crawler = $this->client->clickLink('Transfer');
         $form = $crawler->filter('button#transfer_to_backup_save')->form();
         $form['transfer_to_backup[amount]'] = '100';
         $form['transfer_to_backup[currency]'] = '1';
         $this->client->submit($form);
 
-        $this->client->request('GET', '/en/wallet');
-        $this->assertSelectorTextContains('td#wallet_balance1', '70');
+        $this->client->request('GET', '/en/pln');
+        $this->assertSelectorTextContains('td#pln_balance1', '70');
 
         $this->client->request('GET', '/en/backup');
         $this->assertSelectorTextContains('td#backup_amount1', '100');

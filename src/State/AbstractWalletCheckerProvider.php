@@ -6,16 +6,15 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Entity\AbstractWallet;
 use App\Entity\ChfChecker;
-use App\Entity\WalletChecker;
+use App\Entity\PlnChecker;
 use App\Repository\AccountRepositoryInterface;
-use App\Repository\WalletRepositoryInterface;
 use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
 
-abstract readonly class AbstractAccountCheckerProvider implements ProviderInterface
+abstract readonly class AbstractWalletCheckerProvider implements ProviderInterface
 {
     public function __construct(
         protected BalanceSupervisorInterface $supervisor,
-        protected WalletRepositoryInterface  $walletRepository,
+        protected AccountRepositoryInterface $plnRepository,
         protected AccountRepositoryInterface $chfRepository,
     ) {
     }
@@ -29,15 +28,17 @@ abstract readonly class AbstractAccountCheckerProvider implements ProviderInterf
     protected function accountChecker(
         BalanceSupervisorInterface $supervisor,
         AccountRepositoryInterface $accountRepository,
-        WalletChecker|ChfChecker $data,
-    ): WalletChecker|ChfChecker {
-        $supervisor->setWallets($accountRepository->getAllRecords());
+        PlnChecker|ChfChecker      $data,
+    ): PlnChecker|ChfChecker {
+        /** @var AbstractWallet[] $wallets */
+        $wallets = $accountRepository->getAllRecords();
+        $supervisor->setWallets($wallets);
         $generator = $supervisor->crawl($accountRepository);
-        foreach ($generator as $account) {
-            /** @var AbstractWallet $account */
-            $data->addAccount($account);
+        /** @var AbstractWallet $wallet */
+        foreach ($generator as $wallet) {
+            $data->addWallet($wallet);
         }
-        if (empty($data->getAccounts())) {
+        if (empty($data->getWallets())) {
             $data->setResult('Passed');
         }
 

@@ -2,14 +2,14 @@
 
 namespace App\Service\BalanceSupervisor;
 
-use App\Entity\AbstractAccount;
+use App\Entity\AbstractWallet;
 use App\Repository\AccountRepositoryInterface;
 use Generator;
 
 interface BalanceSupervisorInterface
 {
     /**
-     * @param AbstractAccount[] $wallets
+     * @param AbstractWallet[] $wallets
      * @return void
      */
     public function setWallets(array $wallets): void;

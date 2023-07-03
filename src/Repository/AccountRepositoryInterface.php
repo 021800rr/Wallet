@@ -10,9 +10,7 @@ interface AccountRepositoryInterface extends AppRepositoryInterface
 
     public function getLastRecord(): mixed;
 
-    /**
-     * @return AbstractAccount[]
-     */
+    /** @return AbstractAccount[] */
     public function getAllRecords(): array;
 
     public function find($id, $lockMode = null, $lockVersion = null);

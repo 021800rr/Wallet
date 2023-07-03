@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <table class="table table-hover table-sm">
+        <thead>
+            <tr>
+                <th>{{ '#' }}</th>
+                <th>{{ 'Date'|trans }}</th>
+                <th class="text-end">{{ 'Amount'|trans }}</th>
+                <th class="text-end">{{ 'Balance'|trans }}</th>
+                <th class="ps-4">{{ 'Contractor'|trans }}</th>
+                <th>{{ 'Description'|trans }}</th>
+                <th class="text-center" colspan="3">{{ 'Actions'|trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pln in paginator %}
+                {% if pln.balanceSupervisor is defined and pln.balanceSupervisor is not null %}
+                    {% set bg_color = true %}
+                {% else %}
+                    {% set bg_color = false %}
+                {% endif %}
+                <tr>
+                    <td>{{ pln.id }}</td>
+                    <td>{{ pln.date|date("Y-m-d") }}</td>
+                    <td class="text-end row_money_amount" id="pln_amount{{ loop.index }}">{{ pln.amount }}</td>
+                    <td class="text-end row_money" id="pln_balance{{ loop.index }}">{{ pln.balance }}</td>
+                    <td class="ps-4" id="pln_contractor{{ loop.index }}">{{ pln.contractor.description }}</td>
+                    <td id="pln_description{{ loop.index }}" {% if bg_color %}class="td-danger"{% endif %}>
+                        {% if bg_color %}
+                            {{ 'A different balance value is expected:'|trans }}
+                            {{ pln.balanceSupervisor }}
+                        {% endif %}
+                        {{ pln.description }}
+                    </td>
+                    <td class="text-center">{{ include('pln/_is_consistent_form.html.twig') }}</td>
+                    <td class="text-center">{{ include('pln/_edit_a.html.twig') }}</td>
+                    <td class="text-center">{{ include('pln/_delete_form.html.twig') }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% set PATH = 'pln_index' %}
+    {{ include('paginator.html.twig') }}
+{% endblock %}

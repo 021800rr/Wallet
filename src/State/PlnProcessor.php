@@ -5,19 +5,22 @@ namespace App\State;
 use ApiPlatform\Metadata\DeleteOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
-use App\Entity\Wallet;
-use App\Repository\WalletRepositoryInterface;
+use App\Entity\Pln;
+use App\Repository\AccountRepositoryInterface;
+use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use Exception;
 
-readonly class WalletProcessor implements ProcessorInterface
+class PlnProcessor implements ProcessorInterface
 {
     public function __construct(
-        private ProcessorInterface             $persistProcessor,
-        private ProcessorInterface             $removeProcessor,
-        private BalanceUpdaterFactoryInterface $walletFactory,
-        private WalletRepositoryInterface      $walletRepository,
+        BalanceUpdaterFactoryInterface              $walletFactory,
+        private BalanceUpdaterAccountInterface      $walletUpdater,
+        private readonly ProcessorInterface         $persistProcessor,
+        private readonly ProcessorInterface         $removeProcessor,
+        private readonly AccountRepositoryInterface $plnRepository,
     ) {
+        $this->walletUpdater = $walletFactory->create();
     }
 
     /**
@@ -27,14 +30,14 @@ readonly class WalletProcessor implements ProcessorInterface
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
     {
-        /** @var Wallet $data */
+        /** @var Pln $data */
         if ($operation instanceof DeleteOperationInterface) {
             $data->setAmount(0);
-            $this->walletFactory->create()->compute($this->walletRepository, $data->getId());
+            $this->walletUpdater->compute($this->plnRepository, $data->getId());
             $this->removeProcessor->process($data, $operation, $uriVariables, $context);
         } else {
             $this->persistProcessor->process($data, $operation, $uriVariables, $context);
-            $this->walletFactory->create()->compute($this->walletRepository, $data->getId());
+            $this->walletUpdater->compute($this->plnRepository, $data->getId());
         }
     }
 }

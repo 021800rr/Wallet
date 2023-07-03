@@ -6,7 +6,7 @@ use App\Tests\SetupController;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class EuroWalletControllerTest extends WebTestCase
+class EuroControllerTest extends WebTestCase
 {
     use SetupController;
 

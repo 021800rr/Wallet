@@ -29,6 +29,10 @@
         <source>Wallet</source>
         <target>Portfel</target>
       </trans-unit>
+      <trans-unit id="0cmgHVfx" resname="PlnWallet">
+        <source>PlnWallet</source>
+        <target>Portfel</target>
+      </trans-unit>
       <trans-unit id="8aPPmZH" resname="New Receipt">
         <source>New Receipt</source>
         <target>Nowa Płatność</target>
@@ -124,6 +128,22 @@
       <trans-unit id="5FKtmu5" resname="A different balance value is expected:">
         <source>A different balance value is expected:</source>
         <target>Oczekiwana jest inna wartość salda:</target>
+      </trans-unit>
+      <trans-unit id="scjoYer" resname="CHF">
+        <source>CHF</source>
+        <target>CHF</target>
+      </trans-unit>
+      <trans-unit id="Nx6d_V9" resname="CHF++">
+        <source>CHF++</source>
+        <target>CHF++</target>
+      </trans-unit>
+      <trans-unit id="V9SEbOz" resname="EUR">
+        <source>EUR</source>
+        <target>EUR</target>
+      </trans-unit>
+      <trans-unit id="eQitbN8" resname="EUR++">
+        <source>EUR++</source>
+        <target>EUR++</target>
       </trans-unit>
     </body>
   </file>

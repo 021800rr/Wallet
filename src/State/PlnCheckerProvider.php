@@ -4,9 +4,9 @@ namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
-use App\Entity\WalletChecker;
+use App\Entity\PlnChecker;
 
-readonly class WalletCheckerProvider extends AbstractAccountCheckerProvider implements ProviderInterface
+readonly class PlnCheckerProvider extends AbstractWalletCheckerProvider implements ProviderInterface
 {
     /**
      * @param array<mixed, mixed> $uriVariables
@@ -14,6 +14,6 @@ readonly class WalletCheckerProvider extends AbstractAccountCheckerProvider impl
      */
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {
-        return $this->accountChecker($this->supervisor, $this->walletRepository, new WalletChecker());
+        return $this->accountChecker($this->supervisor, $this->plnRepository, new PlnChecker());
     }
 }

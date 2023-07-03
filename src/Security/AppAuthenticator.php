@@ -52,7 +52,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        return new RedirectResponse($this->urlGenerator->generate('wallet_index'));
+        return new RedirectResponse($this->urlGenerator->generate('pln_index'));
     }
 
     protected function getLoginUrl(Request $request): string

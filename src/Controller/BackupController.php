@@ -8,7 +8,7 @@ use App\Form\InterestType;
 use App\Repository\AccountRepositoryInterface;
 use App\Repository\PaginatorEnum;
 use App\Repository\BackupRepositoryInterface;
-use App\Repository\WalletRepositoryInterface;
+use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use App\Service\ExpectedBackup\CalculatorInterface;
 use App\Service\Interest\InterestInterface;
@@ -31,9 +31,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class BackupController extends AbstractController
 {
     public function __construct(
-        private readonly BalanceUpdaterFactoryInterface $backupFactory,
-        private readonly BackupRepositoryInterface      $backupRepository,
+        BalanceUpdaterFactoryInterface             $backupFactory,
+        private BalanceUpdaterAccountInterface     $backupUpdater,
+        private readonly BackupRepositoryInterface $backupRepository,
     ) {
+        $this->backupUpdater = $backupFactory->create();
     }
 
     #[Route('/', name: 'backup_index', methods: ['GET'])]
@@ -60,7 +62,7 @@ class BackupController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->backupRepository->save($backup, true);
-            $this->backupFactory->create()->compute($this->backupRepository, $backup->getId());
+            $this->backupUpdater->compute($this->backupRepository, $backup->getId());
 
             return $this->redirectToRoute('backup_index');
         }
@@ -77,9 +79,9 @@ class BackupController extends AbstractController
     #[Route('/delete/{id}', name: 'backup_delete', methods: ['POST'])]
     public function delete(Request $request, Backup $backup): RedirectResponse
     {
-        if ($this->isCsrfTokenValid('delete'.$backup->getId(), (string) $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $backup->getId(), (string) $request->request->get('_token'))) {
             $backup->setAmount(0);
-            $this->backupFactory->create()->compute($this->backupRepository, $backup->getId());
+            $this->backupUpdater->compute($this->backupRepository, $backup->getId());
             $this->backupRepository->remove($backup, true);
         }
 
@@ -88,29 +90,29 @@ class BackupController extends AbstractController
 
     #[Route('/paymentsByMonth', name: 'backup_payments_by_month', methods: ['GET'])]
     public function paymentsByMonth(
-        CalculatorInterface $calculator,
-        WalletRepositoryInterface $walletRepository,
+        CalculatorInterface        $calculator,
+        AccountRepositoryInterface $plnRepository,
         AccountRepositoryInterface $chfRepository,
         AccountRepositoryInterface $eurRepository,
     ): Response {
         // $backups:
         // [
-        //     [yearMonth => 2021-06, sum_of_amount => 300],
-        //     [yearMonth => 2021-05, sum_of_amount => 100]
+        //     [yearMonth => 2021-06, sum_of_amounts => 300],
+        //     [yearMonth => 2021-05, sum_of_amounts => 100]
         // ]
         $backups = $this->backupRepository->paymentsByMonth();
-        $walletBalance = $walletRepository->getCurrentBalance();
+        $plnBalance = $plnRepository->getCurrentBalance();
         /** @var Backup $backupLastRecord */
         $backupLastRecord = $this->backupRepository->getLastRecord();
 
         return $this->render('backup/payments_by_month.html.twig', [
             'backups' => $backups,
             'expected' => $calculator->compute($backups),
-            'walletBalance' => $walletBalance,
+            'plnBalance' => $plnBalance,
             'chfBalance' => $chfRepository->getCurrentBalance(),
             'eurBalance' => $eurRepository->getCurrentBalance(),
             'backupLastRecord' => $backupLastRecord,
-            'total' => $walletBalance + $backupLastRecord->getBalance()
+            'total' => $plnBalance + $backupLastRecord->getBalance()
         ]);
     }
 
@@ -125,7 +127,7 @@ class BackupController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $backup = $interest->form2Backup($form);
             $this->backupRepository->save($backup, true);
-            $this->backupFactory->create()->compute($this->backupRepository, $backup->getId());
+            $this->backupUpdater->compute($this->backupRepository, $backup->getId());
 
             return $this->redirectToRoute('backup_index');
         }

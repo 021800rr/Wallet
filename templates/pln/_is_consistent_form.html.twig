@@ -1,12 +1,12 @@
 {% if pln.isConsistent == 1 %}
-    <form method="post" id="search_is_consistent{{ loop.index }}"
-          action="{{ path('search_is_consistent', {'id': pln.id, 'boolAsString': 'false'}) }}">
+    <form method="post" id="pln_is_consistent{{ loop.index }}"
+          action="{{ path('pln_is_consistent', {'id': pln.id, 'boolAsString': 'false'}) }}">
         <input type="hidden" name="_token" value="{{ csrf_token('is_consistent' ~ pln.id) }}">
         <input type="image" class="submitter" src="{{ asset('images/ok.png') }}" alt="ok" width="14" height="14"/>
     </form>
 {% else %}
-    <form method="post" id="search_is_consistent{{ loop.index }}"
-          action="{{ path('search_is_consistent', {'id': pln.id, 'boolAsString': 'true'}) }}">
+    <form method="post" id="pln_is_consistent{{ loop.index }}"
+          action="{{ path('pln_is_consistent', {'id': pln.id, 'boolAsString': 'true'}) }}">
         <input type="hidden" name="_token" value="{{ csrf_token('is_consistent' ~ pln.id) }}">
         <input type="image" class="submitter" src="{{ asset('images/question.png') }}" alt="question" width="14" height="14"/>
     </form>
