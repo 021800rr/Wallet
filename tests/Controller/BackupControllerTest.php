@@ -77,7 +77,6 @@ class BackupControllerTest extends WebTestCase
         $this->assertSelectorTextContains('td#backup_sum_of_amounts1', '300');
         $this->assertSelectorTextContains('td#expected', '300');
         $this->assertSelectorTextContains('td#chfBalance', '70.07');
-        $this->assertSelectorTextContains('td#eurBalance', '70.07');
         $this->assertSelectorTextContains('td#plnBalance', '170');
         $this->assertSelectorTextContains('td#holiday', '300');
         $this->assertSelectorTextContains('td#retiring', '300');

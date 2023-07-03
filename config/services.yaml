@@ -38,9 +38,6 @@ services:
     App\Repository\ChfRepository: ~
     App\Repository\AccountRepositoryInterface $chfRepository: '@App\Repository\ChfRepository'
 
-    App\Repository\EurRepository: ~
-    App\Repository\AccountRepositoryInterface $eurRepository: '@App\Repository\EurRepository'
-
     ###
 
     App\Repository\FeeRepository: ~
