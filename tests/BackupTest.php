@@ -57,10 +57,10 @@ class BackupTest extends ApiTestCase
      */
     public function testDelete(): void
     {
-        $this->client->request('DELETE', '/api/backups/2', ['auth_bearer' => $this->token]);
+        $this->client->request('DELETE', '/api/backups/3', ['auth_bearer' => $this->token]);
         $this->assertResponseStatusCodeSame(204);
         $this->assertNull(
-            $this->backupRepository->findOneBy(['id' => 2])
+            $this->backupRepository->findOneBy(['id' => 3])
         );
 
         $this->client->request('GET', '/api/backups', ['auth_bearer' => $this->token]);
@@ -69,8 +69,8 @@ class BackupTest extends ApiTestCase
             "hydra:totalItems" => 2,
             "hydra:member" => [
                 0 => [
-                    "amount" => 300,
-                    "balance" => 400,
+                    "amount" => 200,
+                    "balance" => 300,
                 ],
                 1 => [
                     "amount" => 100,
@@ -89,10 +89,10 @@ class BackupTest extends ApiTestCase
      */
     public function testPatch(): void
     {
-        $this->client->request('PATCH', '/api/backups/2', [
+        $this->client->request('PATCH', '/api/backups/3', [
             'auth_bearer' => $this->token,
             'json' => [
-                "amount" => 210,
+                "amount" => 400,
                 "description" => "string"
             ],
             'headers' => [
@@ -101,7 +101,7 @@ class BackupTest extends ApiTestCase
         ]);
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
-            "amount" => 210,
+            "amount" => 400,
             "description" => "string"
         ]);
 
@@ -111,14 +111,14 @@ class BackupTest extends ApiTestCase
             "hydra:totalItems" => 3,
             "hydra:member" => [
                 0 => [
-                    "amount" => 300,
-                    "balance" => 610,
+                    "amount" => 400,
+                    "balance" => 700,
+                    "description" => "string"
                 ],
                 1 => [
                     "@id" => "/api/backups/2",
-                    "amount" => 210,
-                    "balance" => 310,
-                    "description" => "string"
+                    "amount" => 200,
+                    "balance" => 300,
                 ],
                 2 => [
                     "amount" => 100,

@@ -33,7 +33,9 @@ class Transfer implements TransferInterface
     public function moveToBackup(Backup $backup, int $currency = 0): void
     {
         $this->backupRepository->save($backup, true);
+        $this->backupUpdater->setPreviousId($this->backupRepository, $backup->getId());
         $pln = $this->persistDebit($this->plnRepository, new Pln(), $backup);
+        $this->walletUpdater->setPreviousId($this->plnRepository, $pln->getId());
         if (0 === $currency) {
             $this->backupUpdater->compute($this->backupRepository, $backup->getId());
         }
@@ -46,8 +48,9 @@ class Transfer implements TransferInterface
     public function moveToPln(Pln $pln): void
     {
         $this->plnRepository->save($pln, true);
+        $this->walletUpdater->setPreviousId($this->plnRepository, $pln->getId());
         $backup = $this->persistDebit($this->backupRepository, new Backup(), $pln);
-
+        $this->backupUpdater->setPreviousId($this->backupRepository, $backup->getId());
         $this->walletUpdater->compute($this->plnRepository, $pln->getId());
         $this->backupUpdater->compute($this->backupRepository, $backup->getId());
     }

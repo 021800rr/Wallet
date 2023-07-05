@@ -35,6 +35,7 @@ class FixedFees implements FixedFeesInterface
             $pln->setContractor($fee->getContractor());
 
             $this->plnRepository->save($pln, true);
+            $this->walletUpdater->setPreviousId($this->plnRepository, $pln->getId());
             $this->walletUpdater->compute($this->plnRepository, $pln->getId());
         }
     }
