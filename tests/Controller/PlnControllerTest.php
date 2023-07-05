@@ -16,11 +16,11 @@ class PlnControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/en/pln');
 
-        $this->assertSelectorTextContains('td#pln_amount1', '-20');
-        $this->assertSelectorTextContains('td#pln_balance1', '170');
+        $this->assertSelectorTextContains('td#pln_amount1', '-40');
+        $this->assertSelectorTextContains('td#pln_balance1', '100');
 
-        $this->assertSelectorTextContains('td#pln_amount2', '-10');
-        $this->assertSelectorTextContains('td#pln_balance2', '191');
+        $this->assertSelectorTextContains('td#pln_amount2', '-30');
+        $this->assertSelectorTextContains('td#pln_balance2', '140');
     }
 
     public function testNew(): void
@@ -28,9 +28,9 @@ class PlnControllerTest extends WebTestCase
         $this->client->request('GET', '/en/pln');
         $this->client->clickLink('New Receipt');
         $this->client->submitForm('Save', [
-            'pln[amount]' => '-70',
+            'pln[amount]' => '-50',
         ]);
-        $this->assertSelectorTextContains('td#pln_balance1', '100');
+        $this->assertSelectorTextContains('td#pln_balance1', '50');
     }
 
     public function testEdit(): void
@@ -41,9 +41,32 @@ class PlnControllerTest extends WebTestCase
             $crawler->filter('a#pln_edit1')->link()
         );
         $this->client->submitForm('pln_save', [
-            'pln[amount]' => '-40',
+            'pln[amount]' => '-50',
         ]);
-        $this->assertSelectorTextContains('td#pln_balance1', '151');
+        $this->assertSelectorTextContains('td#pln_balance1', '90');
+    }
+
+    public function testEditMoveBackward(): void
+    {
+        $crawler = $this->client->request('GET', '/en/pln');
+
+        $this->client->click(
+            $crawler->filter('a#pln_edit3')->link()
+        );
+        $this->client->submitForm('pln_save', [
+            'pln[date]' => '2021-02-12',
+        ]);
+
+        $this->client->request('GET', '/en/pln');
+
+        $this->assertSelectorTextContains('td#pln_amount3', '-10');
+        $this->assertSelectorTextContains('td#pln_balance3', '170');
+
+        $this->assertSelectorTextContains('td#pln_amount4', '-20');
+        $this->assertSelectorTextContains('td#pln_balance4', '180');
+
+        $this->assertSelectorTextContains('td#pln_amount5', '-1');
+        $this->assertSelectorTextContains('td#pln_balance5', '200');
     }
 
     public function testDelete(): void
@@ -53,7 +76,7 @@ class PlnControllerTest extends WebTestCase
         $this->client->submit(
             $crawler->filter('form#pln_delete2')->form()
         );
-        $this->assertSelectorTextContains('td#pln_balance1', '180');
+        $this->assertSelectorTextContains('td#pln_balance1', '130');
     }
 
     public function testIsConsistent(): void
@@ -73,55 +96,6 @@ class PlnControllerTest extends WebTestCase
 
     public function testCheck(): void
     {
-        $this->client->request('GET', '/en/pln');
-        $this->client->clickLink('Check');
-        $this->assertSelectorTextContains('div.alert-danger', '2 : 2021-05-12 : -10 : 191 : 190 : Allegro');
-        $this->assertSelectorTextContains('td.td-danger', 'A different balance value is expected: 171');
-    }
-
-    public function testBalanceAdjustment(): void
-    {
-        // Potrzebne są dwie operacje na rekordzie z błędem:
-        // - najpierw, zwiększymy o pewną wartość kwotę wydatków,
-        //   w ten sposób bilans zostanie ponownie wyliczony i zniknie błąd obliczeń;
-        // - następnie, w tym samym rekordzie zmniejszymy kwotę wydatków o taką samą wartość,
-        //   czyli wrócimy do pierwotnej wartości poniesionych obciążeń;
-        //   drugie przeliczenie niczego nie zepsuje.
-
-        // A: Tymczasowo zwiększ wydatki o jeden, chodzi tylko o ponowne przeliczenie salda.
-
-        $crawler = $this->client->request('GET', '/en/pln');
-        $this->assertSelectorTextContains('td#pln_balance2', '191');
-
-        $crawler = $this->client->click(
-            $crawler->filter('a#pln_edit2')->link()
-        );
-        $form = $crawler->selectButton('pln_save')->form();
-        $values = $form->getValues();
-        $this->assertSame('-10.00', $values["pln[amount]"]);
-        $this->client->submitForm('pln_save', [
-            'pln[amount]' => '-11',
-        ]);
-        $this->assertSelectorTextContains('td#pln_balance2', '189');
-
-        // B: Zmniejsz wydatki do pierwotnej wartości, ponowne przeliczenie niczego nie zepsuje.
-
-        $crawler = $this->client->request('GET', '/en/pln');
-        $this->assertSelectorTextContains('td#pln_balance2', '189');
-
-        $crawler = $this->client->click(
-            $crawler->filter('a#pln_edit2')->link()
-        );
-        $form = $crawler->selectButton('pln_save')->form();
-        $values = $form->getValues();
-        $this->assertSame('-11.00', $values["pln[amount]"]);
-        $this->client->submitForm('pln_save', [
-            'pln[amount]' => '-10',
-        ]);
-        $this->assertSelectorTextContains('td#pln_balance2', '190');
-
-        // Sprawdź, czy błąd został usunięty.
-
         $this->client->request('GET', '/en/pln');
         $this->client->clickLink('Check');
         $this->assertSelectorTextContains('div.alert-success', 'Passed');

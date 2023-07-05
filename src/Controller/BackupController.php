@@ -61,6 +61,7 @@ class BackupController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->backupUpdater->setPreviousId($this->backupRepository, $backup->getId());
             $this->backupRepository->save($backup, true);
             $this->backupUpdater->compute($this->backupRepository, $backup->getId());
 
@@ -81,6 +82,7 @@ class BackupController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $backup->getId(), (string) $request->request->get('_token'))) {
             $backup->setAmount(0);
+            $this->backupUpdater->setPreviousId($this->backupRepository, $backup->getId());
             $this->backupUpdater->compute($this->backupRepository, $backup->getId());
             $this->backupRepository->remove($backup, true);
         }
@@ -125,6 +127,7 @@ class BackupController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $backup = $interest->form2Backup($form);
             $this->backupRepository->save($backup, true);
+            $this->backupUpdater->setPreviousId($this->backupRepository, $backup->getId());
             $this->backupUpdater->compute($this->backupRepository, $backup->getId());
 
             return $this->redirectToRoute('backup_index');

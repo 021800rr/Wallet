@@ -101,6 +101,7 @@ class ChfController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $chf->getId(), (string) $request->request->get('_token'))) {
             $chf->setAmount(0);
+            $this->walletUpdater->setPreviousId($this->chfRepository, $chf->getId());
             $this->walletUpdater->compute($this->chfRepository, $chf->getId());
             $this->chfRepository->remove($chf, true);
         }
@@ -141,8 +142,13 @@ class ChfController extends AbstractController
         $form = $this->createForm(ChfType::class, $chf);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $this->chfRepository->save($chf, true);
+            if ($chf->getId()) {
+                $this->walletUpdater->setPreviousId($this->chfRepository, $chf->getId());
+                $this->chfRepository->save($chf, true);
+            } else {
+                $this->chfRepository->save($chf, true);
+                $this->walletUpdater->setPreviousId($this->chfRepository, $chf->getId());
+            }
             $this->walletUpdater->compute($this->chfRepository, $chf->getId());
 
             return $this->redirectToRoute('chf_index');

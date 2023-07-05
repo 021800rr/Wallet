@@ -63,6 +63,7 @@ class PlnController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->plnRepository->save($pln, true);
+            $this->walletUpdater->setPreviousId($this->plnRepository, $pln->getId());
             $this->walletUpdater->compute($this->plnRepository, $pln->getId());
 
             return $this->redirectToRoute('pln_index');
@@ -84,6 +85,7 @@ class PlnController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->walletUpdater->setPreviousId($this->plnRepository, $pln->getId());
             $this->plnRepository->save($pln, true);
             $this->walletUpdater->compute($this->plnRepository, $pln->getId());
 
@@ -129,6 +131,7 @@ class PlnController extends AbstractController
         $route = (!empty($route)) ? $route : 'pln_index';
         if ($this->isCsrfTokenValid('delete' . $pln->getId(), (string) $request->request->get('_token'))) {
             $pln->setAmount(0);
+            $this->walletUpdater->setPreviousId($this->plnRepository, $pln->getId());
             $this->walletUpdater->compute($this->plnRepository, $pln->getId());
             $this->plnRepository->remove($pln, true);
         }

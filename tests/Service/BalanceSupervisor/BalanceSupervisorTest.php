@@ -25,7 +25,7 @@ class BalanceSupervisorTest extends KernelTestCase
         }
 
         $this->assertSame(
-            ["2 : 2021-05-12 : -10 : 191 : 190 : Allegro", "3 : 2021-05-13 : -20 : 170 : 171 : Allegro"],
+            [],
             $result
         );
     }

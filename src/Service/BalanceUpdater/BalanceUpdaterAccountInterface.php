@@ -13,4 +13,6 @@ interface BalanceUpdaterAccountInterface
      * @throws Exception
      */
     public function compute(AccountRepositoryInterface $accountRepository, int $id): void;
+
+    public function setPreviousId(AccountRepositoryInterface $accountRepository, int $id): int;
 }

@@ -25,7 +25,7 @@ class TransferToPlnTest extends ApiTestCase
      */
     public function testPost(): void
     {
-        $this->assertSame(170.00, $this->plnRepository->getCurrentBalance());
+        $this->assertSame(100.00, $this->plnRepository->getCurrentBalance());
 
         $this->client->request('POST', '/api/transfer/to/pln', [
             'auth_bearer' => $this->token,
@@ -36,7 +36,7 @@ class TransferToPlnTest extends ApiTestCase
         ]);
         $this->assertResponseStatusCodeSame(201);
 
-        $this->assertSame(270.00, $this->plnRepository->getCurrentBalance());
+        $this->assertSame(200.00, $this->plnRepository->getCurrentBalance());
 
         $this->client->request('GET', '/api/backups', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([

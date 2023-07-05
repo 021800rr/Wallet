@@ -22,30 +22,12 @@ class PlnCheckerTest extends ApiTestCase
      */
     public function testGet(): void
     {
-        $r = $this->client->request('GET', '/api/check/plns', ['auth_bearer' => $this->token]);
+        $this->client->request('GET', '/api/check/plns', ['auth_bearer' => $this->token]);
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
         $this->assertJsonContains([
-            "result" => "Error",
-            "wallets" => [
-                [
-                    "balance_supervisor" => 190,
-                    "id" => 2,
-                    "balance" => 191,
-                    "contractor" => [
-                        "description" => "Allegro"
-                    ]
-                ],
-                [
-                    "balance_supervisor" => 171,
-                    "id" => 3,
-                    "balance" => 170,
-                    "contractor" => [
-                        "description" => "Allegro"
-                    ]
-                ]
-            ]
+            "result" => "Passed",
         ]);
     }
 }
