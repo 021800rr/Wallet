@@ -66,9 +66,9 @@ class BackupControllerTest extends WebTestCase
     {
         $crawler = $this->client->request('GET', '/en/backup');
         $this->client->submit(
-            $crawler->filter('form#backup_delete2')->form()
+            $crawler->filter('form#backup_delete1')->form()
         );
-        $this->assertSelectorTextContains('td#backup_balance1', '400');
+        $this->assertSelectorTextContains('td#backup_balance1', '300');
     }
 
     public function testPaymentsByMonth(): void
@@ -77,11 +77,11 @@ class BackupControllerTest extends WebTestCase
         $this->assertSelectorTextContains('td#backup_sum_of_amounts1', '300');
         $this->assertSelectorTextContains('td#expected', '300');
         $this->assertSelectorTextContains('td#chfBalance', '70.07');
-        $this->assertSelectorTextContains('td#plnBalance', '170');
+        $this->assertSelectorTextContains('td#plnBalance', '100');
         $this->assertSelectorTextContains('td#holiday', '300');
         $this->assertSelectorTextContains('td#retiring', '300');
         $this->assertSelectorTextContains('td#balance', '600');
-        $this->assertSelectorTextContains('td#total', '770');
+        $this->assertSelectorTextContains('td#total', '700');
     }
 
     public function testInterest(): void

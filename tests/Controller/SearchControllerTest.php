@@ -16,10 +16,10 @@ class SearchControllerTest extends WebTestCase
     {
         $this->client->request('GET', '/en/pln');
         $this->client->submitForm('form_search', [
-            'form[query]' => '191',
+            'form[query]' => '190',
         ]);
 
-        $this->assertSelectorTextContains('td#search_balance1', '191');
+        $this->assertSelectorTextContains('td#search_balance1', '190');
 
         $this->client->request('GET', '/en/pln');
         $this->client->submitForm('form_search', [
@@ -61,16 +61,14 @@ class SearchControllerTest extends WebTestCase
         $crawler = $this->client->submitForm('form_search', [
             'form[query]' => 'all',
         ]);
-        $this->assertSelectorTextContains('td#search_balance1', '170');
-        $this->assertSelectorTextContains('td#search_amount1', '-20');
 
         $this->client->click(
             $crawler->filter('a#pln_edit1')->link()
         );
         $this->client->submitForm('pln_save', [
-            'pln[amount]' => '-40',
+            'pln[amount]' => '-50',
         ]);
-        $this->assertSelectorTextContains('td#search_balance1', '151');
+        $this->assertSelectorTextContains('td#search_balance1', '90');
     }
 
     public function testDelete(): void
@@ -80,15 +78,10 @@ class SearchControllerTest extends WebTestCase
         $crawler = $this->client->submitForm('form_search', [
             'form[query]' => 'all',
         ]);
-        $this->assertSelectorTextContains('td#search_amount1', '-20');
-        $this->assertSelectorTextContains('td#search_balance1', '170');
-
-        $this->assertSelectorTextContains('td#search_amount2', '-10');
-        $this->assertSelectorTextContains('td#search_balance2', '191');
 
         $this->client->submit(
             $crawler->filter('form#pln_delete2')->form()
         );
-        $this->assertSelectorTextContains('td#search_balance1', '180');
+        $this->assertSelectorTextContains('td#search_balance1', '130');
     }
 }

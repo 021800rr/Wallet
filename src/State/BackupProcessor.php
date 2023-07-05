@@ -33,10 +33,17 @@ class BackupProcessor implements ProcessorInterface
         /** @var Backup $data */
         if ($operation instanceof DeleteOperationInterface) {
             $data->setAmount(0);
+            $this->backupUpdater->setPreviousId($this->backupRepository, $data->getId());
             $this->backupUpdater->compute($this->backupRepository, $data->getId());
             $this->removeProcessor->process($data, $operation, $uriVariables, $context);
         } else {
-            $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+            if ($data->getId()) {
+                $this->backupUpdater->setPreviousId($this->backupRepository, $data->getId());
+                $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+            } else {
+                $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+                $this->backupUpdater->setPreviousId($this->backupRepository, $data->getId());
+            }
             $this->backupUpdater->compute($this->backupRepository, $data->getId());
         }
     }

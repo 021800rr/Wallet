@@ -13,13 +13,13 @@ class PlnRepositoryTest extends KernelTestCase
     public function testFindAll(): void
     {
         $plnTransactions = $this->plnRepository->findAll();
-        $this->assertSame(3, count($plnTransactions));
+        $this->assertSame(5, count($plnTransactions));
     }
 
     public function testGetAllRecords(): void
     {
         $plnTransactions = $this->plnRepository->getAllRecords();
-        $this->assertSame(3, count($plnTransactions));
+        $this->assertSame(5, count($plnTransactions));
     }
 
     public function testSearch(): void
@@ -32,12 +32,12 @@ class PlnRepositoryTest extends KernelTestCase
         $this->assertSame(-10.0, $parameter->getValue());
         $this->assertSame(1, $paginator->count());
 
-        $paginator = $this->plnRepository->search('191', 15);
+        $paginator = $this->plnRepository->search('190', 15);
 
         /** @var Parameter $parameter */
         $parameter = $paginator->getQuery()->getParameters()[3];
         $this->assertSame("balance", $parameter->getName());
-        $this->assertSame(191.0, $parameter->getValue());
+        $this->assertSame(190.0, $parameter->getValue());
         $this->assertSame(1, $paginator->count());
 
         $paginator = $this->plnRepository->search('all', 15);

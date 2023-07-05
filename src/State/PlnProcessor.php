@@ -33,10 +33,17 @@ class PlnProcessor implements ProcessorInterface
         /** @var Pln $data */
         if ($operation instanceof DeleteOperationInterface) {
             $data->setAmount(0);
+            $this->walletUpdater->setPreviousId($this->plnRepository, $data->getId());
             $this->walletUpdater->compute($this->plnRepository, $data->getId());
             $this->removeProcessor->process($data, $operation, $uriVariables, $context);
         } else {
-            $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+            if ($data->getId()) {
+                $this->walletUpdater->setPreviousId($this->plnRepository, $data->getId());
+                $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+            } else {
+                $this->persistProcessor->process($data, $operation, $uriVariables, $context);
+                $this->walletUpdater->setPreviousId($this->plnRepository, $data->getId());
+            }
             $this->walletUpdater->compute($this->plnRepository, $data->getId());
         }
     }

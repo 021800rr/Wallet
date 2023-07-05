@@ -56,9 +56,9 @@ class ChfControllerTest extends WebTestCase
     {
         $crawler = $this->client->request('GET', '/en/chf');
         $this->client->submit(
-            $crawler->filter('form#chf_delete2')->form()
+            $crawler->filter('form#chf_delete1')->form()
         );
-        $this->assertSelectorTextContains('td#chf_balance1', '50.05');
+        $this->assertSelectorTextContains('td#chf_balance1', '30.03');
     }
 
     public function testIsConsistent(): void

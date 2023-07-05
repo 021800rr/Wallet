@@ -81,15 +81,15 @@ class FeeControllerTest extends WebTestCase
         $this->assertSame("http://localhost/en/pln/", $crawler->getUri());
 
         $this->assertSelectorTextContains('td#pln_contractor1', 'Spotify');
-        $this->assertSelectorTextContains('td#pln_balance1', '98.01');
+        $this->assertSelectorTextContains('td#pln_balance1', '28.01');
         $this->assertSelectorTextContains('td#pln_amount1', '-19.99');
 
         $this->assertSelectorTextContains('td#pln_contractor2', 'Netflix');
-        $this->assertSelectorTextContains('td#pln_balance2', '118');
+        $this->assertSelectorTextContains('td#pln_balance2', '48');
         $this->assertSelectorTextContains('td#pln_amount2', '-52');
 
         $this->assertSelectorTextContains('td#pln_contractor3', 'Allegro');
-        $this->assertSelectorTextContains('td#pln_balance3', '170');
-        $this->assertSelectorTextContains('td#pln_amount3', '-20');
+        $this->assertSelectorTextContains('td#pln_balance3', '100');
+        $this->assertSelectorTextContains('td#pln_amount3', '-40');
     }
 }

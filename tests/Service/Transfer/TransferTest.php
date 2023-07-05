@@ -34,7 +34,7 @@ class TransferTest extends KernelTestCase
             $this->plnRepository,
         );
 
-        $this->assertSame(170.00, $this->plnRepository->getCurrentBalance());
+        $this->assertSame(100.00, $this->plnRepository->getCurrentBalance());
 
         /** @var Backup[] $transactions */
         $transactions = $this->backupRepository->findAll();
@@ -48,7 +48,7 @@ class TransferTest extends KernelTestCase
 
         $transfer->moveToBackup($backup);
 
-        $this->assertSame(70.00, $this->plnRepository->getCurrentBalance());
+        $this->assertSame(0.00, $this->plnRepository->getCurrentBalance());
 
         /** @var Backup[] $transactions */
         $transactions = $this->backupRepository->findAll();
@@ -62,7 +62,7 @@ class TransferTest extends KernelTestCase
 
         $transfer->moveToPln($pln);
 
-        $this->assertSame(170.00, $this->plnRepository->getCurrentBalance());
+        $this->assertSame(100.00, $this->plnRepository->getCurrentBalance());
 
         /** @var Backup[] $transactions */
         $transactions = $this->backupRepository->findAll();
@@ -75,7 +75,7 @@ class TransferTest extends KernelTestCase
         $backup->setAmount(100);
 
         $transfer->moveToBackup($backup, 1);
-        $this->assertSame(70.00, $this->plnRepository->getCurrentBalance());
+        $this->assertSame(0.00, $this->plnRepository->getCurrentBalance());
         /** @var Backup[] $transactions */
         $transactions = $this->backupRepository->findAll();
         $this->assertSame(0.00, $transactions[0]->getRetiring());

@@ -27,13 +27,13 @@ class FeeTest extends ApiTestCase
     {
         $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
-            "hydra:totalItems" => 3,
+            "hydra:totalItems" => 5,
         ]);
         $this->client->request('POST', '/api/fees/insert/to/pln', ['auth_bearer' => $this->token]);
         $this->assertResponseStatusCodeSame(204);
         $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
-            "hydra:totalItems" => 5,
+            "hydra:totalItems" => 7,
         ]);
     }
 

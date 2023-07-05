@@ -69,7 +69,7 @@ class AccountTraitTest extends KernelTestCase
     public function testPlnGetCurrentBalance(): void
     {
         $balance = $this->plnRepository->getCurrentBalance();
-        $this->assertSame(170.0, $balance);
+        $this->assertSame(100.0, $balance);
     }
 
     /**
@@ -79,7 +79,7 @@ class AccountTraitTest extends KernelTestCase
     {
         /** @var Pln $last */
         $last = $this->plnRepository->getLastRecord();
-        $this->assertSame(3, $last->getId());
-        $this->assertSame(170.0, $last->getBalance());
+        $this->assertSame(5, $last->getId());
+        $this->assertSame(100.0, $last->getBalance());
     }
 }

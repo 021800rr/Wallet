@@ -38,12 +38,12 @@ class PaymentsByMonthTest extends ApiTestCase
                 ]
             ],
             "expected" => 300,
-            "plnBalance" => 170,
+            "plnBalance" => 100,
             "chfBalance" => 70.07,
             "backupLastRecord" => [
                 "balance" => 600
             ],
-            "total" => 770
+            "total" => 700
         ]);
     }
 }
