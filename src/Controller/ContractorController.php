@@ -44,6 +44,7 @@ class ContractorController extends AbstractController
     public function new(Request $request): Response
     {
         $contractor = new Contractor();
+
         return $this->upsert($contractor, $request);
     }
 
