@@ -7,8 +7,6 @@ use App\Repository\AccountRepositoryInterface;
 
 class BalanceUpdaterWallet extends BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInterface
 {
-    use BalanceUpdaterTrait;
-
     /**
      * @param AccountRepositoryInterface $accountRepository
      * @param AbstractAccount $predecessor
