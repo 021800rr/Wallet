@@ -84,13 +84,10 @@ docker exec -it  wallet-postgres-container bash
 
 docker compose --env-file .env.prod.local down
 
-git co -b develop
-
-// set APP_ENV=dev
-vi .env
+git co develop
 
 docker compose --env-file .env.dev.local up -d
-docker exec -it  wallet-php-container bash
+docker exec -it  wallet-php-container-dev bash
     cd /var/www/
     ./reset_dev.sh
 
@@ -107,9 +104,10 @@ docker exec -it  wallet-php-container bash
 ## test
 
 ```shell
+git co develop
 docker compose --env-file .env.dev.local up -d
 ./xdebug-disable-enable.sh disable
-docker exec -it  wallet-php-container bash
+docker exec -it  wallet-php-container-dev bash
 
     cd /var/www/
 
