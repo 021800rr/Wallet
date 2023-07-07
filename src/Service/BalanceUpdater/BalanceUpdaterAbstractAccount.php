@@ -8,23 +8,30 @@ use Exception;
 
 abstract class BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInterface
 {
-    public function __construct(protected int $previousId = 2)
+    public function __construct(protected ?int $previousId = null)
     {
     }
 
     /**
-     * @param AccountRepositoryInterface $accountRepository
-     * @param AbstractAccount $predecessor
-     * @param AbstractAccount $transaction
-     * @param array<int, AbstractAccount>|null $successors
-     * @return void
+     * @throws Exception
      */
-    abstract protected function walk(
-        AccountRepositoryInterface $accountRepository,
-        AbstractAccount            $predecessor,
-        AbstractAccount            $transaction,
-        ?array                     $successors,
-    ): void;
+    public function setPreviousId(AccountRepositoryInterface $accountRepository, int $id): ?int
+    {
+        $input = $accountRepository->findAll();
+
+        $reversed = array_reverse($input);
+        foreach ($reversed as $key => $transaction) {
+            $this->previousId = $transaction->getId();
+            if (0 === $key && ($transaction->getId() === $id || ($reversed[$key + 1])->getId() === $id)) {
+                $this->previousId = null;
+                throw new Exception("the first two records cannot be changed.... (for now)");
+            } elseif (($reversed[$key + 1])->getId() === $id) {
+                break;
+            }
+        }
+
+        return $this->previousId;
+    }
 
     /**
      * @param AccountRepositoryInterface $accountRepository
@@ -48,21 +55,25 @@ abstract class BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInt
     /**
      * @throws Exception
      */
-    public function setPreviousId(AccountRepositoryInterface $accountRepository, int $id): int
+    protected function getOlderRecordId(AccountRepositoryInterface $accountRepository, int $id): int
     {
-        $input = $accountRepository->findAll();
+        if (!$this->previousId) {
+            throw new Exception('no previous id');
+        }
+        $a = $accountRepository->find($this->previousId);
+        $b = $accountRepository->find($id);
 
-        $reversed = array_reverse($input);
-        foreach ($reversed as $key => $transaction) {
-            $this->previousId = $transaction->getId();
-            if (0 === $key && ($transaction->getId() === $id || ($reversed[$key + 1])->getId() === $id)) {
-                throw new Exception("the first two records cannot be changed.... (for now)");
-            } elseif (($reversed[$key + 1])->getId() === $id) {
-                break;
-            }
+        if ($a->getDate() < $b->getDate()) {
+            $result = $a;
+        } elseif ($b->getDate() < $a->getDate()) {
+            $result = $b;
+        } elseif ($a->getId() < $b->getId()) {
+            $result = $a;
+        } else {
+            $result = $b;
         }
 
-        return $this->previousId;
+        return $result->getId();
     }
 
     /**
@@ -91,21 +102,17 @@ abstract class BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInt
         throw new Exception("no transactions");
     }
 
-    protected function getOlderRecordId(AccountRepositoryInterface $accountRepository, int $id): int
-    {
-        $a = $accountRepository->find($this->previousId);
-        $b = $accountRepository->find($id);
-
-        if ($a->getDate() < $b->getDate()) {
-            $result = $a;
-        } elseif ($b->getDate() < $a->getDate()) {
-            $result = $b;
-        } elseif ($a->getId() < $b->getId()) {
-            $result = $a;
-        } else {
-            $result = $b;
-        }
-
-        return $result->getId();
-    }
+    /**
+     * @param AccountRepositoryInterface $accountRepository
+     * @param AbstractAccount $predecessor
+     * @param AbstractAccount $transaction
+     * @param array<int, AbstractAccount>|null $successors
+     * @return void
+     */
+    abstract protected function walk(
+        AccountRepositoryInterface $accountRepository,
+        AbstractAccount            $predecessor,
+        AbstractAccount            $transaction,
+        ?array                     $successors,
+    ): void;
 }
