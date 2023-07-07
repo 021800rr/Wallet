@@ -23,11 +23,11 @@ class WalletBalanceUpdaterTest extends KernelTestCase
         $this->assertSame(100.00, $transactions[0]->getBalance());
 
         $transaction = $transactions[1];
-        $this->assertSame(-30.00, $transaction->getAmount());
-        $transaction->setAmount(-40);
+        $transaction->setAmount($transaction->getAmount() - 10);
 
-        $this->assertSame(4, $transaction->getId());
-        $this->walletFactory->create()->compute($this->plnRepository, 3);
+        $walletUpdater = $this->walletFactory->create();
+        $walletUpdater->setPreviousId($this->plnRepository, $transaction->getId());
+        $walletUpdater->compute($this->plnRepository, $transaction->getId());
 
         /** @var Pln[] $transactions */
         $transactions = $this->plnRepository->findAll();

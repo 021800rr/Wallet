@@ -22,12 +22,12 @@ class BackupBalanceUpdaterTest extends KernelTestCase
         $this->assertSame(300.00, $transactions[0]->getHoliday());
         $this->assertSame(600.00, $transactions[0]->getBalance());
 
-        $transaction = $transactions[1];
-        $this->assertSame(200.00, $transaction->getAmount());
+        $transaction = $transactions[0];
         $transaction->setAmount($transaction->getAmount() - 10);
-        $this->assertSame(190.00, $transaction->getAmount());
 
-        $this->backupFactory->create()->compute($this->backupRepository, $transaction->getId());
+        $backupUpdater = $this->backupFactory->create();
+        $backupUpdater->setPreviousId($this->backupRepository, $transaction->getId());
+        $backupUpdater->compute($this->backupRepository, $transaction->getId());
 
         /** @var Backup[] $transactions */
         $transactions = $this->backupRepository->findAll();
