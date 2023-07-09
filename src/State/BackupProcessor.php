@@ -8,19 +8,16 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Backup;
 use App\Repository\BackupRepositoryInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
-use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use Exception;
 
-class BackupProcessor implements ProcessorInterface
+readonly class BackupProcessor implements ProcessorInterface
 {
     public function __construct(
-        BalanceUpdaterFactoryInterface             $backupFactory,
-        private BalanceUpdaterAccountInterface     $backupUpdater,
-        private readonly ProcessorInterface        $persistProcessor,
-        private readonly ProcessorInterface        $removeProcessor,
-        private readonly BackupRepositoryInterface $backupRepository,
+        private BalanceUpdaterAccountInterface $backupUpdater,
+        private ProcessorInterface             $persistProcessor,
+        private ProcessorInterface             $removeProcessor,
+        private BackupRepositoryInterface      $backupRepository,
     ) {
-        $this->backupUpdater = $backupFactory->create();
     }
 
     /**

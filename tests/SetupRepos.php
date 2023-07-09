@@ -10,11 +10,9 @@ use App\Repository\ChfRepository;
 use App\Repository\ContractorRepository;
 use App\Repository\FeeRepository;
 use App\Repository\PlnRepository;
+use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterBackup;
-use App\Service\BalanceUpdater\BalanceUpdaterBackupFactory;
-use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterWallet;
-use App\Service\BalanceUpdater\BalanceUpdaterWalletFactory;
 use Exception;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
@@ -30,8 +28,6 @@ trait SetupRepos
     private ContractorRepository $contractorRepository;
     private FeeRepository $feeRepository;
     private PlnRepository $plnRepository;
-    private BalanceUpdaterFactoryInterface $backupFactory;
-    private BalanceUpdaterFactoryInterface $walletFactory;
 
     /** @var Pln[] $plns */
     private array $plns;
@@ -40,6 +36,9 @@ trait SetupRepos
     private array $chfs;
 
     private Contractor $internalTransferOwner;
+
+    private BalanceUpdaterAccountInterface $walletUpdater;
+    private BalanceUpdaterAccountInterface $backupUpdater;
 
     /**
      * @throws TransportExceptionInterface
@@ -79,9 +78,9 @@ trait SetupRepos
         $chfs = $this->chfRepository->getAllRecords();
         $this->chfs = $chfs;
 
-        $this->backupFactory = new BalanceUpdaterBackupFactory(new BalanceUpdaterBackup());
-        $this->walletFactory = new BalanceUpdaterWalletFactory(new BalanceUpdaterWallet());
-
         $this->internalTransferOwner = $contractorRepository->getInternalTransferOwner() ?? throw new Exception('no internal transfer owner');
+
+        $this->backupUpdater = new BalanceUpdaterBackup();
+        $this->walletUpdater = new BalanceUpdaterWallet();
     }
 }

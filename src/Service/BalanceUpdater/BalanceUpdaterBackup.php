@@ -8,8 +8,6 @@ use App\Repository\AccountRepositoryInterface;
 
 class BalanceUpdaterBackup extends BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInterface
 {
-    use BalanceUpdaterTrait;
-
     /**
      * @param AccountRepositoryInterface $accountRepository
      * @param AbstractAccount $predecessor

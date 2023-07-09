@@ -9,7 +9,6 @@ use App\Repository\PaginatorEnum;
 use App\Repository\AccountRepositoryInterface;
 use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
-use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use App\Service\RequestParser\RequestParserInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -31,11 +30,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PlnController extends AbstractController
 {
     public function __construct(
-        BalanceUpdaterFactoryInterface              $walletFactory,
-        private BalanceUpdaterAccountInterface      $walletUpdater,
-        private readonly AccountRepositoryInterface $plnRepository,
+        private readonly BalanceUpdaterAccountInterface $walletUpdater,
+        private readonly AccountRepositoryInterface     $plnRepository,
     ) {
-        $this->walletUpdater = $walletFactory->create();
     }
 
     #[Route('/', name: 'pln_index', methods: ['GET'])]

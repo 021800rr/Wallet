@@ -7,20 +7,17 @@ use App\Entity\Pln;
 use App\Repository\FeeRepositoryInterface;
 use App\Repository\AccountRepositoryInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
-use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use DateInterval;
 use DateTime;
 use Exception;
 
-class FixedFees implements FixedFeesInterface
+readonly class FixedFees implements FixedFeesInterface
 {
     public function __construct(
-        BalanceUpdaterFactoryInterface              $walletFactory,
-        private BalanceUpdaterAccountInterface      $walletUpdater,
-        private readonly FeeRepositoryInterface     $feeRepository,
-        private readonly AccountRepositoryInterface $plnRepository,
+        private BalanceUpdaterAccountInterface $walletUpdater,
+        private FeeRepositoryInterface         $feeRepository,
+        private AccountRepositoryInterface     $plnRepository,
     ) {
-        $this->walletUpdater = $walletFactory->create();
     }
 
     /** @throws Exception */

@@ -8,19 +8,16 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Chf;
 use App\Repository\AccountRepositoryInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
-use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use Exception;
 
-class ChfProcessor implements ProcessorInterface
+readonly class ChfProcessor implements ProcessorInterface
 {
     public function __construct(
-        BalanceUpdaterFactoryInterface              $walletFactory,
-        private BalanceUpdaterAccountInterface      $walletUpdater,
-        private readonly ProcessorInterface         $persistProcessor,
-        private readonly ProcessorInterface         $removeProcessor,
-        private readonly AccountRepositoryInterface $chfRepository,
+        private BalanceUpdaterAccountInterface $walletUpdater,
+        private ProcessorInterface             $persistProcessor,
+        private ProcessorInterface             $removeProcessor,
+        private AccountRepositoryInterface     $chfRepository,
     ) {
-        $this->walletUpdater = $walletFactory->create();
     }
 
     /**
