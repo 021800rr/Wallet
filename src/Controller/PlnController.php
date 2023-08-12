@@ -5,12 +5,13 @@ namespace App\Controller;
 use App\Entity\AbstractWallet;
 use App\Entity\Pln;
 use App\Form\PlnType;
-use App\Repository\PaginatorEnum;
 use App\Repository\AccountRepositoryInterface;
+use App\Repository\PaginatorEnum;
 use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
-use App\Service\RequestParser\RequestParserInterface;
 use Exception;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -36,16 +37,18 @@ class PlnController extends AbstractController
     }
 
     #[Route('/', name: 'pln_index', methods: ['GET'])]
-    public function index(Request $request, RequestParserInterface $requestParser): Response
+    public function index(Request $request): Response
     {
-        /** @var int $offset */
-        $offset = $requestParser->strategy(PlnController::class, $request)[1];
-        $paginator = $this->plnRepository->getPaginator($offset);
+        $queryBuilder = $this->plnRepository->getAllRecordsQueryBuilder();
+        $adapter = new QueryAdapter($queryBuilder);
+        $pagerfanta = Pagerfanta::createForCurrentPageWithMaxPerPage(
+            $adapter,
+            $request->query->get('page', 1),
+            PaginatorEnum::PerPage->value
+        );
 
         return $this->render('pln/index.html.twig', [
-            'paginator' => $paginator,
-            'previous' => $offset - PaginatorEnum::PerPage->value,
-            'next' => min(count($paginator), $offset + PaginatorEnum::PerPage->value),
+            'pager' => $pagerfanta,
         ]);
     }
 
