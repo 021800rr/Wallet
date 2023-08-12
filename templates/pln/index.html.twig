@@ -13,7 +13,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for pln in paginator %}
+            {% for pln in pager %}
                 {% if pln.balanceSupervisor is defined and pln.balanceSupervisor is not null %}
                     {% set bg_color = true %}
                 {% else %}
@@ -40,5 +40,6 @@
         </tbody>
     </table>
     {% set PATH = 'pln_index' %}
-    {{ include('paginator.html.twig') }}
+
+    {{ pagerfanta(pager) }}
 {% endblock %}

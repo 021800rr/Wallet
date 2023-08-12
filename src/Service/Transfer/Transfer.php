@@ -9,22 +9,17 @@ use App\Repository\AccountRepositoryInterface;
 use App\Repository\BackupRepositoryInterface;
 use App\Repository\ContractorRepositoryInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
-use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use Exception;
 
-class Transfer implements TransferInterface
+readonly class Transfer implements TransferInterface
 {
     public function __construct(
-        BalanceUpdaterFactoryInterface                 $walletFactory,
-        private BalanceUpdaterAccountInterface         $walletUpdater,
-        BalanceUpdaterFactoryInterface                 $backupFactory,
-        private BalanceUpdaterAccountInterface         $backupUpdater,
-        private readonly ContractorRepositoryInterface $contractorRepository,
-        private readonly BackupRepositoryInterface     $backupRepository,
-        private readonly AccountRepositoryInterface    $plnRepository,
+        private BalanceUpdaterAccountInterface $walletUpdater,
+        private BalanceUpdaterAccountInterface $backupUpdater,
+        private ContractorRepositoryInterface  $contractorRepository,
+        private BackupRepositoryInterface      $backupRepository,
+        private AccountRepositoryInterface     $plnRepository,
     ) {
-        $this->walletUpdater = $walletFactory->create();
-        $this->backupUpdater = $backupFactory->create();
     }
 
     /**

@@ -19,8 +19,7 @@ class FixedFeesTest extends KernelTestCase
     public function testInsert(): void
     {
         $fixedFees = new FixedFees(
-            $this->walletFactory,
-            new BalanceUpdaterWallet(),
+            $this->walletUpdater,
             $this->feeRepository,
             $this->plnRepository,
         );

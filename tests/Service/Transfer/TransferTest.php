@@ -25,10 +25,8 @@ class TransferTest extends KernelTestCase
     public function testMoveAssets(): void
     {
         $transfer = new Transfer(
-            $this->walletFactory,
-            new BalanceUpdaterWallet(),
-            $this->backupFactory,
-            new BalanceUpdaterBackup(),
+            $this->walletUpdater,
+            $this->backupUpdater,
             $this->contractorRepository,
             $this->backupRepository,
             $this->plnRepository,

@@ -22,23 +22,11 @@ services:
     App\Service\BalanceUpdater\BalanceUpdaterWallet: ~
     App\Service\BalanceUpdater\BalanceUpdaterAccountInterface $walletUpdater: '@App\Service\BalanceUpdater\BalanceUpdaterWallet'
 
-    #
-
-    App\Service\BalanceUpdater\BalanceUpdaterBackupFactory: ~
-    App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface $backupFactory: '@App\Service\BalanceUpdater\BalanceUpdaterBackupFactory'
-
-    App\Service\BalanceUpdater\BalanceUpdaterWalletFactory: ~
-    App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface $walletFactory: '@App\Service\BalanceUpdater\BalanceUpdaterWalletFactory'
-
-    ###
-
     App\Repository\PlnRepository: ~
     App\Repository\AccountRepositoryInterface $plnRepository: '@App\Repository\PlnRepository'
 
     App\Repository\ChfRepository: ~
     App\Repository\AccountRepositoryInterface $chfRepository: '@App\Repository\ChfRepository'
-
-    ###
 
     App\Repository\FeeRepository: ~
     App\Repository\FeeRepositoryInterface $feeRepository: '@App\Repository\FeeRepository'

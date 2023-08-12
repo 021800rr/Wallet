@@ -25,9 +25,8 @@ class BackupBalanceUpdaterTest extends KernelTestCase
         $transaction = $transactions[0];
         $transaction->setAmount($transaction->getAmount() - 10);
 
-        $backupUpdater = $this->backupFactory->create();
-        $backupUpdater->setPreviousId($this->backupRepository, $transaction->getId());
-        $backupUpdater->compute($this->backupRepository, $transaction->getId());
+        $this->backupUpdater->setPreviousId($this->backupRepository, $transaction->getId());
+        $this->backupUpdater->compute($this->backupRepository, $transaction->getId());
 
         /** @var Backup[] $transactions */
         $transactions = $this->backupRepository->findAll();

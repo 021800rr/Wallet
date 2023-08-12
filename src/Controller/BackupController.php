@@ -9,7 +9,6 @@ use App\Repository\AccountRepositoryInterface;
 use App\Repository\PaginatorEnum;
 use App\Repository\BackupRepositoryInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
-use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use App\Service\ExpectedBackup\CalculatorInterface;
 use App\Service\Interest\InterestInterface;
 use Exception;
@@ -31,11 +30,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class BackupController extends AbstractController
 {
     public function __construct(
-        BalanceUpdaterFactoryInterface             $backupFactory,
-        private BalanceUpdaterAccountInterface     $backupUpdater,
-        private readonly BackupRepositoryInterface $backupRepository,
+        private readonly BalanceUpdaterAccountInterface $backupUpdater,
+        private readonly BackupRepositoryInterface      $backupRepository,
     ) {
-        $this->backupUpdater = $backupFactory->create();
     }
 
     #[Route('/', name: 'backup_index', methods: ['GET'])]

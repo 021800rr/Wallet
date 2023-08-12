@@ -10,7 +10,6 @@ use App\Repository\ContractorRepositoryInterface;
 use App\Repository\PaginatorEnum;
 use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
-use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,11 +30,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ChfController extends AbstractController
 {
     public function __construct(
-        BalanceUpdaterFactoryInterface              $walletFactory,
-        private BalanceUpdaterAccountInterface      $walletUpdater,
-        private readonly AccountRepositoryInterface $chfRepository,
+        private readonly BalanceUpdaterAccountInterface $walletUpdater,
+        private readonly AccountRepositoryInterface     $chfRepository,
     ) {
-        $this->walletUpdater = $walletFactory->create();
     }
 
     #[Route('/', name: 'chf_index', methods: ['GET'])]

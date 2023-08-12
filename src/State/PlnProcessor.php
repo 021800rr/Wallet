@@ -8,19 +8,16 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Pln;
 use App\Repository\AccountRepositoryInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
-use App\Service\BalanceUpdater\BalanceUpdaterFactoryInterface;
 use Exception;
 
-class PlnProcessor implements ProcessorInterface
+readonly class PlnProcessor implements ProcessorInterface
 {
     public function __construct(
-        BalanceUpdaterFactoryInterface              $walletFactory,
-        private BalanceUpdaterAccountInterface      $walletUpdater,
-        private readonly ProcessorInterface         $persistProcessor,
-        private readonly ProcessorInterface         $removeProcessor,
-        private readonly AccountRepositoryInterface $plnRepository,
+        private BalanceUpdaterAccountInterface $walletUpdater,
+        private ProcessorInterface             $persistProcessor,
+        private ProcessorInterface             $removeProcessor,
+        private AccountRepositoryInterface     $plnRepository,
     ) {
-        $this->walletUpdater = $walletFactory->create();
     }
 
     /**
