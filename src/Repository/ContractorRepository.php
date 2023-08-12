@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Contractor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -44,15 +44,10 @@ class ContractorRepository extends ServiceEntityRepository implements Contractor
         return $this->findBy([], ['description' => 'ASC']);
     }
 
-    public function getPaginator(int $offset): Paginator
+    public function getAllRecordsQueryBuilder(): QueryBuilder
     {
-        $query = $this->createQueryBuilder('c')
-            ->addOrderBy('c.description', 'ASC')
-            ->setMaxResults(PaginatorEnum::PerPage->value)
-            ->setFirstResult($offset)
-            ->getQuery();
-
-        return new Paginator($query);
+        return $this->createQueryBuilder('c')
+            ->addOrderBy('c.description', 'ASC');
     }
 
     public function getInternalTransferOwner(): ?Contractor

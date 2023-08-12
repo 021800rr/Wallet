@@ -10,7 +10,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for fee in paginator %}
+            {% for fee in pager %}
                 <tr>
                     <td id="fee_date{{ loop.index }}">{{ fee.date| format_number({min_integer_digit:'2'}) }}</td>
                     <td class="text-end row_money_amount" id="fee_amount{{ loop.index }}">{{ fee.amount }}</td>
@@ -23,5 +23,5 @@
     </table>
     {{ include('fee/_fixed_fees_form.html.twig') }}
     {% set PATH = 'fee_index' %}
-    {{ include('paginator.html.twig') }}
+    {{ pagerfanta(pager) }}
 {% endblock %}

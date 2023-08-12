@@ -6,14 +6,10 @@ use App\Entity\AbstractWallet;
 use App\Entity\Pln;
 use App\Form\PlnType;
 use App\Repository\AccountRepositoryInterface;
-use App\Repository\PaginatorEnum;
 use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
 use Exception;
-use Pagerfanta\Doctrine\ORM\QueryAdapter;
-use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
     locale: 'pl',
 )]
 #[IsGranted('ROLE_ADMIN')]
-class PlnController extends AbstractController
+class PlnController extends AbstractAppPaginator
 {
     public function __construct(
         private readonly BalanceUpdaterAccountInterface $walletUpdater,
@@ -39,16 +35,11 @@ class PlnController extends AbstractController
     #[Route('/', name: 'pln_index', methods: ['GET'])]
     public function index(Request $request): Response
     {
-        $queryBuilder = $this->plnRepository->getAllRecordsQueryBuilder();
-        $adapter = new QueryAdapter($queryBuilder);
-        $pagerfanta = Pagerfanta::createForCurrentPageWithMaxPerPage(
-            $adapter,
-            $request->query->get('page', 1),
-            PaginatorEnum::PerPage->value
-        );
-
         return $this->render('pln/index.html.twig', [
-            'pager' => $pagerfanta,
+            'pager' => $this->getPagerfanta(
+                $request,
+                $this->plnRepository->getAllRecordsQueryBuilder(),
+            ),
         ]);
     }
 

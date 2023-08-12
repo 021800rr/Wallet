@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\AbstractAccount;
 use App\Entity\Fee;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\QueryBuilder;
 
 trait AppTrait
 {
@@ -14,15 +14,10 @@ trait AppTrait
         return $this->findBy([], ['date' => 'DESC', 'id' => 'DESC']);
     }
 
-    public function getPaginator(int $offset): Paginator
+    public function getAllRecordsQueryBuilder(): QueryBuilder
     {
-        $query = $this->createQueryBuilder('w')
+        return $this->createQueryBuilder('w')
             ->addOrderBy('w.date', 'DESC')
-            ->addOrderBy('w.id', 'DESC')
-            ->setMaxResults(PaginatorEnum::PerPage->value)
-            ->setFirstResult($offset)
-            ->getQuery();
-
-        return new Paginator($query);
+            ->addOrderBy('w.id', 'DESC');
     }
 }

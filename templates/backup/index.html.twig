@@ -13,7 +13,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for backup in paginator %}
+            {% for backup in pager %}
                 <tr>
                     <td id="backup_date{{ loop.index }}">{{ backup.date|date("Y-m-d") }}</td>
                     <td class="text-end row_money_backup_amount" id="backup_amount{{ loop.index }}">{{ backup.amount }}</td>
@@ -28,5 +28,5 @@
         </tbody>
     </table>
     {% set PATH = 'backup_index' %}
-    {{ include('paginator.html.twig') }}
+    {{ pagerfanta(pager) }}
 {% endblock %}
