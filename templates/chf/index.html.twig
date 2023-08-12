@@ -12,7 +12,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for chf in paginator %}
+            {% for chf in pager %}
                 <tr>
                     <td>{{ chf.date|date("Y-m-d") }}</td>
                     <td class="text-end row_chf_amount" id="chf_amount{{ loop.index }}">{{ chf.amount }}</td>
@@ -27,5 +27,5 @@
         </tbody>
     </table>
     {% set PATH = 'chf_index' %}
-    {{ include('paginator.html.twig') }}
+    {{ pagerfanta(pager) }}
 {% endblock %}

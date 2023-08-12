@@ -5,9 +5,7 @@ namespace App\Controller;
 use App\Entity\Contractor;
 use App\Form\ContractorType;
 use App\Repository\ContractorRepositoryInterface;
-use App\Repository\PaginatorEnum;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
     locale: 'pl',
 )]
 #[IsGranted('ROLE_ADMIN')]
-class ContractorController extends AbstractController
+class ContractorController extends AbstractAppPaginator
 {
     public function __construct(private readonly ContractorRepositoryInterface $contractorRepository)
     {
@@ -30,13 +28,11 @@ class ContractorController extends AbstractController
     #[Route('/', name: 'contractor_index', methods: ['GET'])]
     public function index(Request $request): Response
     {
-        $offset = max(0, $request->query->getInt('offset', 0));
-        $paginator = $this->contractorRepository->getPaginator($offset);
-
         return $this->render('contractor/index.html.twig', [
-            'paginator' => $paginator,
-            'previous' => $offset - PaginatorEnum::PerPage->value,
-            'next' => min(count($paginator), $offset + PaginatorEnum::PerPage->value),
+            'pager' => $this->getPagerfanta(
+                $request,
+                $this->contractorRepository->getAllRecordsQueryBuilder(),
+            ),
         ]);
     }
 

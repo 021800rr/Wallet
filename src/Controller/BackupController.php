@@ -6,14 +6,12 @@ use App\Entity\Backup;
 use App\Form\BackupType;
 use App\Form\InterestType;
 use App\Repository\AccountRepositoryInterface;
-use App\Repository\PaginatorEnum;
 use App\Repository\BackupRepositoryInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
 use App\Service\ExpectedBackup\CalculatorInterface;
 use App\Service\Interest\InterestInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
     locale: 'pl',
 )]
 #[IsGranted('ROLE_ADMIN')]
-class BackupController extends AbstractController
+class BackupController extends AbstractAppPaginator
 {
     public function __construct(
         private readonly BalanceUpdaterAccountInterface $backupUpdater,
@@ -38,13 +36,11 @@ class BackupController extends AbstractController
     #[Route('/', name: 'backup_index', methods: ['GET'])]
     public function index(Request $request): Response
     {
-        $offset = max(0, $request->query->getInt('offset', 0));
-        $paginator = $this->backupRepository->getPaginator($offset);
-
         return $this->render('backup/index.html.twig', [
-            'paginator' => $paginator,
-            'previous' => $offset - PaginatorEnum::PerPage->value,
-            'next' => min(count($paginator), $offset + PaginatorEnum::PerPage->value),
+            'pager' => $this->getPagerfanta(
+                $request,
+                $this->backupRepository->getAllRecordsQueryBuilder(),
+            ),
         ]);
     }
 

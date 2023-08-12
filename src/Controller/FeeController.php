@@ -6,10 +6,8 @@ use App\Entity\Fee;
 use App\Form\FeeType;
 use App\Handler\FeeHandler;
 use App\Repository\FeeRepositoryInterface;
-use App\Repository\PaginatorEnum;
 use App\Service\FixedFees\FixedFeesInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
     locale: 'pl',
 )]
 #[IsGranted('ROLE_ADMIN')]
-class FeeController extends AbstractController
+class FeeController extends AbstractAppPaginator
 {
     public function __construct(private readonly FeeRepositoryInterface $feeRepository)
     {
@@ -32,13 +30,11 @@ class FeeController extends AbstractController
     #[Route('/', name: 'fee_index', methods: ['GET'])]
     public function index(Request $request): Response
     {
-        $offset = max(0, $request->query->getInt('offset', 0));
-        $paginator = $this->feeRepository->getPaginator($offset);
-
         return $this->render('fee/index.html.twig', [
-            'paginator' => $paginator,
-            'previous' => $offset - PaginatorEnum::PerPage->value,
-            'next' => min(count($paginator), $offset + PaginatorEnum::PerPage->value),
+            'pager' => $this->getPagerfanta(
+                $request,
+                $this->feeRepository->getAllRecordsQueryBuilder(),
+            ),
         ]);
     }
 

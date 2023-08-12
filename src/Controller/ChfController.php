@@ -7,12 +7,10 @@ use App\Entity\Chf;
 use App\Form\ChfType;
 use App\Repository\AccountRepositoryInterface;
 use App\Repository\ContractorRepositoryInterface;
-use App\Repository\PaginatorEnum;
 use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +25,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
     locale: 'pl',
 )]
 #[IsGranted('ROLE_ADMIN')]
-class ChfController extends AbstractController
+class ChfController extends AbstractAppPaginator
 {
     public function __construct(
         private readonly BalanceUpdaterAccountInterface $walletUpdater,
@@ -38,13 +36,11 @@ class ChfController extends AbstractController
     #[Route('/', name: 'chf_index', methods: ['GET'])]
     public function index(Request $request): Response
     {
-        $offset = max(0, $request->query->getInt('offset', 0));
-        $paginator = $this->chfRepository->getPaginator($offset);
-
         return $this->render('chf/index.html.twig', [
-            'paginator' => $paginator,
-            'previous' => $offset - PaginatorEnum::PerPage->value,
-            'next' => min(count($paginator), $offset + PaginatorEnum::PerPage->value),
+            'pager' => $this->getPagerfanta(
+                $request,
+                $this->chfRepository->getAllRecordsQueryBuilder(),
+            ),
         ]);
     }
 

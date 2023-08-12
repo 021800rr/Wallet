@@ -9,7 +9,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for contractor in paginator %}
+            {% for contractor in pager %}
                 <tr>
                     <td id="description{{ loop.index }}">{{ contractor.description }}</td>
                     <td id="account{{ loop.index }}">{{ contractor.account }}</td>
@@ -20,6 +20,6 @@
         </tbody>
     </table>
     {% set PATH = 'contractor_index' %}
-    {{ include('paginator.html.twig') }}
+    {{ pagerfanta(pager) }}
 {% endblock %}
 

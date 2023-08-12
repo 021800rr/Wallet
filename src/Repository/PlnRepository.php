@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Pln;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -49,12 +48,5 @@ class PlnRepository extends ServiceEntityRepository implements AccountRepository
             ->getQuery();
 
         return new Paginator($query);
-    }
-
-    public function getAllRecordsQueryBuilder(): QueryBuilder
-    {
-        return $this->createQueryBuilder('w')
-            ->addOrderBy('w.date', 'DESC')
-            ->addOrderBy('w.id', 'DESC');
     }
 }
