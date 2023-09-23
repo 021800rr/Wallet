@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use App\Entity\AbstractWallet;
 use App\Entity\ChfChecker;
+use App\Entity\EurChecker;
 use App\Entity\PlnChecker;
 use App\Repository\AccountRepositoryInterface;
 use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
@@ -16,6 +17,7 @@ abstract readonly class AbstractWalletCheckerProvider implements ProviderInterfa
         protected BalanceSupervisorInterface $supervisor,
         protected AccountRepositoryInterface $plnRepository,
         protected AccountRepositoryInterface $chfRepository,
+        protected AccountRepositoryInterface $eurRepository,
     ) {
     }
 
@@ -28,8 +30,8 @@ abstract readonly class AbstractWalletCheckerProvider implements ProviderInterfa
     protected function accountChecker(
         BalanceSupervisorInterface $supervisor,
         AccountRepositoryInterface $accountRepository,
-        PlnChecker|ChfChecker      $data,
-    ): PlnChecker|ChfChecker {
+        PlnChecker|ChfChecker|EurChecker      $data,
+    ): PlnChecker|ChfChecker|EurChecker {
         /** @var AbstractWallet[] $wallets */
         $wallets = $accountRepository->getAllRecords();
         $supervisor->setWallets($wallets);

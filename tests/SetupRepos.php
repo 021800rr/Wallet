@@ -8,6 +8,7 @@ use App\Entity\Pln;
 use App\Repository\BackupRepository;
 use App\Repository\ChfRepository;
 use App\Repository\ContractorRepository;
+use App\Repository\EurRepository;
 use App\Repository\FeeRepository;
 use App\Repository\PlnRepository;
 use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
@@ -24,6 +25,7 @@ trait SetupRepos
 {
     private BackupRepository $backupRepository;
     private ChfRepository $chfRepository;
+    private EurRepository $eurRepository;
 
     private ContractorRepository $contractorRepository;
     private FeeRepository $feeRepository;
@@ -57,6 +59,10 @@ trait SetupRepos
         /** @var ChfRepository $chfRepository */
         $chfRepository = static::getContainer()->get(ChfRepository::class);
         $this->chfRepository = $chfRepository;
+
+        /** @var EurRepository $eurRepository */
+        $eurRepository = static::getContainer()->get(EurRepository::class);
+        $this->eurRepository = $eurRepository;
 
         /** @var ContractorRepository $contractorRepository */
         $contractorRepository = static::getContainer()->get(ContractorRepository::class);
