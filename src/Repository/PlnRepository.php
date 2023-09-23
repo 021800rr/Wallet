@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Pln;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -24,7 +24,7 @@ class PlnRepository extends ServiceEntityRepository implements AccountRepository
         parent::__construct($registry, Pln::class);
     }
 
-    public function search(string $data, int $offset): Paginator
+    public function search(string $data): QueryBuilder
     {
         $query = $this->createQueryBuilder('w')
             ->innerJoin('w.contractor', 'c')
@@ -43,10 +43,6 @@ class PlnRepository extends ServiceEntityRepository implements AccountRepository
                 ->setParameter('balance', (float) $data);
         }
 
-        $query
-            ->setFirstResult($offset)
-            ->getQuery();
-
-        return new Paginator($query);
+        return $query;
     }
 }

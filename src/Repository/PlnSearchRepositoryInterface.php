@@ -2,9 +2,9 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\QueryBuilder;
 
 interface PlnSearchRepositoryInterface
 {
-    public function search(string $data, int $offset): Paginator;
+    public function search(string $data): QueryBuilder;
 }

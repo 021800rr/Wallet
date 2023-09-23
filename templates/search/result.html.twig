@@ -12,7 +12,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for pln in paginator %}
+        {% for pln in pager %}
             <tr>
                 <td>{{ pln.date|date("Y-m-d") }}</td>
                 <td class="text-end row_money_amount" id="search_amount{{ loop.index }}">{{ pln.amount }}</td>
@@ -27,5 +27,5 @@
         </tbody>
     </table>
     {% set PATH = 'search_result' %}
-    {{ include('paginator.html.twig') }}
+    {{ pagerfanta(pager) }}
 {% endblock %}
