@@ -4,6 +4,7 @@ namespace App\Tests\Repository;
 
 use App\Entity\Backup;
 use App\Entity\Chf;
+use App\Entity\Eur;
 use App\Entity\Pln;
 use App\Tests\SetUp;
 use Doctrine\ORM\NonUniqueResultException;
@@ -57,6 +58,29 @@ class AccountTraitTest extends KernelTestCase
     {
         /** @var Chf $last */
         $last = $this->chfRepository->getLastRecord();
+        $this->assertSame(3, $last->getId());
+        $this->assertSame(70.07, $last->getBalance());
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     * @throws Exception
+     */
+    public function testEurGetCurrentBalance(): void
+    {
+        $balance = $this->eurRepository->getCurrentBalance();
+        $this->assertSame(70.07, $balance);
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     * @throws Exception
+     */
+    public function testEurGetLastRecord(): void
+    {
+        /** @var Eur $last */
+        $last = $this->eurRepository->getLastRecord();
         $this->assertSame(3, $last->getId());
         $this->assertSame(70.07, $last->getBalance());
     }
