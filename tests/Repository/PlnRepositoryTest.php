@@ -24,28 +24,28 @@ class PlnRepositoryTest extends KernelTestCase
 
     public function testSearch(): void
     {
-        $paginator = $this->plnRepository->search('-10', 15);
+        $pager = $this->plnRepository->search('-10');
 
         /** @var Parameter $parameter */
-        $parameter = $paginator->getQuery()->getParameters()[2];
+        $parameter = $pager->getQuery()->getParameters()[2];
         $this->assertSame("amount", $parameter->getName());
         $this->assertSame(-10.0, $parameter->getValue());
-        $this->assertSame(1, $paginator->count());
+        $this->assertSame(1, count((array) $pager->getQuery()->getResult()));
 
-        $paginator = $this->plnRepository->search('190', 15);
+        $pager = $this->plnRepository->search('190');
 
         /** @var Parameter $parameter */
-        $parameter = $paginator->getQuery()->getParameters()[3];
+        $parameter = $pager->getQuery()->getParameters()[3];
         $this->assertSame("balance", $parameter->getName());
         $this->assertSame(190.0, $parameter->getValue());
-        $this->assertSame(1, $paginator->count());
+        $this->assertSame(1, count((array) $pager->getQuery()->getResult()));
 
-        $paginator = $this->plnRepository->search('all', 15);
+        $pager = $this->plnRepository->search('all');
 
         /** @var Parameter $parameter */
-        $parameter = $paginator->getQuery()->getParameters()[0];
+        $parameter = $pager->getQuery()->getParameters()[0];
         $this->assertSame("contractor", $parameter->getName());
         $this->assertSame("%all%", $parameter->getValue());
-        $this->assertSame(2, $paginator->count());
+        $this->assertSame(2, count((array) $pager->getQuery()->getResult()));
     }
 }

@@ -27,7 +27,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
     locale: 'pl',
 )]
 #[IsGranted('ROLE_ADMIN')]
-class SearchController extends AbstractController
+class SearchController extends AbstractAppPaginator
 {
     #[Route('/', name: 'search_index')]
     public function index(string $query = ''): Response
@@ -54,21 +54,16 @@ class SearchController extends AbstractController
 
             $queryHelper->setQuery($query);
             $offsetHelper->resetOffset();
-            $offset = 0;
         } else {
-            /**
-             * @var string $query
-             * @var int $offset
-             */
-            [$query, $offset] = $requestParser->strategy(SearchController::class, $request);
+            /** @var string $query */
+            [$query] = $requestParser->strategy(SearchController::class, $request);
         }
-        $paginator = $plnRepository->search($query, $offset);
 
         return $this->render('search/result.html.twig', [
-            'query' => $query,
-            'paginator' => $paginator,
-            'previous' => $offset - PaginatorEnum::PerPage->value,
-            'next' => min(count($paginator), $offset + PaginatorEnum::PerPage->value),
+            'pager' => $this->getPagerfanta(
+                $request,
+                $plnRepository->search($query),
+            ),
         ]);
     }
 
