@@ -60,6 +60,7 @@ class SearchController extends AbstractAppPaginator
         }
 
         return $this->render('search/result.html.twig', [
+            'query' => $query,
             'pager' => $this->getPagerfanta(
                 $request,
                 $plnRepository->search($query),
