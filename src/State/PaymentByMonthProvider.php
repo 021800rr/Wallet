@@ -17,6 +17,7 @@ readonly class PaymentByMonthProvider implements ProviderInterface
         private CalculatorInterface        $calculator,
         private AccountRepositoryInterface $plnRepository,
         private AccountRepositoryInterface $chfRepository,
+        private AccountRepositoryInterface $eurRepository,
     ) {
     }
 
@@ -50,6 +51,7 @@ readonly class PaymentByMonthProvider implements ProviderInterface
         $paymentByMonth->setExpected($this->calculator->compute($backups));
         $paymentByMonth->setPlnBalance($plnBalance);
         $paymentByMonth->setChfBalance($this->chfRepository->getCurrentBalance());
+        $paymentByMonth->setEurBalance($this->eurRepository->getCurrentBalance());
         $paymentByMonth->setBackupLastRecord($backupLastRecord);
         $paymentByMonth->setTotal($plnBalance + $backupLastRecord->getBalance());
 
