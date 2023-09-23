@@ -30,6 +30,9 @@ class PaymentsByMonth
     private ?float $chfBalance;
 
     #[Groups(['payments:read'])]
+    private ?float $eurBalance;
+
+    #[Groups(['payments:read'])]
     private ?Backup $backupLastRecord;
 
     #[Groups(['payments:read'])]
@@ -78,6 +81,16 @@ class PaymentsByMonth
     public function setChfBalance(float $chfBalance): void
     {
         $this->chfBalance = $chfBalance;
+    }
+
+    public function getEurBalance(): ?float
+    {
+        return $this->eurBalance;
+    }
+
+    public function setEurBalance(float $eurBalance): void
+    {
+        $this->eurBalance = $eurBalance;
     }
 
     public function getBackupLastRecord(): ?Backup
