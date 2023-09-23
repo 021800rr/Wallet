@@ -88,6 +88,7 @@ class BackupController extends AbstractAppPaginator
         CalculatorInterface        $calculator,
         AccountRepositoryInterface $plnRepository,
         AccountRepositoryInterface $chfRepository,
+        AccountRepositoryInterface $eurRepository,
     ): Response {
         // $backups:
         // [
@@ -104,6 +105,7 @@ class BackupController extends AbstractAppPaginator
             'expected' => $calculator->compute($backups),
             'plnBalance' => $plnBalance,
             'chfBalance' => $chfRepository->getCurrentBalance(),
+            'eurBalance' => $eurRepository->getCurrentBalance(),
             'backupLastRecord' => $backupLastRecord,
             'total' => $plnBalance + $backupLastRecord->getBalance()
         ]);

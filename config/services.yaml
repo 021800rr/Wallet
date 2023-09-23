@@ -28,6 +28,9 @@ services:
     App\Repository\ChfRepository: ~
     App\Repository\AccountRepositoryInterface $chfRepository: '@App\Repository\ChfRepository'
 
+    App\Repository\EurRepository: ~
+    App\Repository\AccountRepositoryInterface $eurRepository: '@App\Repository\EurRepository'
+
     App\Repository\FeeRepository: ~
     App\Repository\FeeRepositoryInterface $feeRepository: '@App\Repository\FeeRepository'
 
@@ -48,6 +51,11 @@ services:
             $removeProcessor: '@api_platform.doctrine.orm.state.remove_processor'
 
     App\State\ChfProcessor:
+        bind:
+            $persistProcessor: '@api_platform.doctrine.orm.state.persist_processor'
+            $removeProcessor: '@api_platform.doctrine.orm.state.remove_processor'
+
+    App\State\EurProcessor:
         bind:
             $persistProcessor: '@api_platform.doctrine.orm.state.persist_processor'
             $removeProcessor: '@api_platform.doctrine.orm.state.remove_processor'
