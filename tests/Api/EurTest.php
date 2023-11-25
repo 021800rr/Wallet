@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Api;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
-use App\Entity\Pln;
+use App\Entity\Eur;
+use App\Tests\SetupApi;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-class PlnTest extends ApiTestCase
+class EurTest extends ApiTestCase
 {
     use SetupApi;
 
@@ -23,52 +24,29 @@ class PlnTest extends ApiTestCase
      */
     public function testGetCollection(): void
     {
-        $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
+        $this->client->request('GET', '/api/eurs', ['auth_bearer' => $this->token]);
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-        $this->assertMatchesResourceCollectionJsonSchema(Pln::class);
+        $this->assertMatchesResourceCollectionJsonSchema(Eur::class);
 
         $this->assertJsonContains([
-            "hydra:totalItems" => 5,
+            "hydra:totalItems" => 3,
             "hydra:member" => [
-                [
-                    "id" => 5,
-                    "date" => "2021-05-13T00:00:00+00:00",
-                    "amount" => -40,
-                    "balance" => 100,
-                    "contractor" => [
-                        "description" => "Allegro"
-                    ]
+                0 => [
+                    "date" => "2021-11-26T00:00:00+00:00",
+                    "amount" => 40.04,
+                    "balance" => 70.07,
                 ],
-                [
-                    "id" => 4,
-                    "date" => "2021-04-13T00:00:00+00:00",
-                    "amount" => -30,
-                    "balance" => 140,
-                    "contractor" => [
-                        "description" => "Allegro"
-                    ]
+                1 => [
+                    "date" => "2021-11-04T00:00:00+00:00",
+                    "amount" => 20.02,
+                    "balance" => 30.03,
                 ],
-                [
-                    "isConsistent" => true,
-                    "id" => 3,
-                    "date" => "2021-03-13T00:00:00+00:00",
-                    "amount" => -20,
-                    "balance" => 170,
-                    "contractor" => [
-                        "description" => "Media Expert"
-                    ],
-                ],
-                [
-                    "id" => 2,
-                    "date" => "2021-02-13T00:00:00+00:00",
-                    "amount" => -10,
-                    "balance" => 190,
-                ],
-                [
-                    "id" => 1,
-                    "balance" => 200,
-                ],
+                2 => [
+                    "date" => "2021-10-30T00:00:00+00:00",
+                    "amount" => 10.01,
+                    "balance" => 10.01,
+                ]
             ]
         ]);
     }
@@ -82,11 +60,11 @@ class PlnTest extends ApiTestCase
      */
     public function testPost(): void
     {
-        $this->client->request('POST', '/api/plns', [
+        $this->client->request('POST', '/api/eurs', [
             'auth_bearer' => $this->token,
             'json' => [
-                "date" => "2021-06-13",
-                "amount" => -50,
+                "date" => "2023-06-26",
+                "amount" => 50.05,
                 "contractor" => "/api/contractors/5",
                 "description" => "test..."
             ]
@@ -95,20 +73,20 @@ class PlnTest extends ApiTestCase
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
         $this->assertJsonContains([
-            "date" => "2021-06-13T00:00:00+00:00",
-            "amount" => -50,
+            "date" => "2023-06-26T00:00:00+00:00",
+            "amount" => 50.05,
             "contractor" => [
                 "@id" => "/api/contractors/5",
             ]
         ]);
 
-        $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
+        $this->client->request('GET', '/api/eurs', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
-            "hydra:totalItems" => 6,
+            "hydra:totalItems" => 4,
             "hydra:member" => [
                 0 => [
-                    "date" => "2021-06-13T00:00:00+00:00",
-                    "balance" => 50,
+                    "date" => "2023-06-26T00:00:00+00:00",
+                    "balance" => 120.12,
                 ]
             ]
         ]);
@@ -123,66 +101,31 @@ class PlnTest extends ApiTestCase
      */
     public function testPut(): void
     {
-        $this->client->request('PUT', '/api/plns/4', [
+        $this->client->request('PUT', '/api/eurs/3', [
             'auth_bearer' => $this->token,
             'json' => [
-                "date" => "2021-04-13",
-                "amount" => -20,
+                "date" => "2021-11-23",
+                "amount" => 40,
                 "contractor" => "/api/contractors/5",
                 "description" => "test test"
             ],
         ]);
         $this->assertResponseIsSuccessful();
         $this->assertJsonContains([
-            "date" => "2021-04-13T00:00:00+00:00",
-            "amount" => -20,
+            "date" => "2021-11-23T00:00:00+00:00",
+            "amount" => 40,
             "contractor" => [
                 "id" => 5
             ],
             "description" => "test test"
         ]);
 
-        $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
+        $this->client->request('GET', '/api/eurs', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
-            "hydra:totalItems" => 5,
+            "hydra:totalItems" => 3,
             "hydra:member" => [
                 0 => [
-                    "balance" => 110,
-                ],
-            ]
-        ]);
-    }
-
-    public function testPutMoveBackward(): void
-    {
-        $this->client->request('PUT', '/api/plns/3', [
-            'auth_bearer' => $this->token,
-            'json' => [
-                "date" => "2021-02-12",
-            ],
-        ]);
-        $this->assertResponseIsSuccessful();
-        $this->assertJsonContains([
-            "date" => "2021-02-12T00:00:00+00:00",
-        ]);
-
-        $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
-        $this->assertJsonContains([
-            "hydra:totalItems" => 5,
-            "hydra:member" => [
-                ["id" => 5,],
-                ["id" => 4,],
-                [
-                    "id" => 2,
-                    "date" => "2021-02-13T00:00:00+00:00",
-                    "amount" => -10,
-                    "balance" => 170,
-                ],
-                [
-                    "id" => 3,
-                    "date" => "2021-02-12T00:00:00+00:00",
-                    "amount" => -20,
-                    "balance" => 180,
+                    "balance" => 70.03,
                 ],
             ]
         ]);
@@ -197,18 +140,18 @@ class PlnTest extends ApiTestCase
      */
     public function testDelete(): void
     {
-        $this->client->request('DELETE', '/api/plns/4', ['auth_bearer' => $this->token]);
+        $this->client->request('DELETE', '/api/eurs/3', ['auth_bearer' => $this->token]);
         $this->assertResponseStatusCodeSame(204);
         $this->assertNull(
-            $this->plnRepository->findOneBy(['id' => 4])
+            $this->eurRepository->findOneBy(['id' => 3])
         );
 
-        $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
+        $this->client->request('GET', '/api/eurs', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
-            "hydra:totalItems" => 4,
+            "hydra:totalItems" => 2,
             "hydra:member" => [
                 0 => [
-                    "balance" => 130,
+                    "balance" => 30.03,
                 ],
             ]
         ]);
@@ -223,7 +166,7 @@ class PlnTest extends ApiTestCase
      */
     public function testPatch(): void
     {
-        $this->client->request('PATCH', '/api/plns/2', [
+        $this->client->request('PATCH', '/api/eurs/2', [
             'auth_bearer' => $this->token,
             'json' => [
                 "isConsistent" => true,

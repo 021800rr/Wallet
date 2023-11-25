@@ -103,10 +103,8 @@ class EurController extends AbstractAppPaginator
     }
 
     #[Route('/check', name: 'eur_check', methods: ['GET'])]
-    public function check(
-        BalanceSupervisorInterface $supervisor,
-        TranslatorInterface $translator,
-    ): RedirectResponse {
+    public function check(BalanceSupervisorInterface $supervisor, TranslatorInterface $translator): RedirectResponse
+    {
         /** @var AbstractWallet[] $eurs */
         $eurs = $this->eurRepository->getAllRecords();
         $supervisor->setWallets($eurs);

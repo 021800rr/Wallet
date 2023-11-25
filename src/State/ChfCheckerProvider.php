@@ -9,8 +9,8 @@ use App\Entity\ChfChecker;
 readonly class ChfCheckerProvider extends AbstractWalletCheckerProvider implements ProviderInterface
 {
     /**
-     * @param array<mixed, mixed> $uriVariables
-     * @param array<mixed, mixed> $context
+     * @param mixed[] $uriVariables
+     * @param mixed[] $context
      */
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null
     {

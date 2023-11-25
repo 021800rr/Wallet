@@ -103,10 +103,8 @@ class ChfController extends AbstractAppPaginator
     }
 
     #[Route('/check', name: 'chf_check', methods: ['GET'])]
-    public function check(
-        BalanceSupervisorInterface $supervisor,
-        TranslatorInterface $translator,
-    ): RedirectResponse {
+    public function check(BalanceSupervisorInterface $supervisor, TranslatorInterface $translator): RedirectResponse
+    {
         /** @var AbstractWallet[] $chfs */
         $chfs = $this->chfRepository->getAllRecords();
         $supervisor->setWallets($chfs);

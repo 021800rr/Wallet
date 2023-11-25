@@ -21,8 +21,8 @@ readonly class PlnProcessor implements ProcessorInterface
     }
 
     /**
-     * @param array<mixed, mixed> $uriVariables
-     * @param array<mixed, mixed> $context
+     * @param mixed[] $uriVariables
+     * @param mixed[] $context
      * @throws Exception
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void

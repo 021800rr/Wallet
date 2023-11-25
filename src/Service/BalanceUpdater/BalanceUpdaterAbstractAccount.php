@@ -17,9 +17,7 @@ abstract class BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInt
      */
     public function setPreviousId(AccountRepositoryInterface $accountRepository, int $id): ?int
     {
-        $input = $accountRepository->findAll();
-
-        $reversed = array_reverse($input);
+        $reversed = array_reverse($accountRepository->findAll());
         foreach ($reversed as $key => $transaction) {
             $this->previousId = $transaction->getId();
             if (0 === $key && ($transaction->getId() === $id || ($reversed[$key + 1])->getId() === $id)) {
