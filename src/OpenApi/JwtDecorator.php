@@ -82,7 +82,7 @@ final readonly class JwtDecorator implements OpenApiFactoryInterface
                 security: [],
             ),
         );
-        $openApi->getPaths()->addPath('/api/login_check', $pathItem);
+        $openApi->getPaths()->addPath('/api/login/check', $pathItem);
 
         return $openApi;
     }

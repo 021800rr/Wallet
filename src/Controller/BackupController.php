@@ -83,7 +83,7 @@ class BackupController extends AbstractAppPaginator
         return $this->redirectToRoute('backup_index');
     }
 
-    #[Route('/paymentsByMonth', name: 'backup_payments_by_month', methods: ['GET'])]
+    #[Route('/payments-by-month', name: 'backup_payments_by_month', methods: ['GET'])]
     public function paymentsByMonth(
         CalculatorInterface        $calculator,
         AccountRepositoryInterface $plnRepository,

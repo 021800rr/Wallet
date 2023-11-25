@@ -66,7 +66,7 @@ class EurController extends AbstractAppPaginator
         return $this->upsert($eur, $request);
     }
 
-    #[Route('/isconsistent/{id}/{boolAsString}', name: 'eur_is_consistent', methods: ['POST'])]
+    #[Route('/is-consistent/{id}/{boolAsString}', name: 'eur_is_consistent', methods: ['POST'])]
     public function isConsistent(Request $request, Eur $eur, string $boolAsString = ''): RedirectResponse
     {
         if ($this->isCsrfTokenValid('is_consistent' . $eur->getId(), (string) $request->request->get('_token'))) {

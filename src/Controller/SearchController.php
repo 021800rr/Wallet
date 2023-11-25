@@ -77,7 +77,7 @@ class SearchController extends AbstractAppPaginator
         return $plnController->edit($request, $pln, 'search_result');
     }
 
-    #[Route('/isconsistent/{id}/{boolAsString}', name: 'search_is_consistent', methods: ['POST'])]
+    #[Route('/is-consistent/{id}/{boolAsString}', name: 'search_is_consistent', methods: ['POST'])]
     public function isConsistent(
         Request       $request,
         Pln           $pln,

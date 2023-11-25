@@ -17,7 +17,7 @@ security:
             entry_point: jwt
             provider: app_user_provider
             json_login:
-                check_path: /api/login_check
+                check_path: /api/login/check
                 username_path: username
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -41,7 +41,7 @@ security:
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
         - { path: ^/api/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI docs
-        - { path: ^/api/(login_check|token/refresh), roles: PUBLIC_ACCESS }
+        - { path: ^/api/(login/check|token/refresh), roles: PUBLIC_ACCESS }
         - { path: ^/api/, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

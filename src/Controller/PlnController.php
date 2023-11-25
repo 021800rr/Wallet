@@ -88,7 +88,7 @@ class PlnController extends AbstractAppPaginator
         ]);
     }
 
-    #[Route('/isconsistent/{id}/{boolAsString}', name: 'pln_is_consistent', methods: ['POST'])]
+    #[Route('/is-consistent/{id}/{boolAsString}', name: 'pln_is_consistent', methods: ['POST'])]
     public function isConsistent(
         Request $request,
         Pln     $pln,
