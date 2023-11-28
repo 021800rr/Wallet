@@ -15,6 +15,7 @@ class BackupRepository extends ServiceEntityRepository implements BackupReposito
 {
     use AccountTrait;
     use AppTrait;
+    use SaveRemoveTrait;
 
     private const PAYMENTS_BY_MONTH_YEARS = 12;
 

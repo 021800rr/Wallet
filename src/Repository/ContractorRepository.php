@@ -14,29 +14,13 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ContractorRepository extends ServiceEntityRepository implements ContractorRepositoryInterface
 {
+    use SaveRemoveTrait;
+
     public const INTERNAL_TRANSFER = 'Przelew własny';
 
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Contractor::class);
-    }
-
-    public function save(Contractor $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function remove(Contractor $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
     }
 
     public function findAll(): array

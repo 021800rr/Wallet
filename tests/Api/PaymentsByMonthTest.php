@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Api;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use App\Tests\SetupApi;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -22,7 +23,7 @@ class PaymentsByMonthTest extends ApiTestCase
      */
     public function testGet(): void
     {
-        $r = $this->client->request('GET', '/api/backups/payments/by/month', ['auth_bearer' => $this->token]);
+        $this->client->request('GET', '/api/backups/payments/by/month', ['auth_bearer' => $this->token]);
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 

@@ -22,8 +22,8 @@ abstract readonly class AbstractWalletCheckerProvider implements ProviderInterfa
     }
 
     /**
-     * @param array<mixed, mixed> $uriVariables
-     * @param array<mixed, mixed> $context
+     * @param mixed[] $uriVariables
+     * @param mixed[] $context
      */
     abstract public function provide(Operation $operation, array $uriVariables = [], array $context = []): object|array|null;
 

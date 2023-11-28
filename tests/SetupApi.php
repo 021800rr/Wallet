@@ -26,7 +26,7 @@ trait SetupApi
     protected function setUp(): void
     {
         $this->client = self::createClient();
-        $response = $this->client->request('POST', '/api/login_check', [
+        $response = $this->client->request('POST', '/api/login/check', [
             'headers' => ['Content-Type' => 'application/json'],
             'json' => [
                 'username' => 'rr',

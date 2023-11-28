@@ -34,7 +34,7 @@ class ChfControllerTest extends WebTestCase
         ]);
         $this->assertSelectorTextContains('td#chf_balance1', '120.12');
 
-        $this->client->request('GET', '/en/backup/paymentsByMonth');
+        $this->client->request('GET', '/en/backup/payments-by-month');
         $this->assertSelectorTextContains('td#chfBalance', '120.12');
     }
 

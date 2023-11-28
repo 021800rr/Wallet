@@ -66,7 +66,7 @@ class ChfController extends AbstractAppPaginator
         return $this->upsert($chf, $request);
     }
 
-    #[Route('/isconsistent/{id}/{boolAsString}', name: 'chf_is_consistent', methods: ['POST'])]
+    #[Route('/is-consistent/{id}/{boolAsString}', name: 'chf_is_consistent', methods: ['POST'])]
     public function isConsistent(Request $request, Chf $chf, string $boolAsString = ''): RedirectResponse
     {
         if ($this->isCsrfTokenValid('is_consistent' . $chf->getId(), (string) $request->request->get('_token'))) {
@@ -103,10 +103,8 @@ class ChfController extends AbstractAppPaginator
     }
 
     #[Route('/check', name: 'chf_check', methods: ['GET'])]
-    public function check(
-        BalanceSupervisorInterface $supervisor,
-        TranslatorInterface $translator,
-    ): RedirectResponse {
+    public function check(BalanceSupervisorInterface $supervisor, TranslatorInterface $translator): RedirectResponse
+    {
         /** @var AbstractWallet[] $chfs */
         $chfs = $this->chfRepository->getAllRecords();
         $supervisor->setWallets($chfs);

@@ -56,7 +56,7 @@ class TransferController extends AbstractController
         ]);
     }
 
-    #[Route('/backup', name: 'transfer_to_backup', methods: ['POST'])]
+    #[Route('/transfer-to-backup', name: 'transfer_to_backup', methods: ['POST'])]
     public function transferToBackup(Request $request, TransferInterface $agent): RedirectResponse
     {
         $backup = new Backup();
@@ -77,7 +77,7 @@ class TransferController extends AbstractController
         return $this->redirectToRoute('transfer_index');
     }
 
-    #[Route('/pln', name: 'transfer_to_pln', methods: ['POST'])]
+    #[Route('/transfer-to-pln', name: 'transfer_to_pln', methods: ['POST'])]
     public function transferToPln(Request $request, TransferInterface $agent): RedirectResponse
     {
         $pln = new Pln();

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Api;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
+use App\Tests\SetupApi;
 use Exception;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
@@ -10,7 +11,7 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-class TransferToBackupTest extends ApiTestCase
+class TransferToBackupCurrencyTest extends ApiTestCase
 {
     use SetupApi;
 
@@ -30,9 +31,9 @@ class TransferToBackupTest extends ApiTestCase
         $this->client->request('POST', '/api/transfer/to/backup', [
             'auth_bearer' => $this->token,
             'json' => [
-                "currency" => false,
+                "currency" => true,
                 "amount" => 100,
-                "date" => "2023-06-24"
+                "date" => "2023-06-26"
             ]
         ]);
         $this->assertResponseStatusCodeSame(201);
@@ -43,11 +44,11 @@ class TransferToBackupTest extends ApiTestCase
         $this->assertJsonContains([
             "hydra:member" => [
                 [
-                    "retiring" => 350,
-                    "holiday" => 350,
+                    "retiring" => 0,
+                    "holiday" => 0,
                     "amount" => 100,
-                    "balance" => 700
-                ],
+                    "balance" => 0
+                ]
             ]
         ]);
     }

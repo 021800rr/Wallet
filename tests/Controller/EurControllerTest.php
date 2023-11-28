@@ -34,7 +34,7 @@ class EurControllerTest extends WebTestCase
         ]);
         $this->assertSelectorTextContains('td#eur_balance1', '120.12');
 
-        $this->client->request('GET', '/en/backup/paymentsByMonth');
+        $this->client->request('GET', '/en/backup/payments-by-month');
         $this->assertSelectorTextContains('td#eurBalance', '120.12');
     }
 

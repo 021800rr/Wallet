@@ -4,13 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Pln;
 use App\Repository\PlnSearchRepositoryInterface;
-use App\Repository\PaginatorEnum;
 use App\Service\OffsetQuery\OffsetHelperInterface;
 use App\Service\OffsetQuery\QueryHelperInterface;
 use App\Service\RequestParser\RequestParserInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormInterface;
@@ -77,7 +75,7 @@ class SearchController extends AbstractAppPaginator
         return $plnController->edit($request, $pln, 'search_result');
     }
 
-    #[Route('/isconsistent/{id}/{boolAsString}', name: 'search_is_consistent', methods: ['POST'])]
+    #[Route('/is-consistent/{id}/{boolAsString}', name: 'search_is_consistent', methods: ['POST'])]
     public function isConsistent(
         Request       $request,
         Pln           $pln,

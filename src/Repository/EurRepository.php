@@ -15,6 +15,7 @@ class EurRepository extends ServiceEntityRepository implements AccountRepository
 {
     use AccountTrait;
     use AppTrait;
+    use SaveRemoveTrait;
 
     public function __construct(ManagerRegistry $registry)
     {

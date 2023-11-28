@@ -14,27 +14,10 @@ use Doctrine\Persistence\ManagerRegistry;
 class FeeRepository extends ServiceEntityRepository implements FeeRepositoryInterface
 {
     use AppTrait;
+    use SaveRemoveTrait;
 
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Fee::class);
-    }
-
-    public function save(Fee $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->persist($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
-    public function remove(Fee $entity, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($entity);
-
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
     }
 }
