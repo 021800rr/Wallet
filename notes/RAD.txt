@@ -1,35 +1,38 @@
 docker compose --env-file .env.prod.local down
+
 sudo rm -rf docker/postgres/data*
 docker system prune --all --volumes -f
+
 docker compose --env-file .env.prod.local build --no-cache
 docker compose --env-file .env.prod.local up -d
 docker ps
+
 docker exec -it  postgres-container bash
 
-psql -U elf -d account
+    psql -U elf -d account
 
-create database account_dev;
-create database account_dev_test;
-create user rr with encrypted password 'rr';
-ALTER USER rr WITH SUPERUSER;
+        create database account_dev;
+        create database account_dev_test;
+        create user rr with encrypted password 'rr';
+        ALTER USER rr WITH SUPERUSER;
 
-psql -U elf -d account < /tmp/database_account_2023-06-11.sql
+    psql -U elf -d account < /tmp/database_account_2023-06-11.sql
 
 docker exec -it  php-container bash
 
-cd /var/www/var/cache
+    cd /var/www/var/cache
 
-rm -rf prod/*
-chmod 777 prod/
+    rm -rf prod/*
+    chmod 777 prod/
 
-cd /var/www/var/
+    cd /var/www/var/
 
-chmod 777 log/
+    chmod 777 log/
 
-git config --global user.email "ryszard.ratajczak@protonmail.com"
-git config --global user.name "Ryszard Ratajczak"
+    git config --global user.email "ryszard.ratajczak@protonmail.com"
+    git config --global user.name "Ryszard Ratajczak"
 
-git config --global --add safe.directory /var/www
+    git config --global --add safe.directory /var/www
 ---------------------------------------------------------------------------------
 docker compose --env-file .env.dev.local down --remove-orphans && \
     docker compose --env-file .env.dev.local build && \
@@ -48,23 +51,16 @@ docker compose --env-file .env.prod.local down --remove-orphans && \
     docker compose --env-file .env.prod.local up -d
 -------------------------------------------------------------------------------
 
-make tests
-vendor/bin/phpstan analyse -l 6 src tests
-vendor/bin/phpstan analyse -l 9 src tests
-    mkdir --parents tools/php-cs-fixer
-    composer require --working-dir=tools/php-cs-fixer friendsofphp/php-cs-fixer
-tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src
+SHELL := /bin/bash
 
-make tests && vendor/bin/phpstan analyse -l 9 --memory-limit 1G src tests && tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src
-
-==============================================================================
-
-docker compose --env-file .env.prod.local down --remove-orphans && \
-    docker system prune --all --volumes -f && \
-    docker compose --env-file .env.prod.local build  --no-cache --pull && \
-    docker compose --env-file .env.prod.local up -d && \
-    docker ps
-
-==============================================================================
-
-php bin/console cache:pool:clear cache.global_clearer && composer dump-autoload
+tests:
+	symfony console cache:clear -n --env=test
+	symfony console doctrine:database:drop --force --env=test || true
+	symfony console doctrine:database:create --env=test
+	symfony console doctrine:migrations:migrate -n --env=test
+	symfony console doctrine:fixtures:load -n --env=test
+	symfony console cache:clear -n --env=test
+	SYMFONY_DEPRECATIONS_HELPER='disabled=1' ./vendor/bin/simple-phpunit && \
+		vendor/bin/phpstan analyse -l 9 --memory-limit 1G src tests && \
+		tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src
+.PHONY: tests
