@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.3-fpm
 
 RUN ln -s /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
