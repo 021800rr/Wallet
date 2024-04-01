@@ -123,8 +123,6 @@ class EurController extends AbstractAppPaginator
     }
 
     /**
-     * @param Eur $eur
-     * @param Request $request
      * @return RedirectResponse|Response
      * @throws Exception
      */
@@ -133,7 +131,7 @@ class EurController extends AbstractAppPaginator
         $form = $this->createForm(EurType::class, $eur);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($eur->getId()) {
+            if (0 !== $eur->getId()) {
                 $this->walletUpdater->setPreviousId($this->eurRepository, $eur->getId());
                 $this->eurRepository->save($eur, true);
             } else {

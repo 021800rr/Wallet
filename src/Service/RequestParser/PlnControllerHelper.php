@@ -7,7 +7,6 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 class PlnControllerHelper extends AbstractParser implements ControllerHelperInterface
 {
     /**
-     * @param SymfonyRequest $request
      * @return array<int, int|string>
      */
     public function process(SymfonyRequest $request): array

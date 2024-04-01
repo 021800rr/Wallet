@@ -14,7 +14,6 @@ final readonly class JwtDecorator implements OpenApiFactoryInterface
 
     /**
      * @param array<int, string> $context
-     * @return OpenApi
      */
     public function __invoke(array $context = []): OpenApi
     {

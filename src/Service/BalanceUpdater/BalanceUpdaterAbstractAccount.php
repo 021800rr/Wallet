@@ -20,7 +20,7 @@ abstract class BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInt
         $reversed = array_reverse($accountRepository->findAll());
         foreach ($reversed as $key => $transaction) {
             $this->previousId = $transaction->getId();
-            if (0 === $key && ($transaction->getId() === $id || ($reversed[$key + 1])->getId() === $id)) {
+            if (0 === $key && ($transaction->getId() === $id || ($reversed[1])->getId() === $id)) {
                 $this->previousId = null;
                 throw new Exception("the first two records cannot be changed.... (for now)");
             } elseif (($reversed[$key + 1])->getId() === $id) {
@@ -32,9 +32,6 @@ abstract class BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInt
     }
 
     /**
-     * @param AccountRepositoryInterface $accountRepository
-     * @param int $id
-     * @return void
      * @throws Exception
      */
     public function compute(AccountRepositoryInterface $accountRepository, int $id): void
@@ -75,8 +72,6 @@ abstract class BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInt
     }
 
     /**
-     * @param AccountRepositoryInterface $accountRepository
-     * @param int $id
      * @return array<int, AbstractAccount|AbstractAccount[]|null>
      * @throws Exception
      */
@@ -101,11 +96,7 @@ abstract class BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInt
     }
 
     /**
-     * @param AccountRepositoryInterface $accountRepository
-     * @param AbstractAccount $predecessor
-     * @param AbstractAccount $transaction
      * @param array<int, AbstractAccount>|null $successors
-     * @return void
      */
     abstract protected function walk(
         AccountRepositoryInterface $accountRepository,

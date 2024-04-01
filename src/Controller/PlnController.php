@@ -71,7 +71,7 @@ class PlnController extends AbstractAppPaginator
     #[Route('/edit/{id}', name: 'pln_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Pln $pln, string $route = ''): RedirectResponse|Response
     {
-        $route = (!empty($route)) ? $route : 'pln_index';
+        $route = ('' === $route || '0' === $route) ? 'pln_index' : $route;
         $form = $this->createForm(PlnType::class, $pln);
         $form->handleRequest($request);
 
@@ -95,7 +95,7 @@ class PlnController extends AbstractAppPaginator
         string  $boolAsString = '',
         string  $route = '',
     ): RedirectResponse {
-        $route = (!empty($route)) ? $route : 'pln_index';
+        $route = ('' === $route || '0' === $route) ? 'pln_index' : $route;
         if ($this->isCsrfTokenValid('is_consistent' . $pln->getId(), (string) $request->request->get('_token'))) {
             switch ($boolAsString) {
                 case "true":
@@ -119,7 +119,7 @@ class PlnController extends AbstractAppPaginator
     #[Route('/delete/{id}', name: 'pln_delete', methods: ['POST'])]
     public function delete(Request $request, Pln $pln, string $route = ''): RedirectResponse
     {
-        $route = (!empty($route)) ? $route : 'pln_index';
+        $route = ('' === $route || '0' === $route) ? 'pln_index' : $route;
         if ($this->isCsrfTokenValid('delete' . $pln->getId(), (string) $request->request->get('_token'))) {
             $pln->setAmount(0);
             $this->walletUpdater->setPreviousId($this->plnRepository, $pln->getId());

@@ -49,7 +49,6 @@ readonly class Interest implements InterestInterface
     }
 
     /**
-     * @param FormInterface $form
      * @return array<string, DateTimeInterface|float|Contractor|bool|null>
      */
     private function simplifyFormArray(FormInterface $form): array

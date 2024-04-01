@@ -123,8 +123,6 @@ class ChfController extends AbstractAppPaginator
     }
 
     /**
-     * @param Chf $chf
-     * @param Request $request
      * @return RedirectResponse|Response
      * @throws Exception
      */
@@ -133,7 +131,7 @@ class ChfController extends AbstractAppPaginator
         $form = $this->createForm(ChfType::class, $chf);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($chf->getId()) {
+            if (0 !== $chf->getId()) {
                 $this->walletUpdater->setPreviousId($this->chfRepository, $chf->getId());
                 $this->chfRepository->save($chf, true);
             } else {

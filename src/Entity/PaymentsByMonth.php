@@ -46,7 +46,6 @@ class PaymentsByMonth
 
     /**
      * @param array<int, array<string, string>> $backups
-     * @return void
      */
     public function setBackups(array $backups): void
     {
