@@ -16,7 +16,6 @@ class BalanceSupervisor implements BalanceSupervisorInterface
 
     /**
      * @param AbstractWallet[] $wallets
-     * @return void
      */
     public function setWallets(array $wallets): void
     {
@@ -27,7 +26,8 @@ class BalanceSupervisor implements BalanceSupervisorInterface
     public function crawl(AccountRepositoryInterface $accountRepository): Generator
     {
         $wallet = null;
-        for ($step = 1; $step < count($this->supervisors); $step++) {
+        $counter = count($this->supervisors);
+        for ($step = 1; $step < $counter; $step++) {
             /** @var Pln|Chf $wallet */
             $wallet = $accountRepository->find($this->supervisors[$step]->getId());
             $balanceSupervisorBefore = $wallet->getBalanceSupervisor();

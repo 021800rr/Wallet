@@ -6,7 +6,7 @@ readonly class QueryHelper extends AbstractSession implements QueryHelperInterfa
 {
     public function setQuery(string $query): void
     {
-        if (!empty($query)) {
+        if ('' !== $query && '0' !== $query) {
             $this->requestStack->getSession()->set('query', $query);
         }
     }

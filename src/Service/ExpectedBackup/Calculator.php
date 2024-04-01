@@ -20,12 +20,11 @@ class Calculator implements CalculatorInterface
     // ]
     /**
      * @param array<int, array<string, string|float>> $backups
-     * @return float
      * @throws Exception
      */
     public function compute(array $backups): float
     {
-        if (empty($backups)) {
+        if ([] === $backups) {
             throw new Exception('no backups');
         }
 

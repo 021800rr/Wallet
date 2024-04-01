@@ -78,8 +78,6 @@ class FeeController extends AbstractAppPaginator
     }
 
     /**
-     * @param Fee $fee
-     * @param Request $request
      * @return RedirectResponse|Response
      */
     private function upsert(Fee $fee, Request $request): Response|RedirectResponse

@@ -36,7 +36,7 @@ class PlnRepository extends ServiceEntityRepository implements AccountRepository
             ->addOrderBy('w.date', 'DESC')
             ->addOrderBy('w.id', 'DESC');
 
-        if ((float) $data) {
+        if (0.0 !== (float) $data) {
             $query
                 ->orWhere('w.amount = :amount')
                 ->orWhere('w.balance = :balance')

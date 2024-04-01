@@ -14,8 +14,6 @@ class CalculatorTest extends TestCase
      * @dataProvider appProvider
      *
      * @param array<int, array<string, string|float>> $backups
-     * @param float $expected
-     * @return void
      * @throws Exception
      */
     public function testCompute(array $backups, float $expected): void

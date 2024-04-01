@@ -8,11 +8,7 @@ use App\Repository\AccountRepositoryInterface;
 class BalanceUpdaterWallet extends BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInterface
 {
     /**
-     * @param AccountRepositoryInterface $accountRepository
-     * @param AbstractAccount $predecessor
-     * @param AbstractAccount $transaction
      * @param array<int, AbstractAccount>|null $successors
-     * @return void
      */
     protected function walk(
         AccountRepositoryInterface $accountRepository,

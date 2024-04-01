@@ -10,7 +10,6 @@ interface BalanceSupervisorInterface
 {
     /**
      * @param AbstractWallet[] $wallets
-     * @return void
      */
     public function setWallets(array $wallets): void;
 

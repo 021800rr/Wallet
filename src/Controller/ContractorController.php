@@ -61,8 +61,6 @@ class ContractorController extends AbstractAppPaginator
     }
 
     /**
-     * @param Contractor $contractor
-     * @param Request $request
      * @return RedirectResponse|Response
      */
     private function upsert(Contractor $contractor, Request $request): Response|RedirectResponse

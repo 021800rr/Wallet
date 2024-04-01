@@ -9,6 +9,7 @@ use App\Entity\Chf;
 use App\Repository\AccountRepositoryInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
 use Exception;
+use Symfony\Component\HttpFoundation\Request;
 
 readonly class ChfProcessor implements ProcessorInterface
 {
@@ -22,7 +23,12 @@ readonly class ChfProcessor implements ProcessorInterface
 
     /**
      * @param mixed[] $uriVariables
-     * @param mixed[] $context
+     * @param array{
+     *      request?: Request,
+     *      previous_data?: mixed,
+     *      resource_class?: string,
+     *      original_data?: mixed
+     *  } $context
      * @throws Exception
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): void
