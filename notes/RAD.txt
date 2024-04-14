@@ -5,20 +5,25 @@ docker system prune --all --volumes -f
 
 docker compose --env-file .env.prod.local build --no-cache
 docker compose --env-file .env.prod.local up -d
-docker ps
+docker ps -a
 
 docker exec -it  wallet-php-dev-main bash
+docker exec -it  wallet-php-prod-main bash
     cd /var/www/
+    rm -rf var/cache/*
+    rm -rf var/log/*
+    composer update -W
+
     composer install
 
-docker exec -it wallet-postgres-dev-main bash
+docker exec -it wallet-postgres-dev-main bash (on dev) || docker exec -it wallet-postgres-prod-main bash (on prod)
     psql -U elf -d account
         create database account_dev;
         create database account_dev_test;
         create user rr with encrypted password 'rr';
         ALTER USER rr WITH SUPERUSER;
 
-    psql -U elf -d account < /tmp/database_account_2023-06-11.sql
+    psql -U elf -d account < /tmp/database_account_2024-04-14.sql
 
 docker compose --env-file .env.prod.local down
 
@@ -45,7 +50,8 @@ docker exec -it wallet-php-dev-dev bash
     cd /var/www
     ./reset_dev.sh
     npm install
-    npm run dev
+    npm install bootstrap --save-dev (on dev) || npm install bootstrap (on prod)
+    npm run dev (on dev) || npm run build (on prod)
 
 ---------------------------------------------------------------------------------
 docker compose --env-file .env.dev.local down --remove-orphans && \
