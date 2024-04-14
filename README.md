@@ -96,6 +96,7 @@ docker exec -it wallet-php-dev-dev bash
     setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
     
     npm install
+    npm install bootstrap --save-dev
     npm run dev
 ```
 
