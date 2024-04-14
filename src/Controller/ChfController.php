@@ -10,11 +10,11 @@ use App\Repository\ContractorRepositoryInterface;
 use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route(
@@ -123,8 +123,6 @@ class ChfController extends AbstractAppPaginator
     }
 
     /**
-     * @param Chf $chf
-     * @param Request $request
      * @return RedirectResponse|Response
      * @throws Exception
      */
@@ -133,7 +131,7 @@ class ChfController extends AbstractAppPaginator
         $form = $this->createForm(ChfType::class, $chf);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($chf->getId()) {
+            if (0 !== $chf->getId()) {
                 $this->walletUpdater->setPreviousId($this->chfRepository, $chf->getId());
                 $this->chfRepository->save($chf, true);
             } else {

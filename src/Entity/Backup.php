@@ -42,13 +42,11 @@ class Backup extends AbstractAccount
     private float $holiday = 0.0;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
-    private ?bool $interest;
+    private ?bool $interest = null;
 
     public function __construct()
     {
         parent::__construct();
-
-        $this->interest = null;
     }
 
     public function computeShortDate(): self

@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.3-fpm
 
 RUN ln -s /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
@@ -30,7 +30,7 @@ RUN docker-php-ext-install opcache \
 
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs && npm install -g yarn
 
-COPY --from=composer/composer:2.4.1 /usr/bin/composer /usr/bin/composer
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 RUN chmod +x /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
 

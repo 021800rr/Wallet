@@ -9,11 +9,7 @@ use App\Repository\AccountRepositoryInterface;
 class BalanceUpdaterBackup extends BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInterface
 {
     /**
-     * @param AccountRepositoryInterface $accountRepository
-     * @param AbstractAccount $predecessor
-     * @param AbstractAccount $transaction
      * @param AbstractAccount[]|null $successors
-     * @return void
      */
     protected function walk(
         AccountRepositoryInterface $accountRepository,

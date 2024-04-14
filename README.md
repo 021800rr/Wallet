@@ -38,44 +38,44 @@ git clone https://github.com/021800rr/Wallet.git
 
 cd Wallet/
 vi .env.dev.local
-
     e.g.:
-        DATABASE_URL="postgresql://rr:rr@postgres-service:5432/account_dev?serverVersion=15&charset=utf8"
+        DATABASE_URL="postgresql://rr:rr@postgres-service:5432/account_dev?serverVersion=16&charset=utf8"
 
         NGPORTS=8000:80
         POSTGRES_DB=account_dev
         POSTGRES_USER=rr
         POSTGRES_PASSWORD=rr
-        POSTGRES_PORTS=54323:5432
+        POSTGRES_PORTS=54320:5432
+        DOCKER_COMPOSE_ENV=dev-dev
         
 vi .env.test.local
     e.g.:
-        DATABASE_URL="postgresql://rr:rr@postgres-service:5432/account_dev?serverVersion=15&charset=utf8"
+        DATABASE_URL="postgresql://rr:rr@postgres-service:5432/account_dev?serverVersion=16&charset=utf8"
 
         NGPORTS=8000:80
         POSTGRES_DB=account_dev
         POSTGRES_USER=rr
         POSTGRES_PASSWORD=rr
-        POSTGRES_PORTS=54322:5432
+        POSTGRES_PORTS=54321:5432
 
 vi .env.prod.local
    e.g.:
-        DATABASE_URL="postgresql://user:pass@postgres-service:5432/account?serverVersion=15&charset=utf8"
+        DATABASE_URL="postgresql://user:pass@postgres-service:5432/account?serverVersion=16&charset=utf8"
 
         NGPORTS=80:80
         POSTGRES_DB=account
         POSTGRES_USER=user
         POSTGRES_PASSWORD=pass
-        POSTGRES_PORTS=54321:5432
+        POSTGRES_PORTS=54322:5432
+        DOCKER_COMPOSE_ENV=dev-main
 
 docker compose --env-file .env.prod.local up -d
-docker exec -it  wallet-php-container bash
+
+docker exec -it wallet-php-dev-main bash
     cd /var/www/
     composer install
 
-docker exec -it  wallet-postgres-container bash 
-    // login as SUPERUSER defined in docker-compose.yml and .env.prod.local ^^^
-    // e.g.:
+docker exec -it wallet-postgres-dev-main bash 
     psql -U user -d account
         create database account_dev;
         create database account_dev_test;
@@ -87,7 +87,7 @@ docker compose --env-file .env.prod.local down
 git co develop
 
 docker compose --env-file .env.dev.local up -d
-docker exec -it  wallet-php-container-dev bash
+docker exec -it wallet-php-dev-dev bash
     cd /var/www/
     ./reset_dev.sh
 
@@ -95,10 +95,8 @@ docker exec -it  wallet-php-container-dev bash
     setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
     setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
     
-    npm install node-sass sass-loader --save-dev
-    npm install bootstrap @popperjs/core bs-custom-file-input --save-dev
-    symfony run npm run dev
-
+    npm install
+    npm run dev
 ```
 
 ## test
@@ -107,8 +105,7 @@ docker exec -it  wallet-php-container-dev bash
 git co develop
 docker compose --env-file .env.dev.local up -d
 ./xdebug-disable-enable.sh disable
-docker exec -it  wallet-php-container-dev bash
-
+docker exec -it wallet-php-dev-dev bash
     cd /var/www/
 
     mkdir --parents tools/php-cs-fixer
@@ -127,9 +124,8 @@ http://localhost:8000/api
 ## prod
 
 ```shell
-docker exec -it  postgres-container bash 
-    // login as SUPERUSER defined in docker-compose.yml and .env.prod.local
-    psql -U your_production_postgres_user -d your_production_postgres_database < database_backup_YYYY-MM-DD.sql
+docker exec -it postgres-container bash 
+    psql -U postgres_user -d postgres_database < backup_YYYY-MM-DD.sql
 ```
 
 http://localhost

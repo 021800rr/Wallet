@@ -10,11 +10,11 @@ use App\Repository\ContractorRepositoryInterface;
 use App\Service\BalanceSupervisor\BalanceSupervisorInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route(
@@ -123,8 +123,6 @@ class EurController extends AbstractAppPaginator
     }
 
     /**
-     * @param Eur $eur
-     * @param Request $request
      * @return RedirectResponse|Response
      * @throws Exception
      */
@@ -133,7 +131,7 @@ class EurController extends AbstractAppPaginator
         $form = $this->createForm(EurType::class, $eur);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($eur->getId()) {
+            if (0 !== $eur->getId()) {
                 $this->walletUpdater->setPreviousId($this->eurRepository, $eur->getId());
                 $this->eurRepository->save($eur, true);
             } else {

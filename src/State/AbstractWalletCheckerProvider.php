@@ -40,7 +40,7 @@ abstract readonly class AbstractWalletCheckerProvider implements ProviderInterfa
         foreach ($generator as $wallet) {
             $data->addWallet($wallet);
         }
-        if (empty($data->getWallets())) {
+        if ($data->getWallets() === []) {
             $data->setResult('Passed');
         }
 

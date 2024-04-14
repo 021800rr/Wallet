@@ -5,11 +5,11 @@ services:
   php-service:
     build:
       dockerfile: docker/php/Dockerfile
-    container_name: wallet-php-container
+    container_name: wallet-php-${DOCKER_COMPOSE_ENV}
     volumes:
       - ./:/var/www
 #      - ./docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-#      - ./docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+      - ./docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
       - ./docker/php/conf.d/zzz_memory_limit.ini:/usr/local/etc/php/conf.d/zzz_memory_limit.ini
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -18,7 +18,7 @@ services:
 
   nginx-service:
     image: nginx:1.25-alpine
-    container_name: wallet-nginx-container
+    container_name: wallet-nginx-${DOCKER_COMPOSE_ENV}
     restart: always
     ports:
       - "${NGPORTS}"
@@ -29,8 +29,8 @@ services:
       - app-net
 
   postgres-service:
-    image: postgres:15-alpine
-    container_name: wallet-postgres-container
+    image: postgres:16-alpine
+    container_name: wallet-postgres-${DOCKER_COMPOSE_ENV}
     restart: always
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
@@ -47,4 +47,3 @@ services:
 networks:
   app-net:
     driver: bridge
-
