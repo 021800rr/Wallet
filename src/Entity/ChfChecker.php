@@ -7,7 +7,8 @@ use ApiPlatform\Metadata\Get;
 use App\State\ChfCheckerProvider;
 
 #[ApiResource(
-    normalizationContext: ['groups' => ['account:read']],
+    normalizationContext: ['groups' => ['account:get']],
+    security: "is_granted('ROLE_ADMIN')"
 )]
 #[Get(
     uriTemplate: '/check/chfs',

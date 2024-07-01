@@ -2,19 +2,16 @@
 
 namespace App\Tests\Controller;
 
-use App\Tests\SetupController;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use App\Tests\SetUp;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class PlnControllerTest extends WebTestCase
 {
-    use SetupController;
-
-    private KernelBrowser $client;
+    use SetUp;
 
     public function testIndex(): void
     {
-        $this->client->request('GET', '/en/pln');
+        $this->kernelBrowser->request('GET', '/en/pln');
 
         $this->assertSelectorTextContains('td#pln_amount1', '-40');
         $this->assertSelectorTextContains('td#pln_balance1', '100');
@@ -25,9 +22,9 @@ class PlnControllerTest extends WebTestCase
 
     public function testNew(): void
     {
-        $this->client->request('GET', '/en/pln');
-        $this->client->clickLink('New Receipt');
-        $this->client->submitForm('Save', [
+        $this->kernelBrowser->request('GET', '/en/pln');
+        $this->kernelBrowser->clickLink('New Receipt');
+        $this->kernelBrowser->submitForm('Save', [
             'pln[amount]' => '-50',
         ]);
         $this->assertSelectorTextContains('td#pln_balance1', '50');
@@ -35,12 +32,12 @@ class PlnControllerTest extends WebTestCase
 
     public function testEdit(): void
     {
-        $crawler = $this->client->request('GET', '/en/pln');
+        $crawler = $this->kernelBrowser->request('GET', '/en/pln');
 
-        $this->client->click(
+        $this->kernelBrowser->click(
             $crawler->filter('a#pln_edit1')->link()
         );
-        $this->client->submitForm('pln_save', [
+        $this->kernelBrowser->submitForm('pln_save', [
             'pln[amount]' => '-50',
         ]);
         $this->assertSelectorTextContains('td#pln_balance1', '90');
@@ -48,16 +45,16 @@ class PlnControllerTest extends WebTestCase
 
     public function testEditMoveBackward(): void
     {
-        $crawler = $this->client->request('GET', '/en/pln');
+        $crawler = $this->kernelBrowser->request('GET', '/en/pln');
 
-        $this->client->click(
+        $this->kernelBrowser->click(
             $crawler->filter('a#pln_edit3')->link()
         );
-        $this->client->submitForm('pln_save', [
+        $this->kernelBrowser->submitForm('pln_save', [
             'pln[date]' => '2021-02-12',
         ]);
 
-        $this->client->request('GET', '/en/pln');
+        $this->kernelBrowser->request('GET', '/en/pln');
 
         $this->assertSelectorTextContains('td#pln_amount3', '-10');
         $this->assertSelectorTextContains('td#pln_balance3', '170');
@@ -71,9 +68,9 @@ class PlnControllerTest extends WebTestCase
 
     public function testDelete(): void
     {
-        $crawler = $this->client->request('GET', '/en/pln');
+        $crawler = $this->kernelBrowser->request('GET', '/en/pln');
 
-        $this->client->submit(
+        $this->kernelBrowser->submit(
             $crawler->filter('form#pln_delete2')->form()
         );
         $this->assertSelectorTextContains('td#pln_balance1', '130');
@@ -81,9 +78,9 @@ class PlnControllerTest extends WebTestCase
 
     public function testIsConsistent(): void
     {
-        $crawler = $this->client->request('GET', '/en/pln');
+        $crawler = $this->kernelBrowser->request('GET', '/en/pln');
 
-        $crawler = $this->client->submit(
+        $crawler = $this->kernelBrowser->submit(
             $crawler->filter('form#pln_is_consistent1')->form()
         );
 
@@ -96,8 +93,8 @@ class PlnControllerTest extends WebTestCase
 
     public function testCheck(): void
     {
-        $this->client->request('GET', '/en/pln');
-        $this->client->clickLink('Check');
+        $this->kernelBrowser->request('GET', '/en/pln');
+        $this->kernelBrowser->clickLink('Check');
         $this->assertSelectorTextContains('div.alert-success', 'Passed');
     }
 }

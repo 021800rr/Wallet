@@ -1,26 +1,14 @@
 <?php
 
-namespace App\Tests\Api;
+namespace App\Tests\Entity;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
-use App\Tests\SetupApi;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use App\Tests\SetUp;
 
 class PaymentsByMonthTest extends ApiTestCase
 {
-    use SetupApi;
+    use SetUp;
 
-    /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     */
     public function testGet(): void
     {
         $this->client->request('GET', '/api/backups/payments/by/month', ['auth_bearer' => $this->token]);

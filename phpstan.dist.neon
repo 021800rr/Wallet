@@ -4,19 +4,3 @@ parameters:
         - src/
         - tests/
     checkGenericClassInNonGenericObjectType: false
-    ignoreErrors:
-        -
-          message: '#Method App\\Repository\\AccountRepositoryInterface::find\(\) has no return type specified\.#'
-          path: src/Repository/AccountRepositoryInterface.php
-        -
-          message: '#Method App\\Repository\\AccountRepositoryInterface::find\(\) has parameter \$id with no type specified\.#'
-          path: src/Repository/AccountRepositoryInterface.php
-        -
-          message: '#Method App\\Repository\\AccountRepositoryInterface::find\(\) has parameter \$lockMode with no type specified\.#'
-          path: src/Repository/AccountRepositoryInterface.php
-        -
-          message: '#Method App\\Repository\\AccountRepositoryInterface::find\(\) has parameter \$lockVersion with no type specified\.#'
-          path: src/Repository/AccountRepositoryInterface.php
-        -
-          message: '#Access to constant LAST_USERNAME on an unknown class Symfony\\Component\\Security\\Core\\Security.#'
-          path: src/Security/AppAuthenticator.php

@@ -3,14 +3,24 @@
 namespace App\Entity;
 
 use DateTimeInterface;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
+// extend by TransferToPln, TransferToBackup -> ApiResource
 abstract class AbstractTransfer
 {
-    #[Groups('transfer:create')]
+    #[Groups('transfer:post')]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'float')]
+    #[Assert\Regex(
+        pattern: '/^-?\d+(\.\d{1,2})?$/',
+        message: 'The amount must be a valid number with up to 2 decimal places.',
+    )]
     protected float $amount;
 
-    #[Groups('transfer:create')]
+    #[Groups('transfer:post')]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: DateTimeInterface::class)]
     protected DateTimeInterface $date;
 
     public function getAmount(): float

@@ -9,13 +9,15 @@ use ApiPlatform\Metadata\Patch;
 use App\Repository\BackupRepository;
 use App\State\BackupProcessor;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BackupRepository::class)]
 #[ORM\HasLifecycleCallbacks()]
 #[ApiResource(
-    normalizationContext: ['groups' => ['backup:read']],
-    order: ['date' => 'DESC', 'id' => 'DESC']
+    normalizationContext: ['groups' => ['backup:get']],
+    order: ['date' => 'DESC', 'id' => 'DESC'],
+    security: "is_granted('ROLE_ADMIN')"
 )]
 #[GetCollection]
 #[Patch(
@@ -26,22 +28,33 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Backup extends AbstractAccount
 {
     // boolean interest as const:
-    public const INAPPLICABLE = null;
-    public const NOT_PROCESSED = false;
-    public const DONE = true;
+    public const null INAPPLICABLE = null;
+    public const false NOT_PROCESSED = false;
+    public const true DONE = true;
 
-    #[ORM\Column(type: 'string', length: 7)]
-    private string $yearMonth;
+    #[ORM\Column(type: 'string', length: 7, nullable: true)]
+    #[Assert\Type(type: 'string')]
+    #[Assert\Length(min: 7, max: 7)]
+    #[Assert\Regex(
+        pattern: '/^\d{4}-\d{2}$/',
+        message: 'The yearMonth must be in the format YYYY-MM.',
+    )]
+    private ?string $yearMonth = null;
 
-    #[Groups(['backup:read', 'payments:read'])]
+    #[Groups(['backup:get', 'payments:get'])]
     #[ORM\Column(type: 'float')]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'float')]
     private float $retiring = 0.0;
 
-    #[Groups(['backup:read', 'payments:read'])]
+    #[Groups(['backup:get', 'payments:get'])]
     #[ORM\Column(type: 'float')]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'float')]
     private float $holiday = 0.0;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
+    #[Assert\Type(type: 'boolean')]
     private ?bool $interest = null;
 
     public function __construct()
@@ -63,7 +76,7 @@ class Backup extends AbstractAccount
         return $this;
     }
 
-    public function getYearMonth(): string
+    public function getYearMonth(): ?string
     {
         return $this->yearMonth;
     }
@@ -75,7 +88,7 @@ class Backup extends AbstractAccount
 
     public function setRetiring(float $retiring): self
     {
-        $this->retiring = $retiring;
+        $this->retiring = (float) number_format((float) $retiring, 2, '.', '');
 
         return $this;
     }
@@ -87,7 +100,7 @@ class Backup extends AbstractAccount
 
     public function setHoliday(float $holiday): self
     {
-        $this->holiday = $holiday;
+        $this->holiday = (float) number_format((float) $holiday, 2, '.', '');
 
         return $this;
     }

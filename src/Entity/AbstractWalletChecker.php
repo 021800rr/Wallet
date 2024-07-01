@@ -2,15 +2,19 @@
 
 namespace App\Entity;
 
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
+// extend by PlnWalletChecker, ChfWalletChecker, EurWalletChecker -> ApiResource
 abstract class AbstractWalletChecker
 {
-    #[Groups(['account:read'])]
+    #[Groups(['account:get'])]
+    #[Assert\Type(type: 'string')]
     protected string $result = 'Error';
 
     /** @var AbstractWallet[] */
-    #[Groups(['account:read'])]
+    #[Groups(['account:get'])]
+    #[Assert\Type(type: 'array')]
     protected array $wallets = [];
 
     public function getResult(): string

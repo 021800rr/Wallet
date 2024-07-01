@@ -3,19 +3,22 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
+use InvalidArgumentException;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+// extend by Pln, Chf, Eur -> ORM\Entity, ApiResource
 abstract class AbstractWallet extends AbstractAccount
 {
-    #[Groups(['account:read', 'account:patch'])]
+    #[Groups(['account:get', 'account:patch'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
+    #[Assert\Type(type: 'boolean')]
     protected ?bool $isConsistent;
 
-    #[Groups('account:read')]
+    #[Groups('account:get')]
     #[ORM\Column(type: 'float', nullable: true)]
-    #[Assert\Type('float')]
-    protected ?float $balance_supervisor;
+    #[Assert\Type(type: 'float')]
+    protected ?float $balanceSupervisor;
 
     public function getIsConsistent(): ?bool
     {
@@ -31,12 +34,18 @@ abstract class AbstractWallet extends AbstractAccount
 
     public function getBalanceSupervisor(): ?float
     {
-        return $this->balance_supervisor;
+        return $this->balanceSupervisor;
     }
 
-    public function setBalanceSupervisor(?float $balance_supervisor): self
+    public function setBalanceSupervisor(?float $balanceSupervisor): self
     {
-        $this->balance_supervisor = $balance_supervisor;
+        if (is_numeric($balanceSupervisor)) {
+            $this->balanceSupervisor = (float) number_format((float) $balanceSupervisor, 2, '.', '');
+        } elseif(is_null($balanceSupervisor)) {
+            $this->balanceSupervisor = $balanceSupervisor;
+        } else {
+            throw new InvalidArgumentException('balanceSupervisor must be a float or int.');
+        }
 
         return $this;
     }
@@ -48,7 +57,7 @@ abstract class AbstractWallet extends AbstractAccount
             $this->getAmount() . ' : ' .
             $this->getBalance() . ' : ' .
             $this->getBalanceSupervisor() . ' : ' .
-            $this->getContractor()->getDescription() .
+            $this->getContractor()?->getDescription() .
             ($this->getDescription() ? ' : ' . $this->getDescription() : '')
         ;
     }

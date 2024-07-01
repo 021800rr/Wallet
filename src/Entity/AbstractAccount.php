@@ -5,43 +5,53 @@ namespace App\Entity;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
+use InvalidArgumentException;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+// extend by Backup, AbstractWallet extend by Pln, Chf, Eur -> ORM\Entity, ApiResource
 abstract class AbstractAccount
 {
-    #[Groups('account:read')]
+    #[Groups('account:get')]
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: "SEQUENCE")]
     #[ORM\Column(type: 'integer')]
     protected ?int $id = null;
 
-    #[Groups(['account:read', 'backup:read', 'payments:read', 'account:create' , 'account:update'])]
+    #[Groups(['account:get', 'backup:get', 'payments:get', 'account:post' , 'account:put'])]
     #[ORM\Column(type: 'date')]
-    #[Assert\Type('DateTimeInterface')]
     #[Assert\NotBlank]
+    #[Assert\Type(type: DateTimeInterface::class)]
     protected DateTimeInterface $date;
 
-    #[Groups(['account:read', 'backup:read', 'payments:read', 'account:create' , 'account:update', 'backup:patch'])]
+    #[Groups(['account:get', 'backup:get', 'payments:get', 'account:post' , 'account:put', 'backup:patch'])]
     #[ORM\Column(type: 'float')]
     #[Assert\NotBlank]
-    protected float $amount;
+    #[Assert\Type(type: 'float')]
+    #[Assert\Regex(
+        pattern: '/^-?\d+(\.\d{1,2})?$/',
+        message: 'The amount must be a valid number with up to 2 decimal places.',
+    )]
+    protected float $amount = 0.0;
 
-    #[Groups(['account:read', 'backup:read', 'payments:read'])]
+    #[Groups(['account:get', 'backup:get', 'payments:get'])]
     #[ORM\Column(type: 'float')]
-    #[Assert\Type('float')]
     #[Assert\NotBlank]
-    protected float $balance = 0.00;
+    #[Assert\Type(type: 'float')]
+    protected float $balance = 0.0;
 
-    #[Groups(['account:read', 'account:create' , 'account:update'])]
+    #[Groups(['account:get', 'account:post' , 'account:put'])]
     #[ORM\ManyToOne(targetEntity: Contractor::class)]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotBlank]
-    protected Contractor $contractor;
+    #[Assert\Type(type: Contractor::class)]
+    protected ?Contractor $contractor = null;
 
-    #[Groups(['account:read', 'backup:read', 'payments:read', 'account:create' , 'account:update', 'backup:patch'])]
+    #[Groups(['account:get', 'backup:get', 'payments:get', 'account:post' , 'account:put', 'backup:patch'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    protected ?string $description;
+    #[Assert\Type(type: 'string')]
+    #[Assert\Length(max: 255)]
+    protected ?string $description = null;
 
     public function __construct()
     {
@@ -84,12 +94,12 @@ abstract class AbstractAccount
 
     public function setBalance(float $balance): self
     {
-        $this->balance = round($balance, 2);
+        $this->balance = (float) number_format((float) $balance, 2, '.', '');
 
         return $this;
     }
 
-    public function getContractor(): Contractor
+    public function getContractor(): ?Contractor
     {
         return $this->contractor;
     }

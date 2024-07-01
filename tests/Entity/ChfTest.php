@@ -1,33 +1,21 @@
 <?php
 
-namespace App\Tests\Api;
+namespace App\Tests\Entity;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
-use App\Entity\Eur;
-use App\Tests\SetupApi;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use App\Entity\Chf;
+use App\Tests\SetUp;
 
-class EurTest extends ApiTestCase
+class ChfTest extends ApiTestCase
 {
-    use SetupApi;
+    use SetUp;
 
-    /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     */
     public function testGetCollection(): void
     {
-        $this->client->request('GET', '/api/eurs', ['auth_bearer' => $this->token]);
+        $this->client->request('GET', '/api/chfs', ['auth_bearer' => $this->token]);
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
-        $this->assertMatchesResourceCollectionJsonSchema(Eur::class);
+        $this->assertMatchesResourceCollectionJsonSchema(Chf::class);
 
         $this->assertJsonContains([
             "hydra:totalItems" => 3,
@@ -51,16 +39,9 @@ class EurTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     */
     public function testPost(): void
     {
-        $this->client->request('POST', '/api/eurs', [
+        $this->client->request('POST', '/api/chfs', [
             'auth_bearer' => $this->token,
             'json' => [
                 "date" => "2023-06-26",
@@ -80,7 +61,7 @@ class EurTest extends ApiTestCase
             ]
         ]);
 
-        $this->client->request('GET', '/api/eurs', ['auth_bearer' => $this->token]);
+        $this->client->request('GET', '/api/chfs', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:totalItems" => 4,
             "hydra:member" => [
@@ -92,16 +73,9 @@ class EurTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     */
     public function testPut(): void
     {
-        $this->client->request('PUT', '/api/eurs/3', [
+        $this->client->request('PUT', '/api/chfs/3', [
             'auth_bearer' => $this->token,
             'json' => [
                 "date" => "2021-11-23",
@@ -120,7 +94,7 @@ class EurTest extends ApiTestCase
             "description" => "test test"
         ]);
 
-        $this->client->request('GET', '/api/eurs', ['auth_bearer' => $this->token]);
+        $this->client->request('GET', '/api/chfs', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:totalItems" => 3,
             "hydra:member" => [
@@ -131,22 +105,15 @@ class EurTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     */
     public function testDelete(): void
     {
-        $this->client->request('DELETE', '/api/eurs/3', ['auth_bearer' => $this->token]);
+        $this->client->request('DELETE', '/api/chfs/3', ['auth_bearer' => $this->token]);
         $this->assertResponseStatusCodeSame(204);
         $this->assertNull(
-            $this->eurRepository->findOneBy(['id' => 3])
+            $this->chfRepository->findOneBy(['id' => 3])
         );
 
-        $this->client->request('GET', '/api/eurs', ['auth_bearer' => $this->token]);
+        $this->client->request('GET', '/api/chfs', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:totalItems" => 2,
             "hydra:member" => [
@@ -157,16 +124,9 @@ class EurTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     */
     public function testPatch(): void
     {
-        $this->client->request('PATCH', '/api/eurs/2', [
+        $this->client->request('PATCH', '/api/chfs/2', [
             'auth_bearer' => $this->token,
             'json' => [
                 "isConsistent" => true,
@@ -179,5 +139,26 @@ class EurTest extends ApiTestCase
         $this->assertJsonContains([
             "isConsistent" => true,
         ]);
+    }
+
+    /**
+     * @dataProvider chfProvider
+     */
+    public function testValidation(Chf $chf, int $expectedViolationCount): void
+    {
+        $violations = $this->validateEntity($chf);
+        $this->assertCount($expectedViolationCount, $violations);
+    }
+
+    /**
+     * @return array<string, array{0: Chf, 1: int}>
+     */
+    public function chfProvider(): array
+    {
+        $chf1 = new Chf();
+
+        return [
+            'invalid amount and balanceSupervisor' => [$chf1, 1],
+        ];
     }
 }

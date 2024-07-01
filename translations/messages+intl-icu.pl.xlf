@@ -145,6 +145,10 @@
         <source>EUR++</source>
         <target>EUR++</target>
       </trans-unit>
+      <trans-unit id="SDqpnG1" resname="Cannot delete contractor">
+        <source>Cannot delete contractor</source>
+        <target>Nie można usunąć kontrahenta</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

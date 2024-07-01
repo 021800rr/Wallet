@@ -4,7 +4,6 @@ namespace App\Form;
 
 use App\Entity\Backup;
 use App\Entity\Contractor;
-use App\Validator\Unchangeable;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -17,12 +16,13 @@ class BackupType extends AbstractAccountType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
+
         $builder
             ->add('date', DateType::class, [
                 'widget' => 'single_text',
                 'disabled' => true,
-                'constraints' => [
-                    new Unchangeable(),
+                'attr' => [
+                    'readonly' => true,
                 ],
             ])
             ->add('amount', MoneyType::class, [
@@ -39,32 +39,19 @@ class BackupType extends AbstractAccountType
                 },
                 'choice_label' => 'description',
                 'disabled' => true,
-                'constraints' => [
-                    new Unchangeable(),
-                ],
             ])
             ->add('balance', MoneyType::class, [
                 'currency' => 'PLN',
                 'disabled' => true,
-                'constraints' => [
-                    new Unchangeable(),
-                ],
             ])
             ->add('retiring', MoneyType::class, [
                 'currency' => 'PLN',
                 'disabled' => true,
-                'constraints' => [
-                    new Unchangeable(),
-                ],
             ])
             ->add('holiday', MoneyType::class, [
                 'currency' => 'PLN',
                 'disabled' => true,
-                'constraints' => [
-                    new Unchangeable(),
-                ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

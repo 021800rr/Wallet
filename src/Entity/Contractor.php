@@ -12,17 +12,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ContractorRepository::class)]
 #[UniqueEntity("description")]
 #[ApiResource(
-    normalizationContext: ['groups' => ['contractor:read']],
+    normalizationContext: ['groups' => ['contractor:get']],
+    security: "is_granted('ROLE_ADMIN')"
 )]
 #[GetCollection]
 #[Post(
-    denormalizationContext: ['groups' => ['contractor:create']],
+    denormalizationContext: ['groups' => ['contractor:post']],
 )]
 #[Patch(
     denormalizationContext: ['groups' => ['contractor:patch']],
@@ -30,21 +31,27 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Delete]
 class Contractor
 {
-    #[Groups(['contractor:read', 'account:read', 'fee:read'])]
+    #[Groups(['contractor:get', 'account:get', 'fee:get'])]
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: "SEQUENCE")]
     #[ORM\Column(type: "integer")]
     private ?int $id = null;
 
-    #[Groups(['contractor:read', 'contractor:create', 'contractor:patch', 'account:read', 'fee:read'])]
-    #[ORM\Column(type: "string", length: 255)]
-    #[Assert\NotBlank()]
+    #[Groups(['contractor:get', 'contractor:post', 'contractor:patch', 'account:get', 'fee:get'])]
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'string')]
+    #[Assert\Length(max: 255)]
     private string $description;
 
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
+    #[Groups(['contractor:get', 'contractor:post', 'contractor:patch'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Type(type: 'string')]
+    #[Assert\Length(max: 255)]
     private ?string $account;
 
-    #[ORM\OneToMany(mappedBy: "contractor", targetEntity: Fee::class)]
+    #[ORM\OneToMany(mappedBy: 'contractor', targetEntity: Fee::class)]
+    #[Assert\Type(type: Collection::class)]
     private Collection $fees;
 
     public function __construct()

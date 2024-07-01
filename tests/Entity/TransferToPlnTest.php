@@ -1,29 +1,14 @@
 <?php
 
-namespace App\Tests\Api;
+namespace App\Tests\Entity;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
-use App\Tests\SetupApi;
-use Exception;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use App\Tests\SetUp;
 
 class TransferToPlnTest extends ApiTestCase
 {
-    use SetupApi;
+    use SetUp;
 
-    /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     * @throws Exception
-     * @see Service/Transfer/TransferTest.php
-     */
     public function testPost(): void
     {
         $this->assertSame(100.00, $this->plnRepository->getCurrentBalance());

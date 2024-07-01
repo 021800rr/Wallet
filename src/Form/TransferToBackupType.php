@@ -21,7 +21,7 @@ class TransferToBackupType extends AbstractType
                 'label' => 'Backup',
                 'attr' => [
                     'autofocus' => true,
-                    'required' => true
+//                    'required' => true
                 ]
             ])
             ->add('date', DateType::class, [
