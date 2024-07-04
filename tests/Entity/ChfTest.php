@@ -158,7 +158,7 @@ class ChfTest extends ApiTestCase
         $chf1 = new Chf();
 
         return [
-            'invalid amount and balanceSupervisor' => [$chf1, 1],
+            'invalid amount and balanceSupervisor' => [$chf1, 2],
         ];
     }
 }
