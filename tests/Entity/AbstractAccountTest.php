@@ -18,7 +18,6 @@ class AbstractAccountTest extends KernelTestCase
 
         $currentTime = new DateTime();
         $this->assertEquals($currentTime->format('Y-m-d'), $account->getDate()->format('Y-m-d'));
-        $this->assertEquals(0.0, $account->getAmount());
         $this->assertEquals(0.0, $account->getBalance());
         $this->assertNull($account->getContractor());
         $this->assertNull($account->getDescription());
@@ -47,6 +46,7 @@ class AbstractAccountTest extends KernelTestCase
     public function accountDataProvider(): array
     {
         $validAccount = new class() extends AbstractAccount {};
+        $validAccount->setAmount(1.1);
         $validAccount->setContractor(new Contractor());
 
         $missingFieldsAccount = new class() extends AbstractAccount {};
@@ -56,7 +56,7 @@ class AbstractAccountTest extends KernelTestCase
 
         return [
             'valid account' => [$validAccount, 0],
-            'missing required fields' => [$missingFieldsAccount, 1],
+            'missing required fields' => [$missingFieldsAccount, 2],
             'invalid amount format' => [$invalidAmountAccount, 2],
         ];
     }
