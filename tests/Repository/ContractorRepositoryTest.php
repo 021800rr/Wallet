@@ -3,7 +3,6 @@
 namespace App\Tests\Repository;
 
 use App\Tests\SetUp;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class ContractorRepositoryTest extends KernelTestCase
@@ -16,9 +15,6 @@ class ContractorRepositoryTest extends KernelTestCase
         $this->assertSame(5, count($contractors));
     }
 
-    /**
-     * @throws Exception
-     */
     public function testGetInternalTransferOwner(): void
     {
         $contractor = $this->internalTransferOwner;

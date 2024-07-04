@@ -2,7 +2,7 @@
 {% block body %}
     <div class="row">
         <div class="col" id="transfer_backup">
-            {{ form_start(backup, {'attr': {'id': 'transfer_to_backup_form'}}) }}
+            {{ form_start(backup, {'attr': {'id': 'transfer_to_backup_form', 'novalidate': 'novalidate'}}) }}
             {{ form(backup) }}
             {{ form_end(backup) }}
         </div>

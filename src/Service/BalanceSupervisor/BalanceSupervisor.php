@@ -31,7 +31,7 @@ class BalanceSupervisor implements BalanceSupervisorInterface
             /** @var Pln|Chf $wallet */
             $wallet = $accountRepository->find($this->supervisors[$step]->getId());
             $balanceSupervisorBefore = $wallet->getBalanceSupervisor();
-            $checker = (round($this->initialBalance + $wallet->getAmount(), 2));
+            $checker = (float) number_format(($this->initialBalance + $wallet->getAmount()), 2, '.', '');
             if ($wallet->getBalance() !== $checker) {
                 $wallet->setBalanceSupervisor($checker);
                 yield($wallet);

@@ -1,27 +1,15 @@
 <?php
 
-namespace App\Tests\Api;
+namespace App\Tests\Entity;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Backup;
-use App\Tests\SetupApi;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use App\Tests\SetUp;
 
 class BackupTest extends ApiTestCase
 {
-    use SetupApi;
+    use SetUp;
 
-    /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     */
     public function testGetCollection(): void
     {
         $this->client->request('GET', '/api/backups', ['auth_bearer' => $this->token]);
@@ -49,13 +37,6 @@ class BackupTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     */
     public function testDelete(): void
     {
         $this->client->request('DELETE', '/api/backups/3', ['auth_bearer' => $this->token]);
@@ -81,13 +62,6 @@ class BackupTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     */
     public function testPatch(): void
     {
         $this->client->request('PATCH', '/api/backups/3', [

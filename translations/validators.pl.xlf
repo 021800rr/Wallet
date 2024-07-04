@@ -405,6 +405,42 @@
         <source>The value of the netmask should be between {{ min }} and {{ max }}.</source>
         <target>Wartość maski podsieci powinna być pomiędzy {{ min }} i {{ max }}.</target>
       </trans-unit>
+      <trans-unit id="O5pay9e" resname="The filename is too long. It should have {{ filename_max_length }} character or less.|The filename is too long. It should have {{ filename_max_length }} characters or less.">
+        <source>The filename is too long. It should have {{ filename_max_length }} character or less.|The filename is too long. It should have {{ filename_max_length }} characters or less.</source>
+        <target>Nazwa pliku jest za długa. Powinna mieć {{ filename_max_length }} znak lub mniej.|Nazwa pliku jest za długa. Powinna mieć {{ filename_max_length }} znaków lub mniej.</target>
+      </trans-unit>
+      <trans-unit id="f_lviDt" resname="The password strength is too low. Please use a stronger password.">
+        <source>The password strength is too low. Please use a stronger password.</source>
+        <target>Siła hasła jest zbyt niska. Użyj mocniejszego hasła.</target>
+      </trans-unit>
+      <trans-unit id="xfCh6.k" resname="This value contains characters that are not allowed by the current restriction-level.">
+        <source>This value contains characters that are not allowed by the current restriction-level.</source>
+        <target>Ta wartość zawiera znaki, które nie są dozwolone przez aktualny poziom ograniczeń.</target>
+      </trans-unit>
+      <trans-unit id="x15dlan" resname="Using invisible characters is not allowed.">
+        <source>Using invisible characters is not allowed.</source>
+        <target>Używanie niewidzialnych znaków jest niedozwolone.</target>
+      </trans-unit>
+      <trans-unit id="2NiS4YC" resname="Mixing numbers from different scripts is not allowed.">
+        <source>Mixing numbers from different scripts is not allowed.</source>
+        <target>Mieszanie liczb z różnych skryptów jest niedozwolone.</target>
+      </trans-unit>
+      <trans-unit id="W8N1HuG" resname="Using hidden overlay characters is not allowed.">
+        <source>Using hidden overlay characters is not allowed.</source>
+        <target>Używanie ukrytych znaków nakładki jest niedozwolone.</target>
+      </trans-unit>
+      <trans-unit id="pifGDXc" resname="The extension of the file is invalid ({{ extension }}). Allowed extensions are {{ extensions }}.">
+        <source>The extension of the file is invalid ({{ extension }}). Allowed extensions are {{ extensions }}.</source>
+        <target>Rozszerzenie pliku jest nieprawidłowe ({{ extension }}). Dozwolone rozszerzenia to {{ extensions }}.</target>
+      </trans-unit>
+      <trans-unit id="cM9fJA2" resname="The detected character encoding is invalid ({{ detected }}). Allowed encodings are {{ encodings }}.">
+        <source>The detected character encoding is invalid ({{ detected }}). Allowed encodings are {{ encodings }}.</source>
+        <target>Wykryte kodowanie znaków ({{ detected }}) jest nieprawidłowe. Dozwolone kodowania to {{ encodings }}.</target>
+      </trans-unit>
+      <trans-unit id="gC.d7MB" resname="This value is not a valid MAC address.">
+        <source>This value is not a valid MAC address.</source>
+        <target>Ta wartość nie jest prawidłowym adresem MAC.</target>
+      </trans-unit>
       <trans-unit id=".SEaaBa" resname="This form should not contain extra fields.">
         <source>This form should not contain extra fields.</source>
         <target>Ten formularz nie powinien zawierać dodatkowych pól.</target>

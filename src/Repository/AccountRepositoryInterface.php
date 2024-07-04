@@ -13,6 +13,7 @@ interface AccountRepositoryInterface extends AppRepositoryInterface
     /** @return AbstractAccount[] */
     public function getAllRecords(): array;
 
+    // @phpstan-ignore-next-line
     public function find($id, $lockMode = null, $lockVersion = null);
 
     public function save(AbstractAccount $entity, bool $flush = false): void;

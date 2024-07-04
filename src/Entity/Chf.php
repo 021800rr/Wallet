@@ -15,16 +15,17 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ChfRepository::class)]
 #[ORM\Table(name: 'chf')]
 #[ApiResource(
-    normalizationContext: ['groups' => ['account:read']],
-    order: ['date' => 'DESC', 'id' => 'DESC']
+    normalizationContext: ['groups' => ['account:get']],
+    order: ['date' => 'DESC', 'id' => 'DESC'],
+    security: "is_granted('ROLE_ADMIN')"
 )]
 #[GetCollection]
 #[Post(
-    denormalizationContext: ['groups' => ['account:create']],
+    denormalizationContext: ['groups' => ['account:post']],
     processor: ChfProcessor::class,
 )]
 #[Put(
-    denormalizationContext: ['groups' => ['account:update']],
+    denormalizationContext: ['groups' => ['account:put']],
     processor: ChfProcessor::class,
 )]
 #[Patch(denormalizationContext: ['groups' => ['account:patch']], )]
