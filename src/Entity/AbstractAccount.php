@@ -32,7 +32,7 @@ abstract class AbstractAccount
         pattern: '/^-?\d+(\.\d{1,2})?$/',
         message: 'The amount must be a valid number with up to 2 decimal places.',
     )]
-    protected float $amount = 0.0;
+    protected float $amount;
 
     #[Groups(['account:get', 'backup:get', 'payments:get'])]
     #[ORM\Column(type: 'float')]
