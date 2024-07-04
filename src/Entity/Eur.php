@@ -15,16 +15,17 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: EurRepository::class)]
 #[ORM\Table(name: 'eur')]
 #[ApiResource(
-    normalizationContext: ['groups' => ['account:read']],
-    order: ['date' => 'DESC', 'id' => 'DESC']
+    normalizationContext: ['groups' => ['account:get']],
+    order: ['date' => 'DESC', 'id' => 'DESC'],
+    security: "is_granted('ROLE_ADMIN')"
 )]
 #[GetCollection]
 #[Post(
-    denormalizationContext: ['groups' => ['account:create']],
+    denormalizationContext: ['groups' => ['account:post']],
     processor: EurProcessor::class,
 )]
 #[Put(
-    denormalizationContext: ['groups' => ['account:update']],
+    denormalizationContext: ['groups' => ['account:put']],
     processor: EurProcessor::class,
 )]
 #[Patch(denormalizationContext: ['groups' => ['account:patch']], )]

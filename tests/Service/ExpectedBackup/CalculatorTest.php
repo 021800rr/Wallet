@@ -3,18 +3,23 @@
 namespace App\Tests\Service\ExpectedBackup;
 
 use App\Service\ExpectedBackup\Calculator;
-use Exception;
 use PHPUnit\Framework\TestCase;
 
 class CalculatorTest extends TestCase
 {
     private Calculator $calculator;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->calculator = new Calculator();
+    }
+
     /**
      * @dataProvider appProvider
      *
      * @param array<int, array<string, string|float>> $backups
-     * @throws Exception
      */
     public function testCompute(array $backups, float $expected): void
     {
@@ -56,12 +61,5 @@ class CalculatorTest extends TestCase
                 ]
             ]
         ;
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->calculator = new Calculator();
     }
 }

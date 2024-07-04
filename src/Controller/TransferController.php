@@ -11,10 +11,11 @@ use App\Repository\ContractorRepositoryInterface;
 use App\Service\Transfer\TransferInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route(
@@ -57,11 +58,9 @@ class TransferController extends AbstractController
     }
 
     #[Route('/transfer-to-backup', name: 'transfer_to_backup', methods: ['POST'])]
-    public function transferToBackup(Request $request, TransferInterface $agent): RedirectResponse
+    public function transferToBackup(Request $request, TransferInterface $agent): Response
     {
-        $backup = new Backup();
-        $backup->setContractor($this->internalTransferOwner);
-        $backupForm = $this->createForm(TransferToBackupType::class, $backup);
+        list($backup, $backupForm) = $this->getBackupForm();
         $backupForm->handleRequest($request);
         if ($backupForm->isSubmitted() && $backupForm->isValid()) {
             $post = $request->request->all();
@@ -74,15 +73,18 @@ class TransferController extends AbstractController
             return $this->redirectToRoute('backup_index');
         }
 
-        return $this->redirectToRoute('transfer_index');
+        list($pln, $plnForm) = $this->getPlnForm();
+
+        return $this->render('transfer/index.html.twig', [
+            'backup' => $backupForm->createView(),
+            'pln' => $plnForm->createView(),
+        ]);
     }
 
     #[Route('/transfer-to-pln', name: 'transfer_to_pln', methods: ['POST'])]
-    public function transferToPln(Request $request, TransferInterface $agent): RedirectResponse
+    public function transferToPln(Request $request, TransferInterface $agent): Response
     {
-        $pln = new Pln();
-        $pln->setContractor($this->internalTransferOwner);
-        $plnForm = $this->createForm(TransferToPlnType::class, $pln);
+        list($pln, $plnForm) = $this->getPlnForm();
         $plnForm->handleRequest($request);
         if ($plnForm->isSubmitted() && $plnForm->isValid()) {
             $agent->moveToPln($pln);
@@ -90,6 +92,35 @@ class TransferController extends AbstractController
             return $this->redirectToRoute('pln_index');
         }
 
-        return $this->redirectToRoute('transfer_index');
+        list($backup, $backupForm) = $this->getBackupForm();
+
+        return $this->render('transfer/index.html.twig', [
+            'backup' => $backupForm->createView(),
+            'pln' => $plnForm->createView(),
+        ]);
+    }
+
+    /**
+     * @return array{0: Backup, 1: FormInterface}
+     */
+    private function getBackupForm(): array
+    {
+        $backup = new Backup();
+        $backup->setContractor($this->internalTransferOwner);
+        $backupForm = $this->createForm(TransferToBackupType::class, $backup);
+
+        return array($backup, $backupForm);
+    }
+
+    /**
+     * @return array{0: Pln, 1: FormInterface}
+     */
+    private function getPlnForm(): array
+    {
+        $pln = new Pln();
+        $pln->setContractor($this->internalTransferOwner);
+        $plnForm = $this->createForm(TransferToPlnType::class, $pln);
+
+        return array($pln, $plnForm);
     }
 }

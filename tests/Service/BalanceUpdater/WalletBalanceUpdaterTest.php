@@ -6,16 +6,12 @@ use DateTime;
 use App\Entity\AbstractAccount;
 use App\Entity\Pln;
 use App\Tests\SetUp;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class WalletBalanceUpdaterTest extends KernelTestCase
 {
     use SetUp;
 
-    /**
-     * @throws Exception
-     */
     public function testCompute(): void
     {
         /** @var Pln[] $transactions */

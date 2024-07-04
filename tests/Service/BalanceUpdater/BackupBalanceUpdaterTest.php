@@ -4,16 +4,12 @@ namespace App\Tests\Service\BalanceUpdater;
 
 use App\Entity\Backup;
 use App\Tests\SetUp;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class BackupBalanceUpdaterTest extends KernelTestCase
 {
     use SetUp;
 
-    /**
-     * @throws Exception
-     */
     public function testCompute(): void
     {
         /** @var Backup[] $transactions */

@@ -1,28 +1,15 @@
 <?php
 
-namespace App\Tests\Api;
+namespace App\Tests\Entity;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 use App\Entity\Fee;
-use App\Tests\SetupApi;
-use Exception;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use App\Tests\SetUp;
 
 class FeeTest extends ApiTestCase
 {
-    use SetupApi;
+    use SetUp;
 
-    /**
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     */
     public function testPostInsertToPln(): void
     {
         $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
@@ -37,13 +24,6 @@ class FeeTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     */
     public function testGetCollection(): void
     {
         $this->client->request('GET', '/api/fees', ['auth_bearer' => $this->token]);
@@ -68,13 +48,6 @@ class FeeTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     */
     public function testPost(): void
     {
         $this->client->request('POST', '/api/fees', [
@@ -103,14 +76,6 @@ class FeeTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     * @throws Exception
-     */
     public function testDelete(): void
     {
         $netflix = $this->contractorRepository->findOneBy(['description' => 'Netflix']);
@@ -127,14 +92,6 @@ class FeeTest extends ApiTestCase
         ]);
     }
 
-    /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
-     * @throws Exception
-     */
     public function testPatch(): void
     {
         $netflix = $this->contractorRepository->findOneBy(['description' => 'Netflix']);

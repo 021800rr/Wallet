@@ -17,16 +17,17 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: PlnRepository::class)]
 #[ORM\Table(name: 'wallet')]
 #[ApiResource(
-    normalizationContext: ['groups' => ['account:read']],
-    order: ['date' => 'DESC', 'id' => 'DESC']
+    normalizationContext: ['groups' => ['account:get']],
+    order: ['date' => 'DESC', 'id' => 'DESC'],
+    security: "is_granted('ROLE_ADMIN')"
 )]
 #[GetCollection]
 #[Post(
-    denormalizationContext: ['groups' => ['account:create']],
+    denormalizationContext: ['groups' => ['account:post']],
     processor: PlnProcessor::class,
 )]
 #[Put(
-    denormalizationContext: ['groups' => ['account:update']],
+    denormalizationContext: ['groups' => ['account:put']],
     processor: PlnProcessor::class,
 )]
 #[Patch(denormalizationContext: ['groups' => ['account:patch']], )]

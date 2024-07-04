@@ -3,19 +3,14 @@
 namespace App\Tests\Service\FixedFees;
 
 use App\Entity\Pln;
-use App\Service\BalanceUpdater\BalanceUpdaterWallet;
 use App\Service\FixedFees\FixedFees;
 use App\Tests\SetUp;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class FixedFeesTest extends KernelTestCase
 {
     use SetUp;
 
-    /**
-     * @throws Exception
-     */
     public function testInsert(): void
     {
         $fixedFees = new FixedFees(

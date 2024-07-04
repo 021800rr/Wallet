@@ -5,10 +5,11 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use App\State\PaymentByMonthProvider;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ApiResource(
-    normalizationContext: ['groups' => ['payments:read']],
+    normalizationContext: ['groups' => ['payments:get']],
+    security: "is_granted('ROLE_ADMIN')"
 )]
 #[Get(
     uriTemplate: '/backups/payments/by/month',
@@ -17,25 +18,25 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class PaymentsByMonth
 {
     /** @var array<int, array<string, string>>|null */
-    #[Groups(['payments:read'])]
+    #[Groups(['payments:get'])]
     private ?array $backups;
 
-    #[Groups(['payments:read'])]
+    #[Groups(['payments:get'])]
     private ?float $expected;
 
-    #[Groups(['payments:read'])]
+    #[Groups(['payments:get'])]
     private ?float $plnBalance;
 
-    #[Groups(['payments:read'])]
+    #[Groups(['payments:get'])]
     private ?float $chfBalance;
 
-    #[Groups(['payments:read'])]
+    #[Groups(['payments:get'])]
     private ?float $eurBalance;
 
-    #[Groups(['payments:read'])]
+    #[Groups(['payments:get'])]
     private ?Backup $backupLastRecord;
 
-    #[Groups(['payments:read'])]
+    #[Groups(['payments:get'])]
     private ?float $total;
 
     /** @return array<int, array<string, string>>|null */

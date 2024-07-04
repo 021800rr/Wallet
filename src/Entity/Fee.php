@@ -10,15 +10,17 @@ use ApiPlatform\Metadata\Post;
 use App\Controller\ApiFeeController;
 use App\Repository\FeeRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: FeeRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['fee:read']],
+    normalizationContext: ['groups' => ['fee:get']],
+    security: "is_granted('ROLE_ADMIN')"
 )]
 #[GetCollection]
 #[Post(
-    denormalizationContext: ['groups' => ['fee:create']],
+    denormalizationContext: ['groups' => ['fee:post']],
 )]
 #[Post(
     uriTemplate: '/fees/insert/to/pln',
@@ -33,23 +35,38 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[Delete]
 class Fee
 {
-    #[Groups(['fee:read'])]
+    #[Groups(['fee:get'])]
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: "SEQUENCE")]
     #[ORM\Column(type: "integer")]
     private ?int $id = null;
 
-    #[Groups(['fee:read', 'fee:create', 'fee:patch'])]
+    #[Groups(['fee:get', 'fee:post', 'fee:patch'])]
     #[ORM\Column(type: "integer")]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'integer')]
+    #[Assert\Range(
+        notInRangeMessage: 'The day must be between {{ min }} and {{ max }}.',
+        min: 1,
+        max: 31,
+    )]
     private int $date;
 
-    #[Groups(['fee:read', 'fee:create', 'fee:patch'])]
+    #[Groups(['fee:get', 'fee:post', 'fee:patch'])]
     #[ORM\Column(type: "float")]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'float')]
+    #[Assert\Regex(
+        pattern: '/^-?\d+(\.\d{1,2})?$/',
+        message: 'The amount must be a valid number with up to 2 decimal places.',
+    )]
     private float $amount;
 
-    #[Groups(['fee:read', 'fee:create', 'fee:patch'])]
+    #[Groups(['fee:get', 'fee:post', 'fee:patch'])]
     #[ORM\ManyToOne(targetEntity: Contractor::class, inversedBy: "fees")]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: Contractor::class)]
     private Contractor $contractor;
 
     public function getId(): int

@@ -5,11 +5,13 @@ namespace App\Controller;
 use App\Entity\Contractor;
 use App\Form\ContractorType;
 use App\Repository\ContractorRepositoryInterface;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route(
     path: '/{_locale}/contractor',
@@ -21,8 +23,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class ContractorController extends AbstractAppPaginator
 {
-    public function __construct(private readonly ContractorRepositoryInterface $contractorRepository)
-    {
+    public function __construct(
+        private readonly ContractorRepositoryInterface $contractorRepository,
+        private readonly TranslatorInterface $translator,
+    ) {
     }
 
     #[Route('/', name: 'contractor_index', methods: ['GET'])]
@@ -53,8 +57,15 @@ class ContractorController extends AbstractAppPaginator
     #[Route('/delete/{id}', name: 'contractor_delete', methods: ['POST'])]
     public function delete(Request $request, Contractor $contractor): RedirectResponse
     {
-        if ($this->isCsrfTokenValid('delete' . $contractor->getId(), (string) $request->request->get('_token'))) {
-            $this->contractorRepository->remove($contractor, true);
+        try {
+            if ($this->isCsrfTokenValid('delete' . $contractor->getId(), (string) $request->request->get('_token'))) {
+                $this->contractorRepository->remove($contractor, true);
+            }
+        } catch (ForeignKeyConstraintViolationException $e) {
+            $errorMessage = $this->translator->trans('Cannot delete contractor');
+            $this->addFlash('error', $errorMessage);
+
+            return $this->redirectToRoute('contractor_index');
         }
 
         return $this->redirectToRoute('contractor_index');
