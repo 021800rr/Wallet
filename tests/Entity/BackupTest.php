@@ -12,7 +12,7 @@ class BackupTest extends ApiTestCase
 
     public function testGetCollection(): void
     {
-        $this->client->request('GET', '/api/backups', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/backups', ['auth_bearer' => $this->token]);
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertMatchesResourceCollectionJsonSchema(Backup::class);
@@ -39,13 +39,13 @@ class BackupTest extends ApiTestCase
 
     public function testDelete(): void
     {
-        $this->client->request('DELETE', '/api/backups/3', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('DELETE', '/api/backups/3', ['auth_bearer' => $this->token]);
         $this->assertResponseStatusCodeSame(204);
         $this->assertNull(
             $this->backupRepository->findOneBy(['id' => 3])
         );
 
-        $this->client->request('GET', '/api/backups', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/backups', ['auth_bearer' => $this->token]);
 
         $this->assertJsonContains([
             "hydra:totalItems" => 2,
@@ -64,7 +64,7 @@ class BackupTest extends ApiTestCase
 
     public function testPatch(): void
     {
-        $this->client->request('PATCH', '/api/backups/3', [
+        $this->apiClient->request('PATCH', '/api/backups/3', [
             'auth_bearer' => $this->token,
             'json' => [
                 "amount" => 400,
@@ -80,7 +80,7 @@ class BackupTest extends ApiTestCase
             "description" => "string"
         ]);
 
-        $this->client->request('GET', '/api/backups', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/backups', ['auth_bearer' => $this->token]);
 
         $this->assertJsonContains([
             "hydra:totalItems" => 3,

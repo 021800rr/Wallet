@@ -11,7 +11,7 @@ class BackupControllerTest extends WebTestCase
 
     public function testIndex(): void
     {
-        $this->kernelBrowser->request('GET', '/en/backup');
+        $this->webClient->request('GET', '/en/backup');
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('td#backup_amount1', '300');
@@ -35,12 +35,12 @@ class BackupControllerTest extends WebTestCase
      */
     public function testEdit(string $amount, string $expectedHoliday, string $expectedRetiring, string $expectedBalance): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/backup');
-        $this->kernelBrowser->click(
+        $crawler = $this->webClient->request('GET', '/en/backup');
+        $this->webClient->click(
             $crawler->filter('#backup_edit1')
                 ->link()
         );
-        $this->kernelBrowser->submitForm('Save', [
+        $this->webClient->submitForm('Save', [
             'backup[amount]' => $amount,
         ]);
         $this->assertSelectorTextContains('td#backup_holiday1', $expectedHoliday);
@@ -62,12 +62,12 @@ class BackupControllerTest extends WebTestCase
     }
     public function testEditWithInvalidAmount(): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/backup');
-        $this->kernelBrowser->click(
+        $crawler = $this->webClient->request('GET', '/en/backup');
+        $this->webClient->click(
             $crawler->filter('#backup_edit1')
                 ->link()
         );
-        $this->kernelBrowser->submitForm('Save', [
+        $this->webClient->submitForm('Save', [
             'backup[amount]' => 'abc',
         ]);
 
@@ -78,8 +78,8 @@ class BackupControllerTest extends WebTestCase
 
     public function testDelete(): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/backup');
-        $this->kernelBrowser->submit(
+        $crawler = $this->webClient->request('GET', '/en/backup');
+        $this->webClient->submit(
             $crawler->filter('form#backup_delete1')->form()
         );
         $this->assertSelectorTextContains('td#backup_balance1', '300');
@@ -87,7 +87,7 @@ class BackupControllerTest extends WebTestCase
 
     public function testPaymentsByMonth(): void
     {
-        $this->kernelBrowser->request('GET', '/en/backup/payments-by-month');
+        $this->webClient->request('GET', '/en/backup/payments-by-month');
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('td#backup_sum_of_amounts1', '300');
         $this->assertSelectorTextContains('td#expected', '300');
@@ -102,14 +102,14 @@ class BackupControllerTest extends WebTestCase
 
     public function testInterest(): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/backup/interest');
+        $crawler = $this->webClient->request('GET', '/en/backup/interest');
         $form = $crawler->selectButton('interest_save')
             ->form();
         $form['interest[retiring_tax]'] = '10';
         $form['interest[retiring]'] = '100';
         $form['interest[holiday_tax]'] = '1';
         $form['interest[holiday]'] = '10';
-        $this->kernelBrowser->submit($form);
+        $this->webClient->submit($form);
         $this->assertSelectorTextContains('td#backup_amount1', '99');
         $this->assertSelectorTextContains('td#backup_balance1', '699');
         $this->assertSelectorTextContains('td#backup_retiring1', '390');

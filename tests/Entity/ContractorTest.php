@@ -12,7 +12,7 @@ class ContractorTest extends ApiTestCase
 
     public function testGetCollection(): void
     {
-        $this->client->request('GET', '/api/contractors', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/contractors', ['auth_bearer' => $this->token]);
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertMatchesResourceCollectionJsonSchema(Contractor::class);
@@ -46,7 +46,7 @@ class ContractorTest extends ApiTestCase
 
     public function testPost(): void
     {
-        $this->client->request('POST', '/api/contractors', [
+        $this->apiClient->request('POST', '/api/contractors', [
             'auth_bearer' => $this->token,
             'json' => [
                 "description" => "HBO"
@@ -59,7 +59,7 @@ class ContractorTest extends ApiTestCase
             "description" => "HBO"
         ]);
 
-        $this->client->request('GET', '/api/contractors', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/contractors', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:totalItems" => 6,
         ]);
@@ -67,7 +67,7 @@ class ContractorTest extends ApiTestCase
 
     public function testDelete(): void
     {
-        $this->client->request('POST', '/api/contractors', [
+        $this->apiClient->request('POST', '/api/contractors', [
             'auth_bearer' => $this->token,
             'json' => [
                 "description" => "HBO"
@@ -76,7 +76,7 @@ class ContractorTest extends ApiTestCase
         /** @var string $iri */
         $iri = $this->findIriBy(Contractor::class, ['description' => 'HBO']);
 
-        $this->client->request('DELETE', $iri, ['auth_bearer' => $this->token]);
+        $this->apiClient->request('DELETE', $iri, ['auth_bearer' => $this->token]);
         $this->assertResponseStatusCodeSame(204);
         $this->assertNull(
             $this->contractorRepository->findOneBy(['description' => 'HBO'])
@@ -85,7 +85,7 @@ class ContractorTest extends ApiTestCase
 
     public function testPatch(): void
     {
-        $this->client->request('PATCH', '/api/contractors/2', [
+        $this->apiClient->request('PATCH', '/api/contractors/2', [
             'auth_bearer' => $this->token,
             'json' => [
                 "description" => "test",

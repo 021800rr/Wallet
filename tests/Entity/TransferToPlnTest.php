@@ -13,7 +13,7 @@ class TransferToPlnTest extends ApiTestCase
     {
         $this->assertSame(100.00, $this->plnRepository->getCurrentBalance());
 
-        $this->client->request('POST', '/api/transfer/to/pln', [
+        $this->apiClient->request('POST', '/api/transfer/to/pln', [
             'auth_bearer' => $this->token,
             'json' => [
                 "amount" => 100,
@@ -24,7 +24,7 @@ class TransferToPlnTest extends ApiTestCase
 
         $this->assertSame(200.00, $this->plnRepository->getCurrentBalance());
 
-        $this->client->request('GET', '/api/backups', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/backups', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:member" => [
                 [

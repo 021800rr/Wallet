@@ -12,7 +12,7 @@ class PlnTest extends ApiTestCase
 
     public function testGetCollection(): void
     {
-        $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertMatchesResourceCollectionJsonSchema(Pln::class);
@@ -64,7 +64,7 @@ class PlnTest extends ApiTestCase
 
     public function testPost(): void
     {
-        $this->client->request('POST', '/api/plns', [
+        $this->apiClient->request('POST', '/api/plns', [
             'auth_bearer' => $this->token,
             'json' => [
                 "date" => "2021-06-13",
@@ -84,7 +84,7 @@ class PlnTest extends ApiTestCase
             ]
         ]);
 
-        $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:totalItems" => 6,
             "hydra:member" => [
@@ -98,7 +98,7 @@ class PlnTest extends ApiTestCase
 
     public function testPut(): void
     {
-        $this->client->request('PUT', '/api/plns/4', [
+        $this->apiClient->request('PUT', '/api/plns/4', [
             'auth_bearer' => $this->token,
             'json' => [
                 "date" => "2021-04-13",
@@ -117,7 +117,7 @@ class PlnTest extends ApiTestCase
             "description" => "test test"
         ]);
 
-        $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:totalItems" => 5,
             "hydra:member" => [
@@ -130,7 +130,7 @@ class PlnTest extends ApiTestCase
 
     public function testPutMoveBackward(): void
     {
-        $this->client->request('PUT', '/api/plns/3', [
+        $this->apiClient->request('PUT', '/api/plns/3', [
             'auth_bearer' => $this->token,
             'json' => [
                 "date" => "2021-02-12",
@@ -141,7 +141,7 @@ class PlnTest extends ApiTestCase
             "date" => "2021-02-12T00:00:00+00:00",
         ]);
 
-        $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:totalItems" => 5,
             "hydra:member" => [
@@ -165,13 +165,13 @@ class PlnTest extends ApiTestCase
 
     public function testDelete(): void
     {
-        $this->client->request('DELETE', '/api/plns/4', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('DELETE', '/api/plns/4', ['auth_bearer' => $this->token]);
         $this->assertResponseStatusCodeSame(204);
         $this->assertNull(
             $this->plnRepository->findOneBy(['id' => 4])
         );
 
-        $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:totalItems" => 4,
             "hydra:member" => [
@@ -184,7 +184,7 @@ class PlnTest extends ApiTestCase
 
     public function testPatch(): void
     {
-        $this->client->request('PATCH', '/api/plns/2', [
+        $this->apiClient->request('PATCH', '/api/plns/2', [
             'auth_bearer' => $this->token,
             'json' => [
                 "isConsistent" => true,

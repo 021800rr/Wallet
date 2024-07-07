@@ -12,7 +12,7 @@ class ChfTest extends ApiTestCase
 
     public function testGetCollection(): void
     {
-        $this->client->request('GET', '/api/chfs', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/chfs', ['auth_bearer' => $this->token]);
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertMatchesResourceCollectionJsonSchema(Chf::class);
@@ -41,7 +41,7 @@ class ChfTest extends ApiTestCase
 
     public function testPost(): void
     {
-        $this->client->request('POST', '/api/chfs', [
+        $this->apiClient->request('POST', '/api/chfs', [
             'auth_bearer' => $this->token,
             'json' => [
                 "date" => "2023-06-26",
@@ -61,7 +61,7 @@ class ChfTest extends ApiTestCase
             ]
         ]);
 
-        $this->client->request('GET', '/api/chfs', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/chfs', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:totalItems" => 4,
             "hydra:member" => [
@@ -75,7 +75,7 @@ class ChfTest extends ApiTestCase
 
     public function testPut(): void
     {
-        $this->client->request('PUT', '/api/chfs/3', [
+        $this->apiClient->request('PUT', '/api/chfs/3', [
             'auth_bearer' => $this->token,
             'json' => [
                 "date" => "2021-11-23",
@@ -94,7 +94,7 @@ class ChfTest extends ApiTestCase
             "description" => "test test"
         ]);
 
-        $this->client->request('GET', '/api/chfs', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/chfs', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:totalItems" => 3,
             "hydra:member" => [
@@ -107,13 +107,13 @@ class ChfTest extends ApiTestCase
 
     public function testDelete(): void
     {
-        $this->client->request('DELETE', '/api/chfs/3', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('DELETE', '/api/chfs/3', ['auth_bearer' => $this->token]);
         $this->assertResponseStatusCodeSame(204);
         $this->assertNull(
             $this->chfRepository->findOneBy(['id' => 3])
         );
 
-        $this->client->request('GET', '/api/chfs', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/chfs', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:totalItems" => 2,
             "hydra:member" => [
@@ -126,7 +126,7 @@ class ChfTest extends ApiTestCase
 
     public function testPatch(): void
     {
-        $this->client->request('PATCH', '/api/chfs/2', [
+        $this->apiClient->request('PATCH', '/api/chfs/2', [
             'auth_bearer' => $this->token,
             'json' => [
                 "isConsistent" => true,

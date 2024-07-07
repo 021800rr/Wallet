@@ -11,7 +11,7 @@ class EurCheckerTest extends ApiTestCase
 
     public function testGet(): void
     {
-        $this->client->request('GET', '/api/check/eurs', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/check/eurs', ['auth_bearer' => $this->token]);
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
