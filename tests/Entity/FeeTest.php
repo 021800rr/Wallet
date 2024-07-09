@@ -12,13 +12,13 @@ class FeeTest extends ApiTestCase
 
     public function testPostInsertToPln(): void
     {
-        $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:totalItems" => 5,
         ]);
-        $this->client->request('POST', '/api/fees/insert/to/pln', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('POST', '/api/fees/insert/to/pln', ['auth_bearer' => $this->token]);
         $this->assertResponseStatusCodeSame(204);
-        $this->client->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
             "hydra:totalItems" => 7,
         ]);
@@ -26,7 +26,7 @@ class FeeTest extends ApiTestCase
 
     public function testGetCollection(): void
     {
-        $this->client->request('GET', '/api/fees', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/fees', ['auth_bearer' => $this->token]);
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertMatchesResourceCollectionJsonSchema(Fee::class);
@@ -50,7 +50,7 @@ class FeeTest extends ApiTestCase
 
     public function testPost(): void
     {
-        $this->client->request('POST', '/api/fees', [
+        $this->apiClient->request('POST', '/api/fees', [
             'auth_bearer' => $this->token,
             'json' => [
                 "date" => 1,
@@ -69,7 +69,7 @@ class FeeTest extends ApiTestCase
             ]
         ]);
 
-        $this->client->request('GET', '/api/fees', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/fees', ['auth_bearer' => $this->token]);
 
         $this->assertJsonContains([
             "hydra:totalItems" => 3,
@@ -81,11 +81,11 @@ class FeeTest extends ApiTestCase
         $netflix = $this->contractorRepository->findOneBy(['description' => 'Netflix']);
 
         $iri = $this->findIriBy(Fee::class, ['contractor' => $netflix]);
-        $this->client->request('DELETE', (string) $iri, ['auth_bearer' => $this->token]);
+        $this->apiClient->request('DELETE', (string) $iri, ['auth_bearer' => $this->token]);
         $this->assertResponseStatusCodeSame(204);
         $this->assertNull($this->feeRepository->findOneBy(['contractor' => $netflix]));
 
-        $this->client->request('GET', '/api/fees', ['auth_bearer' => $this->token]);
+        $this->apiClient->request('GET', '/api/fees', ['auth_bearer' => $this->token]);
 
         $this->assertJsonContains([
             "hydra:totalItems" => 1,
@@ -97,7 +97,7 @@ class FeeTest extends ApiTestCase
         $netflix = $this->contractorRepository->findOneBy(['description' => 'Netflix']);
         /** @var string $iri */
         $iri = $this->findIriBy(Fee::class, ['contractor' => $netflix]);
-        $this->client->request('PATCH', $iri, [
+        $this->apiClient->request('PATCH', $iri, [
             'auth_bearer' => $this->token,
             'json' => [
                 "date" => 1,

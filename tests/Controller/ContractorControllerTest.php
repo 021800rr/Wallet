@@ -11,7 +11,7 @@ class ContractorControllerTest extends WebTestCase
 
     public function testIndex(): void
     {
-        $this->kernelBrowser->request('GET', '/en/contractor');
+        $this->webClient->request('GET', '/en/contractor');
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('td#description1', 'Allegro');
         $this->assertSelectorTextContains('td#description2', 'Media Expert');
@@ -20,25 +20,25 @@ class ContractorControllerTest extends WebTestCase
 
     public function testNew(): void
     {
-        $this->kernelBrowser->request('GET', '/en/contractor/new');
-        $this->kernelBrowser->submitForm('Save', [
+        $this->webClient->request('GET', '/en/contractor/new');
+        $this->webClient->submitForm('Save', [
             'contractor[description]' => 'CCC',
             'contractor[account]' => '1234567'
         ]);
-        $this->kernelBrowser->request('GET', '/en/contractor');
+        $this->webClient->request('GET', '/en/contractor');
         $this->assertSelectorTextContains('td#description2', 'CCC');
         $this->assertSelectorTextContains('td#account2', '1234567');
     }
 
     public function testEdit(): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/contractor');
-        $this->kernelBrowser->click(
+        $crawler = $this->webClient->request('GET', '/en/contractor');
+        $this->webClient->click(
             $crawler->filter('a#contractor_edit2')
                 ->link()
         );
 
-        $this->kernelBrowser->submitForm('contractor_save', [
+        $this->webClient->submitForm('contractor_save', [
             'contractor[description]' => 'Media Expert xxx',
         ]);
 
@@ -47,16 +47,16 @@ class ContractorControllerTest extends WebTestCase
 
     public function testDelete(): void
     {
-        $this->kernelBrowser->request('GET', '/en/contractor/new');
-        $this->kernelBrowser->submitForm('Save', [
+        $this->webClient->request('GET', '/en/contractor/new');
+        $this->webClient->submitForm('Save', [
             'contractor[description]' => 'CCC',
             'contractor[account]' => '1234567'
         ]);
 
-        $crawler = $this->kernelBrowser->request('GET', '/en/contractor');
+        $crawler = $this->webClient->request('GET', '/en/contractor');
         $this->assertSelectorTextContains('td#description2', 'CCC');
 
-        $this->kernelBrowser->submit(
+        $this->webClient->submit(
             $crawler->filter('form#contractor_delete2')
                 ->form()
         );
@@ -66,8 +66,8 @@ class ContractorControllerTest extends WebTestCase
 
     public function testDeleteWith(): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/contractor');
-        $this->kernelBrowser->submit(
+        $crawler = $this->webClient->request('GET', '/en/contractor');
+        $this->webClient->submit(
             $crawler->filter('form#contractor_delete5')
                 ->form()
         );

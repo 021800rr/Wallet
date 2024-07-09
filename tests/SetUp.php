@@ -2,7 +2,7 @@
 
 namespace App\Tests;
 
-use ApiPlatform\Symfony\Bundle\Test\Client;
+use ApiPlatform\Symfony\Bundle\Test\Client as ApiClient;
 use App\Entity\AbstractAccount;
 use App\Entity\Chf;
 use App\Entity\Contractor;
@@ -17,17 +17,19 @@ use App\Repository\UserRepository;
 use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
 use App\Service\BalanceUpdater\BalanceUpdaterBackup;
 use App\Service\BalanceUpdater\BalanceUpdaterWallet;
-use Exception;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use App\Tests\Exception\InternalTransferOwnerNotFoundException;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser as WebClient;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 trait SetUp
 {
-    private KernelBrowser $kernelBrowser;
-    private Client $client;
-    private string $token;
+    private const string DEFAULT_USERNAME = 'rr';
+    private const string DEFAULT_PASSWORD = 'rr';
+
+    private WebClient $webClient;
+    private ApiClient $apiClient;
     private BackupRepository $backupRepository;
     private ChfRepository $chfRepository;
     private EurRepository $eurRepository;
@@ -37,6 +39,8 @@ trait SetUp
     private Contractor $internalTransferOwner;
     private BalanceUpdaterAccountInterface $walletUpdater;
     private BalanceUpdaterAccountInterface $backupUpdater;
+    private string $token;
+    private string $username;
 
     /** @var Pln[] $plns */
     private array $plns;
@@ -44,109 +48,115 @@ trait SetUp
     /** @var Chf[] $chfs */
     private array $chfs;
 
-    /**
-     * @throws Exception
-     */
+    /** @throws InternalTransferOwnerNotFoundException */
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->username = getenv('TEST_USERNAME') ?: self::DEFAULT_USERNAME;
+
         $client = $this->initializeClient();
-        $this->setUpKernelBrowser($client);
+        $this->setUpWebClient($client);
         $this->setUpApiClient($client);
-        $this->setUpRepos();
+        $this->setUpRepositories();
         $this->setUpAccounts();
-        $this->finalizeSetup();
+        $this->setUpInternalTransferOwner();
+        $this->setUpBalanceUpdaters();
     }
 
-    private function initializeClient(): null|KernelBrowser|Client
+    private function initializeClient(): null|WebClient|ApiClient
     {
         // @phpstan-ignore-next-line
         return method_exists($this, 'createClient') ? static::createClient() : null;
     }
 
-    private function setUpKernelBrowser(null|KernelBrowser|Client $client): void
+    private function setUpWebClient(null|WebClient|ApiClient $client): void
     {
-        if ($client instanceof KernelBrowser) {
-            $this->kernelBrowser = $client;
-
-                /** @var UserRepository $userRepository */
-            $userRepository = static::getContainer()->get(UserRepository::class);
-
-            /** @var UserInterface $testUser */
-            $testUser = $userRepository->findOneBy(['username' => 'rr']);
-
-            $this->kernelBrowser->loginUser($testUser);
-            $this->kernelBrowser->followRedirects();
+        if (!$client instanceof WebClient) {
+            return;
         }
+        $this->webClient = $client;
+
+        /** @var UserRepository $userRepository */
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+        /** @var ?UserInterface $testUser */
+        $testUser = $userRepository->findOneBy(['username' => $this->username]);
+
+        if ($testUser === null) {
+            throw new \RuntimeException("Test user '{$this->username}' not found");
+        }
+
+        $this->webClient->loginUser($testUser);
+        $this->webClient->followRedirects();
     }
 
-    private function setUpApiClient(null|KernelBrowser|Client $client): void
+    private function setUpApiClient(null|WebClient|ApiClient $client): void
     {
-        if ($client instanceof Client) {
-            $this->client = $client;
-
-            $response = $this->client->request('POST', '/api/login/check', [
-                'headers' => ['Content-Type' => 'application/json'],
-                'json' => [
-                    'username' => 'rr',
-                    'password' => 'rr',
-                ],
-            ]);
-
-            $this->token = $response->toArray()['token'];
+        if (!$client instanceof ApiClient) {
+            return;
         }
+        $this->apiClient = $client;
+
+        $password = getenv('TEST_PASSWORD') ?: self::DEFAULT_PASSWORD;
+
+        $response = $this->apiClient->request('POST', '/api/login/check', [
+            'headers' => ['Content-Type' => 'application/json'],
+            'json' => [
+                'username' => $this->username,
+                'password' => $password,
+            ],
+        ]);
+
+        $responseData = $response->toArray();
+        if (!isset($responseData['token'])) {
+            throw new \RuntimeException('API login failed: token not found in response');
+        }
+        $this->token = $responseData['token'];
     }
 
-    protected function setUpRepos(): void
+    protected function setUpRepositories(): void
     {
-        /** @var BackupRepository $backupRepository */
-        $backupRepository = static::getContainer()->get(BackupRepository::class);
-        $this->backupRepository = $backupRepository;
-
-        /** @var ChfRepository $chfRepository */
-        $chfRepository = static::getContainer()->get(ChfRepository::class);
-        $this->chfRepository = $chfRepository;
-
-        /** @var EurRepository $eurRepository */
-        $eurRepository = static::getContainer()->get(EurRepository::class);
-        $this->eurRepository = $eurRepository;
-
-        /** @var ContractorRepository $contractorRepository */
-        $contractorRepository = static::getContainer()->get(ContractorRepository::class);
-        $this->contractorRepository = $contractorRepository;
-
-        /** @var FeeRepository $feeRepository */
-        $feeRepository = static::getContainer()->get(FeeRepository::class);
-        $this->feeRepository = $feeRepository;
-
-        /** @var PlnRepository $plnRepository */
-        $plnRepository = static::getContainer()->get(PlnRepository::class);
-        $this->plnRepository = $plnRepository;
+        // @phpstan-ignore-next-line
+        $this->backupRepository = static::getContainer()->get(BackupRepository::class);
+        // @phpstan-ignore-next-line
+        $this->chfRepository = static::getContainer()->get(ChfRepository::class);
+        // @phpstan-ignore-next-line
+        $this->eurRepository = static::getContainer()->get(EurRepository::class);
+        // @phpstan-ignore-next-line
+        $this->contractorRepository = static::getContainer()->get(ContractorRepository::class);
+        // @phpstan-ignore-next-line
+        $this->feeRepository = static::getContainer()->get(FeeRepository::class);
+        // @phpstan-ignore-next-line
+        $this->plnRepository = static::getContainer()->get(PlnRepository::class);
     }
 
     private function setUpAccounts(): void
     {
-        /** @var Pln[] $plns */
-        $plns = $this->plnRepository->getAllRecords();
-        $this->plns = $plns;
-
-        /** @var Chf[] $chfs */
-        $chfs = $this->chfRepository->getAllRecords();
-        $this->chfs = $chfs;
+        // @phpstan-ignore-next-line
+        $this->plns = $this->plnRepository->getAllRecords();
+        // @phpstan-ignore-next-line
+        $this->chfs = $this->chfRepository->getAllRecords();
     }
 
-    private function finalizeSetup(): void
+    /** @throws InternalTransferOwnerNotFoundException */
+    private function setUpInternalTransferOwner(): void
     {
-        $this->internalTransferOwner = $this->contractorRepository->getInternalTransferOwner() ?? throw new Exception('no internal transfer owner');
+        $this->internalTransferOwner = $this->contractorRepository->getInternalTransferOwner()
+            ?? throw new InternalTransferOwnerNotFoundException('Internal transfer owner not found during setup.');
+    }
 
+    private function setUpBalanceUpdaters(): void
+    {
         $this->backupUpdater = new BalanceUpdaterBackup();
         $this->walletUpdater = new BalanceUpdaterWallet();
     }
 
     private function validateEntity(AbstractAccount|Chf $entity): ConstraintViolationListInterface
     {
-        self::bootKernel();
+        if (!self::$booted) {
+            self::bootKernel();
+        }
         /** @var ValidatorInterface $validator */
         $validator = static::getContainer()->get(ValidatorInterface::class);
 

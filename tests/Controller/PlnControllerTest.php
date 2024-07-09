@@ -11,7 +11,7 @@ class PlnControllerTest extends WebTestCase
 
     public function testIndex(): void
     {
-        $this->kernelBrowser->request('GET', '/en/pln');
+        $this->webClient->request('GET', '/en/pln');
 
         $this->assertSelectorTextContains('td#pln_amount1', '-40');
         $this->assertSelectorTextContains('td#pln_balance1', '100');
@@ -22,9 +22,9 @@ class PlnControllerTest extends WebTestCase
 
     public function testNew(): void
     {
-        $this->kernelBrowser->request('GET', '/en/pln');
-        $this->kernelBrowser->clickLink('New Receipt');
-        $this->kernelBrowser->submitForm('Save', [
+        $this->webClient->request('GET', '/en/pln');
+        $this->webClient->clickLink('New Receipt');
+        $this->webClient->submitForm('Save', [
             'pln[amount]' => '-50',
         ]);
         $this->assertSelectorTextContains('td#pln_balance1', '50');
@@ -32,12 +32,12 @@ class PlnControllerTest extends WebTestCase
 
     public function testEdit(): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/pln');
+        $crawler = $this->webClient->request('GET', '/en/pln');
 
-        $this->kernelBrowser->click(
+        $this->webClient->click(
             $crawler->filter('a#pln_edit1')->link()
         );
-        $this->kernelBrowser->submitForm('pln_save', [
+        $this->webClient->submitForm('pln_save', [
             'pln[amount]' => '-50',
         ]);
         $this->assertSelectorTextContains('td#pln_balance1', '90');
@@ -45,16 +45,16 @@ class PlnControllerTest extends WebTestCase
 
     public function testEditMoveBackward(): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/pln');
+        $crawler = $this->webClient->request('GET', '/en/pln');
 
-        $this->kernelBrowser->click(
+        $this->webClient->click(
             $crawler->filter('a#pln_edit3')->link()
         );
-        $this->kernelBrowser->submitForm('pln_save', [
+        $this->webClient->submitForm('pln_save', [
             'pln[date]' => '2021-02-12',
         ]);
 
-        $this->kernelBrowser->request('GET', '/en/pln');
+        $this->webClient->request('GET', '/en/pln');
 
         $this->assertSelectorTextContains('td#pln_amount3', '-10');
         $this->assertSelectorTextContains('td#pln_balance3', '170');
@@ -68,9 +68,9 @@ class PlnControllerTest extends WebTestCase
 
     public function testDelete(): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/pln');
+        $crawler = $this->webClient->request('GET', '/en/pln');
 
-        $this->kernelBrowser->submit(
+        $this->webClient->submit(
             $crawler->filter('form#pln_delete2')->form()
         );
         $this->assertSelectorTextContains('td#pln_balance1', '130');
@@ -78,9 +78,9 @@ class PlnControllerTest extends WebTestCase
 
     public function testIsConsistent(): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/pln');
+        $crawler = $this->webClient->request('GET', '/en/pln');
 
-        $crawler = $this->kernelBrowser->submit(
+        $crawler = $this->webClient->submit(
             $crawler->filter('form#pln_is_consistent1')->form()
         );
 
@@ -93,8 +93,8 @@ class PlnControllerTest extends WebTestCase
 
     public function testCheck(): void
     {
-        $this->kernelBrowser->request('GET', '/en/pln');
-        $this->kernelBrowser->clickLink('Check');
+        $this->webClient->request('GET', '/en/pln');
+        $this->webClient->clickLink('Check');
         $this->assertSelectorTextContains('div.alert-success', 'Passed');
     }
 }

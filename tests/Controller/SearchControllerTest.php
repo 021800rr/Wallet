@@ -11,22 +11,22 @@ class SearchControllerTest extends WebTestCase
 
     public function testIndex(): void
     {
-        $this->kernelBrowser->request('GET', '/en/pln');
-        $this->kernelBrowser->submitForm('form_search', [
+        $this->webClient->request('GET', '/en/pln');
+        $this->webClient->submitForm('form_search', [
             'form[query]' => '190',
         ]);
 
         $this->assertSelectorTextContains('td#search_balance1', '190');
 
-        $this->kernelBrowser->request('GET', '/en/pln');
-        $this->kernelBrowser->submitForm('form_search', [
+        $this->webClient->request('GET', '/en/pln');
+        $this->webClient->submitForm('form_search', [
             'form[query]' => '-10',
         ]);
 
         $this->assertSelectorTextContains('td#search_amount1', '-10');
 
-        $this->kernelBrowser->request('GET', '/en/pln');
-        $this->kernelBrowser->submitForm('form_search', [
+        $this->webClient->request('GET', '/en/pln');
+        $this->webClient->submitForm('form_search', [
             'form[query]' => 'all',
         ]);
 
@@ -36,12 +36,12 @@ class SearchControllerTest extends WebTestCase
 
     public function testChangeIsConsistent(): void
     {
-        $this->kernelBrowser->request('GET', '/en/pln');
-        $crawler = $this->kernelBrowser->submitForm('form_search', [
+        $this->webClient->request('GET', '/en/pln');
+        $crawler = $this->webClient->submitForm('form_search', [
             'form[query]' => 'all',
         ]);
 
-        $crawler = $this->kernelBrowser->submit(
+        $crawler = $this->webClient->submit(
             $crawler->filter('form#search_is_consistent1')->form()
         );
 
@@ -54,15 +54,15 @@ class SearchControllerTest extends WebTestCase
 
     public function testEdit(): void
     {
-        $this->kernelBrowser->request('GET', '/en/pln');
-        $crawler = $this->kernelBrowser->submitForm('form_search', [
+        $this->webClient->request('GET', '/en/pln');
+        $crawler = $this->webClient->submitForm('form_search', [
             'form[query]' => 'all',
         ]);
 
-        $this->kernelBrowser->click(
+        $this->webClient->click(
             $crawler->filter('a#pln_edit1')->link()
         );
-        $this->kernelBrowser->submitForm('pln_save', [
+        $this->webClient->submitForm('pln_save', [
             'pln[amount]' => '-50',
         ]);
         $this->assertSelectorTextContains('td#search_balance1', '90');
@@ -70,13 +70,13 @@ class SearchControllerTest extends WebTestCase
 
     public function testDelete(): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/pln');
+        $crawler = $this->webClient->request('GET', '/en/pln');
         $crawler->selectButton('form_search')->form();
-        $crawler = $this->kernelBrowser->submitForm('form_search', [
+        $crawler = $this->webClient->submitForm('form_search', [
             'form[query]' => 'all',
         ]);
 
-        $this->kernelBrowser->submit(
+        $this->webClient->submit(
             $crawler->filter('form#pln_delete2')->form()
         );
         $this->assertSelectorTextContains('td#search_balance1', '130');

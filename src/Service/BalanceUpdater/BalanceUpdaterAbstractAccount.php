@@ -15,7 +15,7 @@ abstract class BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInt
     /**
      * @throws Exception
      */
-    public function setPreviousId(AccountRepositoryInterface $accountRepository, int $id): ?int
+    public function setPreviousId(AccountRepositoryInterface $accountRepository, ?int $id): ?int
     {
         $reversed = array_reverse($accountRepository->findAll());
         foreach ($reversed as $key => $transaction) {
@@ -23,7 +23,7 @@ abstract class BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInt
             if (0 === $key && ($transaction->getId() === $id || ($reversed[1])->getId() === $id)) {
                 $this->previousId = null;
                 throw new Exception("the first two records cannot be changed.... (for now)");
-            } elseif (($reversed[$key + 1])->getId() === $id) {
+            } elseif (isset($reversed[$key + 1]) && $reversed[$key + 1]->getId() === $id) {
                 break;
             }
         }
@@ -34,9 +34,9 @@ abstract class BalanceUpdaterAbstractAccount implements BalanceUpdaterAccountInt
     /**
      * @throws Exception
      */
-    public function compute(AccountRepositoryInterface $accountRepository, int $id): void
+    public function compute(AccountRepositoryInterface $accountRepository, ?int $id): void
     {
-        $selectedId = $this->getOlderRecordId($accountRepository, $id);
+        $selectedId = $this->getOlderRecordId($accountRepository, (int) $id);
 
         /**
          * @var AbstractAccount $predecessor

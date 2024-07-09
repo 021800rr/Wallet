@@ -11,7 +11,7 @@ class ChfControllerTest extends WebTestCase
 
     public function testIndex(): void
     {
-        $this->kernelBrowser->request('GET', '/en/chf');
+        $this->webClient->request('GET', '/en/chf');
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('td#chf_amount1', '40.04');
@@ -29,15 +29,15 @@ class ChfControllerTest extends WebTestCase
      */
     public function testNew(string $amount, string $expectedBalance): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/chf/new');
+        $crawler = $this->webClient->request('GET', '/en/chf/new');
         $form = $crawler->selectButton('Save')
             ->form();
         $form['chf[amount]'] = $amount;
-        $this->kernelBrowser->submit($form);
+        $this->webClient->submit($form);
 
         $this->assertSelectorTextContains('td#chf_balance1', $expectedBalance);
 
-        $this->kernelBrowser->request('GET', '/en/backup/payments-by-month');
+        $this->webClient->request('GET', '/en/backup/payments-by-month');
         $this->assertSelectorTextContains('td#chfBalance', $expectedBalance);
     }
 
@@ -55,11 +55,11 @@ class ChfControllerTest extends WebTestCase
 
     public function testNewWithInvalidAmount(): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/chf/new');
+        $crawler = $this->webClient->request('GET', '/en/chf/new');
         $form = $crawler->selectButton('Save')
             ->form();
         $form['chf[amount]'] = 'abc';
-        $this->kernelBrowser->submit($form);
+        $this->webClient->submit($form);
 
         $this->assertSelectorTextContains('.invalid-feedback.d-block', 'Please enter a valid money amount.');
     }
@@ -69,12 +69,12 @@ class ChfControllerTest extends WebTestCase
      */
     public function testEdit(string $amount, string $expectedBalance): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/chf');
-        $this->kernelBrowser->click(
+        $crawler = $this->webClient->request('GET', '/en/chf');
+        $this->webClient->click(
             $crawler->filter('a#chf_edit1')->link()
         );
 
-        $this->kernelBrowser->submitForm('chf_save', [
+        $this->webClient->submitForm('chf_save', [
             'chf[amount]' => $amount,
         ]);
 
@@ -95,13 +95,13 @@ class ChfControllerTest extends WebTestCase
 
     public function testEditWithInvalidAmount(): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/chf');
-        $this->kernelBrowser->click(
+        $crawler = $this->webClient->request('GET', '/en/chf');
+        $this->webClient->click(
             $crawler->filter('a#chf_edit1')
                 ->link()
         );
 
-        $this->kernelBrowser->submitForm('chf_save', [
+        $this->webClient->submitForm('chf_save', [
             'chf[amount]' => 'abc',
         ]);
 
@@ -110,8 +110,8 @@ class ChfControllerTest extends WebTestCase
 
     public function testDelete(): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/chf');
-        $this->kernelBrowser->submit(
+        $crawler = $this->webClient->request('GET', '/en/chf');
+        $this->webClient->submit(
             $crawler->filter('form#chf_delete1')
                 ->form()
         );
@@ -120,9 +120,9 @@ class ChfControllerTest extends WebTestCase
 
     public function testIsConsistent(): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/chf');
+        $crawler = $this->webClient->request('GET', '/en/chf');
 
-        $crawler = $this->kernelBrowser->submit(
+        $crawler = $this->webClient->submit(
             $crawler->filter('form#chf_is_consistent1')
                 ->form()
         );

@@ -12,7 +12,7 @@ class FeeControllerTest extends WebTestCase
 
     public function testIndex(): void
     {
-        $this->kernelBrowser->request('GET', '/en/fee');
+        $this->webClient->request('GET', '/en/fee');
 
         $this->assertSelectorTextContains('td#fee_contractor1', 'Spotify');
         $this->assertSelectorTextContains('td#fee_amount1', '-19.99');
@@ -23,10 +23,10 @@ class FeeControllerTest extends WebTestCase
 
     public function testNew(): void
     {
-        $this->kernelBrowser->request('GET', '/en/fee');
+        $this->webClient->request('GET', '/en/fee');
 
-        $this->kernelBrowser->request('GET', '/en/fee/new');
-        $this->kernelBrowser->submitForm('Save', [
+        $this->webClient->request('GET', '/en/fee/new');
+        $this->webClient->submitForm('Save', [
             'fee[date]' => '20',
             'fee[amount]' => '-21',
             'fee[contractor]' => $this->internalTransferOwner->getId(),
@@ -38,13 +38,13 @@ class FeeControllerTest extends WebTestCase
 
     public function testEdit(): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/fee');
+        $crawler = $this->webClient->request('GET', '/en/fee');
 
-        $this->kernelBrowser->click(
+        $this->webClient->click(
             $crawler->filter('a#fee_edit1')->link()
         );
 
-        $this->kernelBrowser->submitForm('fee_save', [
+        $this->webClient->submitForm('fee_save', [
             'fee[date]' => '10',
             'fee[amount]' => '-20',
         ]);
@@ -55,10 +55,10 @@ class FeeControllerTest extends WebTestCase
 
     public function testDelete(): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/fee');
+        $crawler = $this->webClient->request('GET', '/en/fee');
         $this->assertSelectorTextContains('td#fee_contractor1', 'Spotify');
         $this->assertSelectorTextContains('td#fee_contractor2', 'Netflix');
-        $this->kernelBrowser->submit(
+        $this->webClient->submit(
             $crawler->filter('form#fee_delete1')->form()
         );
         $spotify = $this->contractorRepository->findOneBy(['description' => 'Spotify']);
@@ -70,9 +70,9 @@ class FeeControllerTest extends WebTestCase
 
     public function testInsert(): void
     {
-        $crawler = $this->kernelBrowser->request('GET', '/en/fee');
+        $crawler = $this->webClient->request('GET', '/en/fee');
 
-        $crawler = $this->kernelBrowser->submit(
+        $crawler = $this->webClient->submit(
             $crawler->selectButton('Save')->form()
         );
         $this->assertSame("http://localhost/en/pln/", $crawler->getUri());
