@@ -1,3 +1,7 @@
+docker compose --env-file .env.dev.local down
+docker compose --env-file .env.dev.local build --no-cache
+docker compose --env-file .env.dev.local up -d
+
 docker compose --env-file .env.prod.local down
 
 sudo rm -rf docker/postgres/data*
