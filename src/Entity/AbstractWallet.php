@@ -13,12 +13,12 @@ abstract class AbstractWallet extends AbstractAccount
     #[Groups(['account:get', 'account:patch'])]
     #[ORM\Column(type: 'boolean', nullable: true)]
     #[Assert\Type(type: 'boolean')]
-    protected ?bool $isConsistent;
+    protected ?bool $isConsistent = null;
 
     #[Groups('account:get')]
     #[ORM\Column(type: 'float', nullable: true)]
     #[Assert\Type(type: 'float')]
-    protected ?float $balanceSupervisor;
+    protected ?float $balanceSupervisor = null;
 
     public function getIsConsistent(): ?bool
     {
@@ -58,7 +58,6 @@ abstract class AbstractWallet extends AbstractAccount
             $this->getBalance() . ' : ' .
             $this->getBalanceSupervisor() . ' : ' .
             $this->getContractor()?->getDescription() .
-            ($this->getDescription() ? ' : ' . $this->getDescription() : '')
-        ;
+            ($this->getDescription() ? ' : ' . $this->getDescription() : '');
     }
 }

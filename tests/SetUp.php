@@ -4,6 +4,7 @@ namespace App\Tests;
 
 use ApiPlatform\Symfony\Bundle\Test\Client as ApiClient;
 use App\Entity\AbstractAccount;
+use App\Entity\AbstractTransfer;
 use App\Entity\Chf;
 use App\Entity\Contractor;
 use App\Entity\Pln;
@@ -152,7 +153,7 @@ trait SetUp
         $this->walletUpdater = new BalanceUpdaterWallet();
     }
 
-    private function validateEntity(AbstractAccount|Chf $entity): ConstraintViolationListInterface
+    private function validateEntity(AbstractAccount|AbstractTransfer|Chf $entity): ConstraintViolationListInterface
     {
         if (!self::$booted) {
             self::bootKernel();
