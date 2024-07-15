@@ -1,0 +1,98 @@
+docker compose --env-file .env.dev.local down  --remove-orphans
+docker compose --env-file .env.dev.local build --no-cache
+docker compose --env-file .env.dev.local up -d
+docker ps -a
+
+docker compose --env-file .env.prod.local down  --remove-orphans
+docker compose --env-file .env.prod.local build --no-cache
+docker compose --env-file .env.prod.local up -d
+docker ps -a
+
+docker compose --env-file .env.prod.local down
+
+sudo rm -rf docker/postgres/data*
+docker system prune --all --volumes -f
+
+docker compose --env-file .env.prod.local build --no-cache
+docker compose --env-file .env.prod.local up -d
+docker ps -a
+
+docker exec -it  wallet-php-dev-main bash
+docker exec -it  wallet-php-prod-main bash
+    cd /var/www/
+    rm -rf var/cache/*
+    rm -rf var/log/*
+    composer update -W
+
+    composer install
+
+docker exec -it wallet-postgres-dev-main bash (on dev) || docker exec -it wallet-postgres-prod-main bash (on prod)
+    psql -U elf -d account
+        create database account_dev;
+        create database account_dev_test;
+        create user rr with encrypted password 'rr';
+        ALTER USER rr WITH SUPERUSER;
+
+    psql -U elf -d account < /tmp/database_account_2024-04-14.sql
+
+docker compose --env-file .env.prod.local down
+
+git co develop
+
+docker compose --env-file .env.dev.local up -d
+docker ps
+
+docker exec -it wallet-php-dev-dev bash
+    cd /var/www/var/cache
+
+    rm -rf dev/*
+    chmod 777 dev/
+
+    cd /var/www/var/
+
+    chmod 777 log/
+
+    git config --global user.email "ryszard.ratajczak@protonmail.com"
+    git config --global user.name "Ryszard Ratajczak"
+
+    git config --global --add safe.directory /var/www
+
+    cd /var/www
+    ./reset_dev.sh
+    npm install
+    npm install bootstrap --save-dev (on dev) || npm install bootstrap (on prod)
+    npm run dev (on dev) || npm run build (on prod)
+
+---------------------------------------------------------------------------------
+docker compose --env-file .env.dev.local down --remove-orphans && \
+    docker compose --env-file .env.dev.local build && \
+    docker compose --env-file .env.dev.local up -d
+
+docker compose --env-file .env.dev.local down --remove-orphans && \
+    docker compose --env-file .env.dev.local build --no-cache --pull && \
+    docker compose --env-file .env.dev.local up -d
+---------------------------------------------------------------------------------
+docker compose --env-file .env.prod.local down --remove-orphans && \
+    docker compose --env-file .env.prod.local build && \
+    docker compose --env-file .env.prod.local up -d
+
+docker compose --env-file .env.prod.local down --remove-orphans && \
+    docker compose --env-file .env.prod.local build  --no-cache --pull && \
+    docker compose --env-file .env.prod.local up -d
+-------------------------------------------------------------------------------
+
+SHELL := /bin/bash
+
+tests:
+	symfony console cache:clear -n --env=test
+	symfony console doctrine:database:drop --force --env=test || true
+	symfony console doctrine:database:create --env=test
+	symfony console doctrine:migrations:migrate -n --env=test
+	symfony console doctrine:fixtures:load -n --env=test
+	symfony console cache:clear -n --env=test
+	SYMFONY_DEPRECATIONS_HELPER='disabled=1' bin/phpunit && \
+		vendor/bin/phpstan analyse -l 9 --memory-limit 1G src tests && \
+		tools/php-cs-fixer/vendor/bin/php-cs-fixer fix src
+.PHONY: tests
+
+----------
