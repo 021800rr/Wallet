@@ -1,6 +1,12 @@
-docker compose --env-file .env.dev.local down
+docker compose --env-file .env.dev.local down  --remove-orphans
 docker compose --env-file .env.dev.local build --no-cache
 docker compose --env-file .env.dev.local up -d
+docker ps -a
+
+docker compose --env-file .env.prod.local down  --remove-orphans
+docker compose --env-file .env.prod.local build --no-cache
+docker compose --env-file .env.prod.local up -d
+docker ps -a
 
 docker compose --env-file .env.prod.local down
 
