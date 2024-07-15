@@ -28,9 +28,11 @@ abstract class AbstractTransfer
         return $this->amount;
     }
 
-    public function setAmount(float $amount): void
+    public function setAmount(float $amount): self
     {
         $this->amount = $amount;
+
+        return $this;
     }
 
     public function getDate(): DateTimeInterface
@@ -38,8 +40,10 @@ abstract class AbstractTransfer
         return $this->date;
     }
 
-    public function setDate(DateTimeInterface $date): void
+    public function setDate(DateTimeInterface $date): self
     {
         $this->date = $date;
+
+        return $this;
     }
 }

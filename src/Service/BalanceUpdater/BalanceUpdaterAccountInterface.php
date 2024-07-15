@@ -7,10 +7,10 @@ use Exception;
 
 interface BalanceUpdaterAccountInterface
 {
-    public function setPreviousId(AccountRepositoryInterface $accountRepository, int $id): ?int;
+    public function setPreviousId(AccountRepositoryInterface $accountRepository, ?int $id): ?int;
 
     /**
      * @throws Exception
      */
-    public function compute(AccountRepositoryInterface $accountRepository, int $id): void;
+    public function compute(AccountRepositoryInterface $accountRepository, ?int $id): void;
 }

@@ -88,7 +88,7 @@ class Backup extends AbstractAccount
 
     public function setRetiring(float $retiring): self
     {
-        $this->retiring = (float) number_format((float) $retiring, 2, '.', '');
+        $this->retiring = (float) number_format($retiring, 2, '.', '');
 
         return $this;
     }
@@ -100,7 +100,7 @@ class Backup extends AbstractAccount
 
     public function setHoliday(float $holiday): self
     {
-        $this->holiday = (float) number_format((float) $holiday, 2, '.', '');
+        $this->holiday = (float) number_format($holiday, 2, '.', '');
 
         return $this;
     }

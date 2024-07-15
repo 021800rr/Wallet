@@ -58,9 +58,9 @@ abstract class AbstractAccount
         $this->date = new DateTime();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
-        return (int) $this->id;
+        return $this->id;
     }
 
     public function getDate(): DateTimeInterface
@@ -94,7 +94,7 @@ abstract class AbstractAccount
 
     public function setBalance(float $balance): self
     {
-        $this->balance = (float) number_format((float) $balance, 2, '.', '');
+        $this->balance = (float) number_format($balance, 2, '.', '');
 
         return $this;
     }
