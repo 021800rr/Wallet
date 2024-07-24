@@ -105,7 +105,6 @@ docker exec -it wallet-php-dev-dev bash
 ```shell
 git co develop
 docker compose --env-file .env.dev.local up -d
-./xdebug-disable-enable.sh disable
 docker exec -it wallet-php-dev-dev bash
     cd /var/www/
 
