@@ -60,6 +60,7 @@ class BackupControllerTest extends WebTestCase
             'high amount' => ['10000', '5150', '5150', '10300'],
         ];
     }
+
     public function testEditWithInvalidAmount(): void
     {
         $crawler = $this->webClient->request('GET', '/en/backup');
@@ -74,7 +75,6 @@ class BackupControllerTest extends WebTestCase
         $this->assertSelectorExists('input[name="backup[amount]"].is-invalid');
         $this->assertSelectorTextContains('.invalid-feedback.d-block', 'Please enter a valid money amount.');
     }
-
 
     public function testDelete(): void
     {
@@ -114,5 +114,47 @@ class BackupControllerTest extends WebTestCase
         $this->assertSelectorTextContains('td#backup_balance1', '699');
         $this->assertSelectorTextContains('td#backup_retiring1', '390');
         $this->assertSelectorTextContains('td#backup_holiday1', '309');
+    }
+
+    public function testRenderEditForm(): void
+    {
+        $crawler = $this->webClient->request('GET', '/en/backup/edit/1');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorExists('form[name="backup"]');
+    }
+
+    public function testEditFormValidation(): void
+    {
+        $crawler = $this->webClient->request('GET', '/en/backup/edit/1');
+        $form = $crawler->selectButton('Save')->form();
+
+        $form['backup[amount]'] = '';
+
+        $this->webClient->submit($form);
+        $this->assertSelectorExists('input[name="backup[amount]"].is-invalid');
+        $this->assertSelectorTextContains('.invalid-feedback.d-block', 'This value should not be null.');
+    }
+
+    public function testRenderInterestForm(): void
+    {
+        $crawler = $this->webClient->request('GET', '/en/backup/interest');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorExists('form[name="interest"]');
+    }
+
+    public function testInterestFormValidation(): void
+    {
+        $crawler = $this->webClient->request('GET', '/en/backup/interest');
+        $form = $crawler->selectButton('interest_save')->form();
+
+        $form['interest[retiring_tax]'] = '';
+        $form['interest[retiring]'] = '';
+
+        $this->webClient->submit($form);
+        $this->assertSelectorExists('input[name="interest[retiring_tax]"].is-invalid');
+        $this->assertSelectorExists('input[name="interest[retiring]"].is-invalid');
+        $this->assertSelectorTextContains('.invalid-feedback.d-block', 'This value should not be blank.');
     }
 }

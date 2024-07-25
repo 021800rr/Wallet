@@ -56,8 +56,8 @@ class AbstractAccountTest extends KernelTestCase
 
         return [
             'valid account' => [$validAccount, 0],
-            'missing required fields' => [$missingFieldsAccount, 2],
-            'invalid amount format' => [$invalidAmountAccount, 2],
+            'missing required fields' => [$missingFieldsAccount, 3],
+            'invalid amount format' => [$invalidAmountAccount, 3],
         ];
     }
 }

@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
 class InterestType extends AbstractType
@@ -19,6 +20,7 @@ class InterestType extends AbstractType
             'currency' => 'PLN',
             'required' => false,
             'constraints' => [
+                new NotBlank(),
                 new Type(['type' => "float"]),
                 new GreaterThan(0.00),
             ]

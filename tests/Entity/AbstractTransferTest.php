@@ -16,11 +16,11 @@ class AbstractTransferTest extends KernelTestCase
         $transfer->setAmount(123.456);
         $violations = $this->validateEntity($transfer);
 
-        $this->assertCount(2, $violations, 'Invalid amount, required "date" field missing.');
+        $this->assertCount(3, $violations, 'Invalid amount, required "date" field missing.');
 
         $transfer = new class() extends AbstractTransfer {};
         $violations = $this->validateEntity($transfer);
 
-        $this->assertCount(2, $violations, 'Missing required fields should cause two violations.');
+        $this->assertCount(4, $violations, 'Missing required fields should cause two violations.');
     }
 }
