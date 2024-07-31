@@ -31,7 +31,7 @@ abstract class AbstractAccount
         pattern: '/^-?\d+(\.\d{1,2})?$/',
         message: 'The amount must be a valid number with up to 2 decimal places.',
     )]
-    protected float $amount;
+    protected ?float $amount;
 
     #[Groups(['account:get', 'backup:get', 'payments:get'])]
     #[ORM\Column(type: 'float')]
@@ -74,12 +74,12 @@ abstract class AbstractAccount
         return $this;
     }
 
-    public function getAmount(): float
+    public function getAmount(): ?float
     {
         return $this->amount;
     }
 
-    public function setAmount(float $amount): self
+    public function setAmount(?float $amount): self
     {
         $this->amount = $amount;
 

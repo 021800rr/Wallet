@@ -85,7 +85,7 @@ trait SetUp
         $testUser = $userRepository->findOneBy(['username' => $this->username]);
 
         if ($testUser === null) {
-            throw new \RuntimeException("Test user '{$this->username}' not found");
+            throw new \RuntimeException(sprintf("Test user '%s' not found", $this->username));
         }
 
         $this->webClient->loginUser($testUser);
