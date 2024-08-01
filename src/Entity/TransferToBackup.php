@@ -19,14 +19,14 @@ class TransferToBackup extends AbstractTransfer
 {
     #[Groups('transfer:post')]
     #[Assert\Type(type: 'bool')]
-    private bool $currency;
+    private ?bool $currency;
 
-    public function isCurrency(): bool
+    public function isCurrency(): ?bool
     {
         return $this->currency;
     }
 
-    public function setCurrency(bool $currency): void
+    public function setCurrency(?bool $currency): void
     {
         $this->currency = $currency;
     }

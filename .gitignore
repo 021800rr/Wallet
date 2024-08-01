@@ -33,3 +33,4 @@ tools/
 ###> phpstan/phpstan ###
 phpstan.neon
 ###< phpstan/phpstan ###
+/templates/memo

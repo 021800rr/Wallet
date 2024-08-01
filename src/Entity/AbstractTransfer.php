@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use DateTimeInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -16,19 +17,24 @@ abstract class AbstractTransfer
         pattern: '/^-?\d+(\.\d{1,2})?$/',
         message: 'The amount must be a valid number with up to 2 decimal places.',
     )]
-    protected float $amount;
+    protected ?float $amount;
 
     #[Groups('transfer:post')]
     #[Assert\NotBlank]
     #[Assert\Type(type: DateTimeInterface::class)]
     protected DateTimeInterface $date;
 
-    public function getAmount(): float
+    public function __construct()
+    {
+        $this->date = new DateTime();
+    }
+
+    public function getAmount(): ?float
     {
         return $this->amount;
     }
 
-    public function setAmount(float $amount): self
+    public function setAmount(?float $amount): self
     {
         $this->amount = $amount;
 

@@ -50,7 +50,7 @@ class Fee
         min: 1,
         max: 31,
     )]
-    private int $date;
+    private ?int $date;
 
     #[Groups(['fee:get', 'fee:post', 'fee:patch'])]
     #[ORM\Column(type: "float")]
@@ -60,50 +60,50 @@ class Fee
         pattern: '/^-?\d+(\.\d{1,2})?$/',
         message: 'The amount must be a valid number with up to 2 decimal places.',
     )]
-    private float $amount;
+    private ?float $amount;
 
     #[Groups(['fee:get', 'fee:post', 'fee:patch'])]
     #[ORM\ManyToOne(targetEntity: Contractor::class, inversedBy: "fees")]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotBlank]
     #[Assert\Type(type: Contractor::class)]
-    private Contractor $contractor;
+    private ?Contractor $contractor;
 
     public function getId(): int
     {
         return (int) $this->id;
     }
 
-    public function getDate(): int
+    public function getDate(): ?int
     {
         return $this->date;
     }
 
-    public function setDate(int $date): self
+    public function setDate(?int $date): self
     {
         $this->date = $date;
 
         return $this;
     }
 
-    public function getAmount(): float
+    public function getAmount(): ?float
     {
         return $this->amount;
     }
 
-    public function setAmount(float $amount): self
+    public function setAmount(?float $amount): self
     {
         $this->amount = $amount;
 
         return $this;
     }
 
-    public function getContractor(): Contractor
+    public function getContractor(): ?Contractor
     {
         return $this->contractor;
     }
 
-    public function setContractor(Contractor $contractor): self
+    public function setContractor(?Contractor $contractor): self
     {
         $this->contractor = $contractor;
 

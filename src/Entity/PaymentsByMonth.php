@@ -48,7 +48,7 @@ class PaymentsByMonth
     /**
      * @param array<int, array<string, string>> $backups
      */
-    public function setBackups(array $backups): void
+    public function setBackups(?array $backups): void
     {
         $this->backups = $backups;
     }
@@ -58,7 +58,7 @@ class PaymentsByMonth
         return $this->expected;
     }
 
-    public function setExpected(float $expected): void
+    public function setExpected(?float $expected): void
     {
         $this->expected = $expected;
     }
@@ -68,7 +68,7 @@ class PaymentsByMonth
         return $this->plnBalance;
     }
 
-    public function setPlnBalance(float $plnBalance): void
+    public function setPlnBalance(?float $plnBalance): void
     {
         $this->plnBalance = $plnBalance;
     }
@@ -78,7 +78,7 @@ class PaymentsByMonth
         return $this->chfBalance;
     }
 
-    public function setChfBalance(float $chfBalance): void
+    public function setChfBalance(?float $chfBalance): void
     {
         $this->chfBalance = $chfBalance;
     }
@@ -88,7 +88,7 @@ class PaymentsByMonth
         return $this->eurBalance;
     }
 
-    public function setEurBalance(float $eurBalance): void
+    public function setEurBalance(?float $eurBalance): void
     {
         $this->eurBalance = $eurBalance;
     }
@@ -98,7 +98,7 @@ class PaymentsByMonth
         return $this->backupLastRecord;
     }
 
-    public function setBackupLastRecord(Backup $backupLastRecord): void
+    public function setBackupLastRecord(?Backup $backupLastRecord): void
     {
         $this->backupLastRecord = $backupLastRecord;
     }
@@ -108,7 +108,7 @@ class PaymentsByMonth
         return $this->total;
     }
 
-    public function setTotal(float $total): void
+    public function setTotal(?float $total): void
     {
         $this->total = $total;
     }
