@@ -21,7 +21,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     #[Assert\Type(type: 'string')]
     #[Assert\Length(max: 180)]
-    private string $username;
+    private ?string $username;
 
     /**
      * @var string[]
@@ -35,7 +35,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     #[Assert\Type(type: 'string')]
     #[Assert\Length(max: 255)]
-    private string $password;
+    private ?string $password;
 
     public function getId(): ?int
     {
@@ -47,7 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function setUsername(string $username): self
+    public function setUsername(?string $username): self
     {
         $this->username = $username;
 
@@ -56,7 +56,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return $this->username;
+        return (string) $this->username;
     }
 
     public function getRoles(): array
@@ -71,19 +71,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @param array<int, string> $roles
      * @return $this
      */
-    public function setRoles(array $roles): self
+    public function setRoles(array $roles = []): self
     {
         $this->roles = $roles;
 
         return $this;
     }
 
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 

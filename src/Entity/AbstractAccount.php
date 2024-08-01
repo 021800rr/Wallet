@@ -103,7 +103,7 @@ abstract class AbstractAccount
         return $this->contractor;
     }
 
-    public function setContractor(Contractor $contractor): self
+    public function setContractor(?Contractor $contractor): self
     {
         $this->contractor = $contractor;
 

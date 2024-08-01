@@ -42,7 +42,7 @@ class Contractor
     #[Assert\NotBlank]
     #[Assert\Type(type: 'string')]
     #[Assert\Length(max: 255)]
-    private string $description;
+    private ?string $description;
 
     #[Groups(['contractor:get', 'contractor:post', 'contractor:patch'])]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -64,12 +64,12 @@ class Contractor
         return (int) $this->id;
     }
 
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 

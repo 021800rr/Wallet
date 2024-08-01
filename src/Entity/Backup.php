@@ -57,11 +57,6 @@ class Backup extends AbstractAccount
     #[Assert\Type(type: 'boolean')]
     private ?bool $interest = null;
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function computeShortDate(): self
     {
         $this->yearMonth = $this->date->format('Y-m');

@@ -93,9 +93,14 @@ class ChfController extends AbstractAppPaginator
     public function delete(Request $request, Chf $chf): RedirectResponse
     {
         if ($this->isCsrfTokenValid('delete' . $chf->getId(), (string) $request->request->get('_token'))) {
+            // Set amount to 0 before deleting the entity
             $chf->setAmount(0);
+
+            // Perform operations on the entity before deletion
             $this->walletUpdater->setPreviousId($this->chfRepository, $chf->getId());
             $this->walletUpdater->compute($this->chfRepository, $chf->getId());
+
+            // Remove the entity from the database
             $this->chfRepository->remove($chf, true);
         }
 
