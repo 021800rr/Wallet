@@ -9,6 +9,12 @@ class ChfCheckerTest extends ApiTestCase
 {
     use SetUp;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->traitSetUp();
+    }
+
     public function testGet(): void
     {
         $this->apiClient->request('GET', '/api/check/chfs', ['auth_bearer' => $this->token]);

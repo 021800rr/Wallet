@@ -11,6 +11,12 @@ class FixedFeesTest extends KernelTestCase
 {
     use SetUp;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->traitSetUp();
+    }
+
     public function testInsert(): void
     {
         $fixedFees = new FixedFees(

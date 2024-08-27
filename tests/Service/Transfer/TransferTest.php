@@ -12,6 +12,12 @@ class TransferTest extends KernelTestCase
 {
     use SetUp;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->traitSetUp();
+    }
+
     public function testMoveAssets(): void
     {
         $transfer = new Transfer(

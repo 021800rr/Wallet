@@ -10,6 +10,12 @@ class FeeTest extends ApiTestCase
 {
     use SetUp;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->traitSetUp();
+    }
+
     public function testPostInsertToPln(): void
     {
         $this->apiClient->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
