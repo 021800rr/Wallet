@@ -12,6 +12,12 @@ class WalletBalanceUpdaterTest extends KernelTestCase
 {
     use SetUp;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->traitSetUp();
+    }
+
     public function testCompute(): void
     {
         /** @var Pln[] $transactions */

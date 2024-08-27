@@ -9,6 +9,12 @@ class EurControllerTest extends WebTestCase
 {
     use SetUp;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->traitSetUp();
+    }
+
     public function testIndex(): void
     {
         $this->webClient->request('GET', '/en/eur');

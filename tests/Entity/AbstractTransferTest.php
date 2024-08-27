@@ -10,6 +10,12 @@ class AbstractTransferTest extends KernelTestCase
 {
     use SetUp;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->traitSetUp();
+    }
+
     public function testSetAmountWithInvalidValueThrowsException(): void
     {
         $transfer = new class() extends AbstractTransfer {};

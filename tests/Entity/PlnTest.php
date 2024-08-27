@@ -10,6 +10,12 @@ class PlnTest extends ApiTestCase
 {
     use SetUp;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->traitSetUp();
+    }
+
     public function testGetCollection(): void
     {
         $this->apiClient->request('GET', '/api/plns', ['auth_bearer' => $this->token]);

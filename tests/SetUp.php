@@ -50,10 +50,8 @@ trait SetUp
     private array $chfs;
 
     /** @throws InternalTransferOwnerNotFoundException */
-    protected function setUp(): void
+    protected function traitSetUp(): void
     {
-        parent::setUp();
-
         $this->username = getenv('TEST_USERNAME') ?: self::DEFAULT_USERNAME;
 
         $client = $this->initializeClient();

@@ -9,6 +9,12 @@ class TransferToPlnTest extends ApiTestCase
 {
     use SetUp;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->traitSetUp();
+    }
+
     public function testPost(): void
     {
         $this->assertSame(100.00, $this->plnRepository->getCurrentBalance());

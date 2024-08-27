@@ -9,6 +9,12 @@ class BackupRepositoryTest extends KernelTestCase
 {
     use SetUp;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->traitSetUp();
+    }
+
     public function testPaymentsByMonth(): void
     {
         $paymentsByMonth = $this->backupRepository->paymentsByMonth();
