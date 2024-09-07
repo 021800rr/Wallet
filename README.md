@@ -125,6 +125,7 @@ http://localhost:8000/api
 ## prod
 
 ```shell
+git co main
 docker exec -it postgres-container bash 
     psql -U postgres_user -d postgres_database < backup_YYYY-MM-DD.sql
 ```
