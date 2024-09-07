@@ -41,7 +41,7 @@ abstract class AbstractWallet extends AbstractAccount
     {
         if (is_numeric($balanceSupervisor)) {
             $this->balanceSupervisor = (float) number_format((float) $balanceSupervisor, 2, '.', '');
-        } elseif(is_null($balanceSupervisor)) {
+        } elseif (is_null($balanceSupervisor)) {
             $this->balanceSupervisor = $balanceSupervisor;
         } else {
             throw new InvalidArgumentException('balanceSupervisor must be a float or int.');
