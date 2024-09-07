@@ -69,6 +69,7 @@ vi .env.prod.local
         POSTGRES_PORTS=54322:5432
         DOCKER_COMPOSE_ENV=dev-main
 
+docker compose --env-file .env.prod.local build --no-cache --pull
 docker compose --env-file .env.prod.local up -d
 
 docker exec -it wallet-php-dev-main bash
@@ -89,6 +90,7 @@ git co develop
 docker compose --env-file .env.dev.local up -d
 docker exec -it wallet-php-dev-dev bash
     cd /var/www/
+    chmod 775 ./reset_dev.sh 
     ./reset_dev.sh
 
     php bin/console lexik:jwt:generate-keypair
@@ -96,7 +98,6 @@ docker exec -it wallet-php-dev-dev bash
     setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
     
     npm install
-    npm install bootstrap --save-dev
     npm run dev
 ```
 
