@@ -131,15 +131,12 @@ http://localhost:8000/api
 ```shell
 git co main
 docker compose --env-file .env.prod.local up -d
-
-docker exec -it wallet-php-dev-main bash 
-    psql -U postgres_user -d postgres_database < backup_YYYY-MM-DD.sql  
-  
-user/pass: rr/rr
-
-http://localhost/  
-
-
 ```
+if there is any database backup at all
+```shell
+docker exec -it wallet-php-dev-main bash 
+    psql -U postgres_user -d postgres_database < backup_YYYY-MM-DD.sql  (if any)
+```
+user/pass: rr/rr
 
 http://localhost
