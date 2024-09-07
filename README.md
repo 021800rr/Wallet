@@ -60,6 +60,7 @@ vi .env.test.local
 
 vi .env.prod.local
    e.g.:
+        APP_ENV=prod
         DATABASE_URL="postgresql://user:pass@postgres-service:5432/account?serverVersion=16&charset=utf8"
 
         NGPORTS=80:80
@@ -117,6 +118,9 @@ docker exec -it wallet-php-dev-dev bash
 
 ## dev
 
+git co develop
+docker compose --env-file .env.dev.local up -d
+
 user/pass: rr/rr
 
 http://localhost:8000/  
@@ -126,8 +130,16 @@ http://localhost:8000/api
 
 ```shell
 git co main
-docker exec -it postgres-container bash 
-    psql -U postgres_user -d postgres_database < backup_YYYY-MM-DD.sql
+docker compose --env-file .env.prod.local up -d
+
+docker exec -it wallet-php-dev-main bash 
+    psql -U postgres_user -d postgres_database < backup_YYYY-MM-DD.sql  
+  
+user/pass: rr/rr
+
+http://localhost/  
+
+
 ```
 
 http://localhost
