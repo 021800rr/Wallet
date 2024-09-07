@@ -118,9 +118,10 @@ docker exec -it wallet-php-dev-dev bash
 
 ## dev
 
+```shell
 git co develop
 docker compose --env-file .env.dev.local up -d
-
+```
 user/pass: rr/rr
 
 http://localhost:8000/  
