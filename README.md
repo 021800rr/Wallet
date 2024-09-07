@@ -60,6 +60,7 @@ vi .env.test.local
 
 vi .env.prod.local
    e.g.:
+        APP_ENV=prod
         DATABASE_URL="postgresql://user:pass@postgres-service:5432/account?serverVersion=16&charset=utf8"
 
         NGPORTS=80:80
@@ -69,6 +70,7 @@ vi .env.prod.local
         POSTGRES_PORTS=54322:5432
         DOCKER_COMPOSE_ENV=dev-main
 
+docker compose --env-file .env.prod.local build --no-cache --pull
 docker compose --env-file .env.prod.local up -d
 
 docker exec -it wallet-php-dev-main bash
@@ -89,6 +91,7 @@ git co develop
 docker compose --env-file .env.dev.local up -d
 docker exec -it wallet-php-dev-dev bash
     cd /var/www/
+    chmod 775 ./reset_dev.sh 
     ./reset_dev.sh
 
     php bin/console lexik:jwt:generate-keypair
@@ -96,7 +99,6 @@ docker exec -it wallet-php-dev-dev bash
     setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
     
     npm install
-    npm install bootstrap --save-dev
     npm run dev
 ```
 
@@ -116,6 +118,9 @@ docker exec -it wallet-php-dev-dev bash
 
 ## dev
 
+git co develop
+docker compose --env-file .env.dev.local up -d
+
 user/pass: rr/rr
 
 http://localhost:8000/  
@@ -124,8 +129,14 @@ http://localhost:8000/api
 ## prod
 
 ```shell
-docker exec -it postgres-container bash 
-    psql -U postgres_user -d postgres_database < backup_YYYY-MM-DD.sql
+git co main
+docker compose --env-file .env.prod.local up -d
 ```
+if there is any database backup at all
+```shell
+docker exec -it wallet-php-dev-main bash 
+    psql -U postgres_user -d postgres_database < backup_YYYY-MM-DD.sql  (if any)
+```
+user/pass: rr/rr
 
 http://localhost
