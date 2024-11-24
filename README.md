@@ -41,22 +41,22 @@ vi .env.dev.local
     e.g.:
         DATABASE_URL="postgresql://rr:rr@postgres-service:5432/account_dev?serverVersion=16&charset=utf8"
 
-        NGPORTS=8000:80
+        NGPORTS=81:80
         POSTGRES_DB=account_dev
         POSTGRES_USER=rr
         POSTGRES_PASSWORD=rr
-        POSTGRES_PORTS=54320:5432
+        POSTGRES_PORTS=54321:5432
         DOCKER_COMPOSE_ENV=dev
         
 vi .env.test.local
     e.g.:
         DATABASE_URL="postgresql://rr:rr@postgres-service:5432/account_dev?serverVersion=16&charset=utf8"
 
-        NGPORTS=8000:80
+        NGPORTS=82:80
         POSTGRES_DB=account_dev
         POSTGRES_USER=rr
         POSTGRES_PASSWORD=rr
-        POSTGRES_PORTS=54321:5432
+        POSTGRES_PORTS=54322:5432
 
 vi .env.prod.local
    e.g.:
@@ -67,7 +67,7 @@ vi .env.prod.local
         POSTGRES_DB=account
         POSTGRES_USER=user
         POSTGRES_PASSWORD=pass
-        POSTGRES_PORTS=54322:5432
+        POSTGRES_PORTS=54320:5432
         DOCKER_COMPOSE_ENV=prod
 
 docker compose --env-file .env.prod.local build --no-cache --pull

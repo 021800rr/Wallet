@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 abstract class AbstractAppPaginator extends AbstractController
 {
+    /** @phpstan-ignore-next-line */
     public function getPagerfanta(Request $request, QueryBuilder $queryBuilder): Pagerfanta
     {
         $page = (int) $request->query->get('page', 1);

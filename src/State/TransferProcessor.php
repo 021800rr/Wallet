@@ -12,6 +12,9 @@ use App\Repository\ContractorRepository;
 use App\Service\Transfer\TransferInterface;
 use Exception;
 
+/**
+ * @implements ProcessorInterface<TransferToBackup|TransferToPln, void>
+ */
 readonly class TransferProcessor implements ProcessorInterface
 {
     public function __construct(

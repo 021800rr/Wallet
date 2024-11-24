@@ -8,6 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * @extends ServiceEntityRepository<Contractor>
  * @method Contractor|null find($id, $lockMode = null, $lockVersion = null)
  * @method Contractor|null findOneBy(array $criteria, array $orderBy = null)
  * @method Contractor[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)

@@ -24,8 +24,8 @@ class ContractorTest extends ApiTestCase
         $this->assertMatchesResourceCollectionJsonSchema(Contractor::class);
 
         $this->assertJsonContains([
-            "hydra:totalItems" => 5,
-            "hydra:member" => [
+            "totalItems" => 5,
+            "member" => [
                 0 => [
                     "id" => 1,
                     "description" => "Media Expert"
@@ -54,6 +54,9 @@ class ContractorTest extends ApiTestCase
     {
         $this->apiClient->request('POST', '/api/contractors', [
             'auth_bearer' => $this->token,
+            'headers' => [
+                'Content-Type' => 'application/ld+json; charset=utf-8',
+            ],
             'json' => [
                 "description" => "HBO"
             ]
@@ -67,7 +70,7 @@ class ContractorTest extends ApiTestCase
 
         $this->apiClient->request('GET', '/api/contractors', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
-            "hydra:totalItems" => 6,
+            "totalItems" => 6,
         ]);
     }
 
@@ -75,13 +78,15 @@ class ContractorTest extends ApiTestCase
     {
         $this->apiClient->request('POST', '/api/contractors', [
             'auth_bearer' => $this->token,
+            'headers' => [
+                'Content-Type' => 'application/ld+json; charset=utf-8',
+            ],
             'json' => [
                 "description" => "HBO"
             ]
         ]);
         /** @var string $iri */
         $iri = $this->findIriBy(Contractor::class, ['description' => 'HBO']);
-
         $this->apiClient->request('DELETE', $iri, ['auth_bearer' => $this->token]);
         $this->assertResponseStatusCodeSame(204);
         $this->assertNull(
