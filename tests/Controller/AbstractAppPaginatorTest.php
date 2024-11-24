@@ -6,6 +6,7 @@ use App\Config\PaginatorEnum;
 use App\Controller\AbstractAppPaginator;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Pagerfanta;
+use Rector\Enum\ClassName;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,6 +22,11 @@ class AbstractAppPaginatorTest extends WebTestCase
         $queryBuilder = $this->createMock(QueryBuilder::class);
 
         $paginator = new class extends AbstractAppPaginator {
+            /**
+             * @param Request $request
+             * @param QueryBuilder $queryBuilder
+             * @return Pagerfanta<ClassName>
+             */
             public function getPagerfantaPublic(Request $request, QueryBuilder $queryBuilder): Pagerfanta
             {
                 return $this->getPagerfanta($request, $queryBuilder);

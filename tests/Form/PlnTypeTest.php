@@ -9,14 +9,14 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Form\DoctrineOrmExtension;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class PlnTypeTest extends KernelTestCase
 {
     use SetUp;
 
     private EntityManagerInterface $entityManager;
-    private FormFactory $formFactory;
+    private FormFactoryInterface $formFactory;
 
     protected function setUp(): void
     {
@@ -24,9 +24,14 @@ class PlnTypeTest extends KernelTestCase
         $this->traitSetUp();
 
         $this->entityManager = $this->createMock(EntityManagerInterface::class);
-        $this->formFactory = static::getContainer()->get('form.factory');
+        /** @var FormFactoryInterface $formFactory */
+        $formFactory = static::getContainer()->get('form.factory');
+        $this->formFactory = $formFactory;
     }
 
+    /**
+     * @return DoctrineOrmExtension[]
+     */
     protected function getExtensions(): array
     {
         $registry = $this->createMock(ManagerRegistry::class);
@@ -45,7 +50,7 @@ class PlnTypeTest extends KernelTestCase
 
         $formData = [
             'amount' => 100.00,
-            'contractor' => $contractor->getId(),
+            'contractor' => $contractor?->getId(),
             'date' => '2024-08-20',
             'description' => 'Test Description',
         ];

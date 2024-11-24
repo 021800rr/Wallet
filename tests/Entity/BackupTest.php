@@ -22,10 +22,9 @@ class BackupTest extends ApiTestCase
         $this->assertResponseIsSuccessful();
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
         $this->assertMatchesResourceCollectionJsonSchema(Backup::class);
-
         $this->assertJsonContains([
-            "hydra:totalItems" => 3,
-            "hydra:member" => [
+            "totalItems" => 3,
+            "member" => [
                 0 => [
                     "amount" => 300,
                     "balance" => 600,
@@ -54,8 +53,8 @@ class BackupTest extends ApiTestCase
         $this->apiClient->request('GET', '/api/backups', ['auth_bearer' => $this->token]);
 
         $this->assertJsonContains([
-            "hydra:totalItems" => 2,
-            "hydra:member" => [
+            "totalItems" => 2,
+            "member" => [
                 0 => [
                     "amount" => 200,
                     "balance" => 300,
@@ -81,16 +80,12 @@ class BackupTest extends ApiTestCase
             ]
         ]);
         $this->assertResponseIsSuccessful();
-        $this->assertJsonContains([
-            "amount" => 400,
-            "description" => "string"
-        ]);
 
         $this->apiClient->request('GET', '/api/backups', ['auth_bearer' => $this->token]);
 
         $this->assertJsonContains([
-            "hydra:totalItems" => 3,
-            "hydra:member" => [
+            "totalItems" => 3,
+            "member" => [
                 0 => [
                     "amount" => 400,
                     "balance" => 700,

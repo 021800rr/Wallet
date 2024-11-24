@@ -4,6 +4,9 @@ namespace App\State;
 
 use ApiPlatform\Metadata\DeleteOperationInterface;
 use ApiPlatform\Metadata\Operation;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Chf;
 use App\Repository\AccountRepositoryInterface;
@@ -11,8 +14,15 @@ use App\Service\BalanceUpdater\BalanceUpdaterAccountInterface;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @implements ProcessorInterface<Chf, void>
+ */
 readonly class ChfProcessor implements ProcessorInterface
 {
+    /**
+     * @param ProcessorInterface<Chf, Chf> $persistProcessor
+     * @param ProcessorInterface<Chf, void> $removeProcessor
+     */
     public function __construct(
         private BalanceUpdaterAccountInterface $walletUpdater,
         private ProcessorInterface             $persistProcessor,
@@ -40,14 +50,18 @@ readonly class ChfProcessor implements ProcessorInterface
             $this->walletUpdater->compute($this->chfRepository, $data->getId());
             $this->removeProcessor->process($data, $operation, $uriVariables, $context);
         } else {
-            if ($data->getId()) {
-                $this->walletUpdater->setPreviousId($this->chfRepository, $data->getId());
+            if ($operation instanceof Patch || $operation instanceof Put) {
+                /** @var int $id */
+                $id = $uriVariables['id'];
+                $this->walletUpdater->setPreviousId($this->chfRepository, $id);
                 $this->persistProcessor->process($data, $operation, $uriVariables, $context);
-            } else {
+            } elseif ($operation instanceof Post) {
                 $this->persistProcessor->process($data, $operation, $uriVariables, $context);
                 $this->walletUpdater->setPreviousId($this->chfRepository, $data->getId());
             }
-            $this->walletUpdater->compute($this->chfRepository, $data->getId());
+            /** @var int $id */
+            $id = $data->getId() ?? $id ?? throw new \Exception('Id is required');
+            $this->walletUpdater->compute($this->chfRepository, $id);
         }
     }
 }

@@ -10,6 +10,9 @@ use App\Repository\AccountRepositoryInterface;
 use App\Repository\BackupRepositoryInterface;
 use App\Service\ExpectedBackup\CalculatorInterface;
 
+/**
+ * @implements ProviderInterface<PaymentsByMonth>
+ */
 readonly class PaymentByMonthProvider implements ProviderInterface
 {
     public function __construct(
