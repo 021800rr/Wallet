@@ -75,6 +75,7 @@ docker compose --env-file .env.prod.local up -d
 
 docker exec -it wallet-php-prod bash
     cd /var/www/
+    git config --global --add safe.directory /var/www
     composer install
 
 docker exec -it wallet-postgres-prod bash 
