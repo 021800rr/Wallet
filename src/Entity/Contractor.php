@@ -50,6 +50,9 @@ class Contractor
     #[Assert\Length(max: 255)]
     private ?string $account;
 
+    /**
+     * @var Collection<int, Fee>
+     */
     #[ORM\OneToMany(mappedBy: 'contractor', targetEntity: Fee::class)]
     #[Assert\Type(type: Collection::class)]
     private Collection $fees;
@@ -88,6 +91,9 @@ class Contractor
         return $this;
     }
 
+    /**
+     * @return Collection<int, Fee>
+     */
     public function getFees(): Collection
     {
         return $this->fees;

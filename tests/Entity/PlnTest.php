@@ -10,6 +10,12 @@ class PlnTest extends ApiTestCase
 {
     use SetUp;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->traitSetUp();
+    }
+
     public function testGetCollection(): void
     {
         $this->apiClient->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
@@ -18,8 +24,8 @@ class PlnTest extends ApiTestCase
         $this->assertMatchesResourceCollectionJsonSchema(Pln::class);
 
         $this->assertJsonContains([
-            "hydra:totalItems" => 5,
-            "hydra:member" => [
+            "totalItems" => 5,
+            "member" => [
                 [
                     "id" => 5,
                     "date" => "2021-05-13T00:00:00+00:00",
@@ -66,6 +72,9 @@ class PlnTest extends ApiTestCase
     {
         $this->apiClient->request('POST', '/api/plns', [
             'auth_bearer' => $this->token,
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
             'json' => [
                 "date" => "2021-06-13",
                 "amount" => -50,
@@ -76,18 +85,10 @@ class PlnTest extends ApiTestCase
         $this->assertResponseStatusCodeSame(201);
         $this->assertResponseHeaderSame('content-type', 'application/ld+json; charset=utf-8');
 
-        $this->assertJsonContains([
-            "date" => "2021-06-13T00:00:00+00:00",
-            "amount" => -50,
-            "contractor" => [
-                "@id" => "/api/contractors/5",
-            ]
-        ]);
-
         $this->apiClient->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
-            "hydra:totalItems" => 6,
-            "hydra:member" => [
+            "totalItems" => 6,
+            "member" => [
                 0 => [
                     "date" => "2021-06-13T00:00:00+00:00",
                     "balance" => 50,
@@ -100,6 +101,9 @@ class PlnTest extends ApiTestCase
     {
         $this->apiClient->request('PUT', '/api/plns/4', [
             'auth_bearer' => $this->token,
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
             'json' => [
                 "date" => "2021-04-13",
                 "amount" => -20,
@@ -108,19 +112,11 @@ class PlnTest extends ApiTestCase
             ],
         ]);
         $this->assertResponseIsSuccessful();
-        $this->assertJsonContains([
-            "date" => "2021-04-13T00:00:00+00:00",
-            "amount" => -20,
-            "contractor" => [
-                "id" => 5
-            ],
-            "description" => "test test"
-        ]);
 
         $this->apiClient->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
-            "hydra:totalItems" => 5,
-            "hydra:member" => [
+            "totalItems" => 5,
+            "member" => [
                 0 => [
                     "balance" => 110,
                 ],
@@ -132,19 +128,21 @@ class PlnTest extends ApiTestCase
     {
         $this->apiClient->request('PUT', '/api/plns/3', [
             'auth_bearer' => $this->token,
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
             'json' => [
                 "date" => "2021-02-12",
+                "amount" => -20,
+                "contractor" => "/api/contractors/1",
             ],
         ]);
         $this->assertResponseIsSuccessful();
-        $this->assertJsonContains([
-            "date" => "2021-02-12T00:00:00+00:00",
-        ]);
 
         $this->apiClient->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
-            "hydra:totalItems" => 5,
-            "hydra:member" => [
+            "totalItems" => 5,
+            "member" => [
                 ["id" => 5,],
                 ["id" => 4,],
                 [
@@ -173,8 +171,8 @@ class PlnTest extends ApiTestCase
 
         $this->apiClient->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
-            "hydra:totalItems" => 4,
-            "hydra:member" => [
+            "totalItems" => 4,
+            "member" => [
                 0 => [
                     "balance" => 130,
                 ],

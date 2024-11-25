@@ -9,6 +9,12 @@ class ContractorRepositoryTest extends KernelTestCase
 {
     use SetUp;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->traitSetUp();
+    }
+
     public function testFindAll(): void
     {
         $contractors = $this->contractorRepository->findAll();

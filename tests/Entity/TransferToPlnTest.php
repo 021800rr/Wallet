@@ -9,12 +9,21 @@ class TransferToPlnTest extends ApiTestCase
 {
     use SetUp;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->traitSetUp();
+    }
+
     public function testPost(): void
     {
         $this->assertSame(100.00, $this->plnRepository->getCurrentBalance());
 
         $this->apiClient->request('POST', '/api/transfer/to/pln', [
             'auth_bearer' => $this->token,
+            'headers' => [
+                'Content-Type' => 'application/ld+json; charset=utf-8',
+            ],
             'json' => [
                 "amount" => 100,
                 "date" => "2023-06-25"
@@ -26,7 +35,7 @@ class TransferToPlnTest extends ApiTestCase
 
         $this->apiClient->request('GET', '/api/backups', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
-            "hydra:member" => [
+            "member" => [
                 [
                     "retiring" => 300,
                     "holiday" => 200,

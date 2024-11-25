@@ -13,6 +13,12 @@ class AccountTraitTest extends KernelTestCase
 {
     use SetUp;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->traitSetUp();
+    }
+
     public function testBackupGetCurrentBalance(): void
     {
         $balance = $this->backupRepository->getCurrentBalance();

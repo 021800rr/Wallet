@@ -12,6 +12,12 @@ class BalanceSupervisorTest extends KernelTestCase
 {
     use SetUp;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->traitSetUp();
+    }
+
     public function testPlnCrawl(): void
     {
         $balanceSupervisor = new BalanceSupervisor();

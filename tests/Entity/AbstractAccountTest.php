@@ -12,6 +12,12 @@ class AbstractAccountTest extends KernelTestCase
 {
     use SetUp;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->traitSetUp();
+    }
+
     public function testConstructAndDefaultValues(): void
     {
         $account = new class() extends AbstractAccount {};

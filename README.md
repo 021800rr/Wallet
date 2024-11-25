@@ -41,22 +41,22 @@ vi .env.dev.local
     e.g.:
         DATABASE_URL="postgresql://rr:rr@postgres-service:5432/account_dev?serverVersion=16&charset=utf8"
 
-        NGPORTS=8000:80
+        NGPORTS=81:80
         POSTGRES_DB=account_dev
         POSTGRES_USER=rr
         POSTGRES_PASSWORD=rr
-        POSTGRES_PORTS=54320:5432
-        DOCKER_COMPOSE_ENV=dev-dev
+        POSTGRES_PORTS=54321:5432
+        DOCKER_COMPOSE_ENV=dev
         
 vi .env.test.local
     e.g.:
         DATABASE_URL="postgresql://rr:rr@postgres-service:5432/account_dev?serverVersion=16&charset=utf8"
 
-        NGPORTS=8000:80
+        NGPORTS=82:80
         POSTGRES_DB=account_dev
         POSTGRES_USER=rr
         POSTGRES_PASSWORD=rr
-        POSTGRES_PORTS=54321:5432
+        POSTGRES_PORTS=54322:5432
 
 vi .env.prod.local
    e.g.:
@@ -67,17 +67,18 @@ vi .env.prod.local
         POSTGRES_DB=account
         POSTGRES_USER=user
         POSTGRES_PASSWORD=pass
-        POSTGRES_PORTS=54322:5432
-        DOCKER_COMPOSE_ENV=dev-main
+        POSTGRES_PORTS=54320:5432
+        DOCKER_COMPOSE_ENV=prod
 
 docker compose --env-file .env.prod.local build --no-cache --pull
 docker compose --env-file .env.prod.local up -d
 
-docker exec -it wallet-php-dev-main bash
+docker exec -it wallet-php-prod bash
     cd /var/www/
+    git config --global --add safe.directory /var/www
     composer install
 
-docker exec -it wallet-postgres-dev-main bash 
+docker exec -it wallet-postgres-prod bash 
     psql -U user -d account
         create database account_dev;
         create database account_dev_test;
@@ -89,16 +90,18 @@ docker compose --env-file .env.prod.local down
 git co develop
 
 docker compose --env-file .env.dev.local up -d
-docker exec -it wallet-php-dev-dev bash
+docker exec -it wallet-php-dev bash
     cd /var/www/
-    chmod 775 ./reset_dev.sh 
     ./reset_dev.sh
 
     php bin/console lexik:jwt:generate-keypair
     setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
     setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
     
-    npm install
+    git config --global --add safe.directory /var/www
+    npm uninstall sass-loader
+    npm install sass-loader@^16.0.1 --save-dev
+    npm install bootstrap --save
     npm run dev
 ```
 
@@ -107,7 +110,7 @@ docker exec -it wallet-php-dev-dev bash
 ```shell
 git co develop
 docker compose --env-file .env.dev.local up -d
-docker exec -it wallet-php-dev-dev bash
+docker exec -it wallet-php-dev bash
     cd /var/www/
 
     mkdir --parents tools/php-cs-fixer
@@ -135,7 +138,7 @@ docker compose --env-file .env.prod.local up -d
 ```
 if there is any database backup at all
 ```shell
-docker exec -it wallet-php-dev-main bash 
+docker exec -it wallet-php-prod bash 
     psql -U postgres_user -d postgres_database < backup_YYYY-MM-DD.sql  (if any)
 ```
 user/pass: rr/rr

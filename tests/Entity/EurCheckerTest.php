@@ -9,6 +9,12 @@ class EurCheckerTest extends ApiTestCase
 {
     use SetUp;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->traitSetUp();
+    }
+
     public function testGet(): void
     {
         $this->apiClient->request('GET', '/api/check/eurs', ['auth_bearer' => $this->token]);

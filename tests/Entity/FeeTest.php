@@ -10,17 +10,28 @@ class FeeTest extends ApiTestCase
 {
     use SetUp;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->traitSetUp();
+    }
+
     public function testPostInsertToPln(): void
     {
         $this->apiClient->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
-            "hydra:totalItems" => 5,
+            "totalItems" => 5,
         ]);
-        $this->apiClient->request('POST', '/api/fees/insert/to/pln', ['auth_bearer' => $this->token]);
-        $this->assertResponseStatusCodeSame(204);
+        $this->apiClient->request('POST', '/api/fees/insert/to/pln', [
+            'auth_bearer' => $this->token,
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
+        ]);
+        $this->assertResponseStatusCodeSame(200);
         $this->apiClient->request('GET', '/api/plns', ['auth_bearer' => $this->token]);
         $this->assertJsonContains([
-            "hydra:totalItems" => 7,
+            "totalItems" => 7,
         ]);
     }
 
@@ -32,8 +43,8 @@ class FeeTest extends ApiTestCase
         $this->assertMatchesResourceCollectionJsonSchema(Fee::class);
 
         $this->assertJsonContains([
-            "hydra:totalItems" => 2,
-            "hydra:member" => [
+            "totalItems" => 2,
+            "member" => [
                 0 => [
                     "contractor" => [
                         "description" => "Netflix",
@@ -52,6 +63,9 @@ class FeeTest extends ApiTestCase
     {
         $this->apiClient->request('POST', '/api/fees', [
             'auth_bearer' => $this->token,
+            'headers' => [
+                'Content-Type' => 'application/ld+json',
+            ],
             'json' => [
                 "date" => 1,
                 "amount" => 1,
@@ -72,7 +86,7 @@ class FeeTest extends ApiTestCase
         $this->apiClient->request('GET', '/api/fees', ['auth_bearer' => $this->token]);
 
         $this->assertJsonContains([
-            "hydra:totalItems" => 3,
+            "totalItems" => 3,
         ]);
     }
 
@@ -88,7 +102,7 @@ class FeeTest extends ApiTestCase
         $this->apiClient->request('GET', '/api/fees', ['auth_bearer' => $this->token]);
 
         $this->assertJsonContains([
-            "hydra:totalItems" => 1,
+            "totalItems" => 1,
         ]);
     }
 
