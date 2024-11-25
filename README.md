@@ -91,14 +91,16 @@ git co develop
 docker compose --env-file .env.dev.local up -d
 docker exec -it wallet-php-dev bash
     cd /var/www/
-    chmod 775 ./reset_dev.sh 
     ./reset_dev.sh
 
     php bin/console lexik:jwt:generate-keypair
     setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
     setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
     
-    npm install
+    git config --global --add safe.directory /var/www
+    npm uninstall sass-loader
+    npm install sass-loader@^16.0.1 --save-dev
+    npm install bootstrap --save
     npm run dev
 ```
 
